@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>新增计划管理</title>
+    <#include "../include/header.html">   	
+</head>
+
+<body>
+<form class="form-horizontal" role="form" style="margin-top:20px;" id="defaultForm">
+	<#if im??>	
+	<div style="display: inline-block">	
+	<input hidden="" value="${im.id!}" name="id" id="id">
+     <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="plan_no">计划号：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="系统自动生成" name="plan_no" id="plan_no" value="${im.plan_no!}" disabled="disabled">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="delivery_dock">发货港：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="发货港" name="delivery_dock" id="delivery_dock" value="${im.delivery_dock!}">
+        </div>
+    </div> 
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="estimated_arrvial_date">预抵日期：</label>
+        <div class="col-xs-6">
+            <input class="form-control form_datetime" placeholder="预抵日期" name="estimated_arrvial_date" id="estimated_arrvial_date" value="${im.estimated_arrvial_date!}">
+        </div>
+    </div>    
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="Excess_deduction_price">超耗扣价：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="超耗扣价" name="Excess_deduction_price" id="Excess_deduction_price" value="${im.Excess_deduction_price!}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="import_total_dollar">合计数量：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="合计数量" name="total_quantity" id="total_quantity" value="${im.total_quantity!}">
+        </div>
+    </div>
+ </div>  
+ <div style="display:inline-block"> 
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="goods_name">货物名称：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="货物名称" name="goods_name" id="goods_name" value="${im.goods_name!}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="seagoing_vessel_name">海轮名称：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="海轮名称" name="seagoing_vessel_name" id="seagoing_vessel_name" value="${im.seagoing_vessel_name!}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="transport_consumption">运输定耗：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="运输定耗" name="transport_consumption" id="transport_consumption" value="${im.transport_consumption!}">
+        </div>
+    </div>
+     <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="destination_port">目的港：</label>
+        <div class="col-xs-6">
+            <select name="destination_port" id="destination_port" class="form-control" style="padding-right: 2px">
+            	<option value="">--选择目的港-- </option>
+            	<option value="蚌埠" <#if im.destination_port=='蚌埠'>selected</#if>>蚌埠</option>
+            	<option value="淮安" <#if im.destination_port=='淮安'>selected</#if>>淮安</option>
+            	<option value="盐城" <#if im.destination_port=='盐城'>selected</#if>>盐城</option>
+            	<option value="大丰" <#if im.destination_port=='大丰'>selected</#if>>大丰</option>
+            	<option value="泰州" <#if im.destination_port=='泰州'>selected</#if>>泰州</option>
+            	<option value="扬州" <#if im.destination_port=='扬州'>selected</#if>>扬州</option>
+            	<option value="重庆" <#if im.destination_port=='重庆'>selected</#if>>重庆</option>
+            	<option value="杭州" <#if im.destination_port=='杭州'>selected</#if>>杭州</option>
+            	<option value="上海" <#if im.destination_port=='上海'>selected</#if>>上海</option>
+            </select>
+        </div>
+    </div>
+     <div class="form-group">
+     	 <label class="col-xs-11 control-label text-center" for="import_total_price">
+     	 	<input name="billing" id="billing" type="checkbox" value="1" <#if im.billing==true>checked</#if>><span style="margin-right: 26px">开票</span>
+       		<input name="port_fee" id="port_fee" type="checkbox" value="1" <#if im.port_fee==true>checked</#if>><span style="margin-right: 20px">港建费</span>
+        	<input name="insurance" id="insurance" type="checkbox" value="1" <#if im.insurance==true>checked</#if>><span style="margin-right: 20px">保险</span>
+     	 </label>    
+    </div>
+</div>
+<div style="display:inline-block;margin-bottom: 49px" >
+	<div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="consignor">托运人：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="托运人" name="consignor" id="consignor" value="${im.consignor!}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="settle_price">结算价：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="结算价" name="settle_price" id="settle_price" value="${im.settle_price!}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="discharge_period">卸货期限：</label>
+        <div class="col-xs-6">
+            <input class="form-control form_datetime" placeholder="卸货期限" name="discharge_period" id="discharge_period" value="${im.discharge_period!}">
+        </div>
+    </div>
+	<div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="berthing_tonnage">靠泊吨位：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="靠泊吨位" name="berthing_tonnage" id="berthing_tonnage" value="${im.berthing_tonnage!}">
+        </div>
+    </div> 
+</div>
+	<div class="form-group">
+        <label class="col-xs-2 control-label text-right" for="remark" style="max-width:148.53px">备注：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="备注" name="remark" id="remark" value="${im.remark!}">
+        </div>
+    </div>  
+    <div class="form-group">
+        <label class="col-xs-2 control-label" for="v" style="max-width:148.53px"></label>
+        <div class="col-xs-6">
+            <button id="v" type="submit" class="btn btn-11">　提交　</button>
+       	</div>
+    </div> 
+	<#else>
+	<div style="display: inline-block">	
+     <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="plan_no">计划号：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="系统自动生成" name="plan_no" id="plan_no" value="保存自动生成" disabled="disabled">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="delivery_dock">发货港：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="发货港" name="delivery_dock" id="delivery_dock" value="">
+        </div>
+    </div> 
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="estimated_arrvial_date">预抵日期：</label>
+        <div class="col-xs-6">
+            <input class="form-control form_datetime" placeholder="预抵日期" name="estimated_arrvial_date" id="estimated_arrvial_date" value="">
+        </div>
+    </div>    
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="Excess_deduction_price">超耗扣价：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="超耗扣价" name="Excess_deduction_price" id="Excess_deduction_price" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="import_total_dollar">合计数量：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="合计数量" name="total_quantity" id="total_quantity" value="">
+        </div>
+    </div>
+ </div>  
+ <div style="display:inline-block"> 
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="goods_name">货物名称：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="货物名称" name="goods_name" id="goods_name" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="seagoing_vessel_name">海轮名称：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="海轮名称" name="seagoing_vessel_name" id="seagoing_vessel_name" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="transport_consumption">运输定耗：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="运输定耗" name="transport_consumption" id="transport_consumption" value="">
+        </div>
+    </div>
+     <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="destination_port">目的港：</label>
+        <div class="col-xs-6">
+            <select name="destination_port" id="destination_port" class="form-control" style="padding-right: 2px">
+            	<option>--选择目的港-- </option>
+            	<option>蚌埠</option>
+            	<option>淮安</option>
+            	<option>盐城</option>
+            	<option>大丰</option>
+            	<option>泰州</option>
+            	<option>扬州</option>
+            	<option>重庆</option>
+            	<option>杭州</option>
+            	<option>上海</option>
+            </select>
+        </div>
+    </div>
+     <div class="form-group">
+     	 <label class="col-xs-11 control-label text-center" for="import_total_price">
+     	 	<input name="billing" id="billing" type="checkbox" value="1"><span style="margin-right: 26px">开票</span>
+       		<input name="port_fee" id="port_fee" type="checkbox" value="1"><span style="margin-right: 20px">港建费</span>
+        	<input name="insurance" id="insurance" type="checkbox" value="1"><span style="margin-right: 20px">保险</span>
+     	 </label>    
+    </div>
+</div>
+<div style="display:inline-block;margin-bottom: 49px" >
+	<div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="consignor">托运人：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="托运人" name="consignor" id="consignor" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="settle_price">结算价：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="结算价" name="settle_price" id="settle_price" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="discharge_period">卸货期限：</label>
+        <div class="col-xs-6">
+            <input class="form-control form_datetime" placeholder="卸货期限" name="discharge_period" id="discharge_period" value="">
+        </div>
+    </div>
+	<div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="berthing_tonnage">靠泊吨位：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="靠泊吨位" name="berthing_tonnage" id="berthing_tonnage" value="">
+        </div>
+    </div> 
+</div>
+	<div class="form-group">
+        <label class="col-xs-2 control-label text-right" for="remark" style="max-width:148.53px">备注：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="备注" name="remark" id="remark" value="">
+        </div>
+    </div>  
+    <div class="form-group">
+        <label class="col-xs-2 control-label" for="v" style="max-width:148.53px"></label>
+        <div class="col-xs-6">
+            <button id="v" type="submit" class="btn btn-11">　提交　</button>
+       	</div>
+    </div> 
+    </#if>
+</form>
+
+<script type="text/javascript">
+$(".form_datetime").datetimepicker({
+	format: "yyyy-mm-dd",
+	autoclose: true,
+	todayBtn: false,
+	todayHighlight: true,
+	showMeridian: true,
+	pickerPosition: "bottom-right",
+	language: 'zh-CN',//中文，需要引用zh-CN.js包
+	startView: 2,// // 日视图
+	minView: 2,
+});
+$(function(){
+	// 表单校验
+	$('form').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			plan_no: {//计划号
+				validators: {
+					notEmpty: {
+						message: '请输入计划号!'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                }
+				}
+			},
+			goods_name: {//货物名称
+				validators: {
+					notEmpty: {
+						message: '请输入货物名称!'
+					},
+					regexp:{
+						regexp:/^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/,
+						message:'请勿输入特殊字符'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                }
+				}
+			},
+			consignor: {//托运人
+				validators: {
+					notEmpty: {
+						message: '请输入托运人!'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+					regexp:{
+						regexp:/^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/,
+						message:'请勿输入特殊字符'
+					}
+				}
+			},
+			delivery_dock: {//发货港
+				validators: {
+					notEmpty:{
+						message:'请输入发货港'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+					regexp:{
+						regexp:/^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/,
+						message:'请勿输入特殊字符'
+					}
+				}
+			},
+			destination_port: {//目的港
+				validators: {
+					notEmpty:{
+						message:'请输入目的港'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+					regexp:{
+						regexp:/^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/,
+						message:'请勿输入特殊字符'
+					}
+				}
+			},
+			seagoing_vessel_name: {//海轮名称
+				validators: {
+					notEmpty:{
+						message:'请输入海轮名称'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+					regexp:{
+						regexp:/^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/,
+						message:'请勿输入特殊字符'
+					}
+				}
+			},
+			settle_price: {//结算价	
+				validators: {
+					notEmpty:{
+						message:'请输入结算价'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+	                regexp:{
+						regexp:/^\d+(\.\d{1,4})?$/,
+						message:'请保留小数点后4位'
+					}	
+				}
+			},
+			estimated_arrvial_date: {//预抵达日期
+				validators: {
+					notEmpty:{
+						message:'请输入预抵日期'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                }
+				}
+			},
+			transport_consumption: {//运输定耗
+				validators: {
+					notEmpty:{
+						message:'请输入运输定价'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+	                regexp:{
+						regexp:/^\d+(\.\d{1,4})?$/,
+						message:'请保留小数点后4位'
+					}										
+				}
+			},
+			discharge_period: {//卸货日期
+				validators: {
+					notEmpty:{
+						message:'请输入卸货日期'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                }
+				}
+			},
+			Excess_deduction_price: {//超耗扣价
+				validators: {
+					notEmpty:{
+						message:'请输入超耗扣价'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                }
+				}
+			},
+			berthing_tonnage: {//靠泊吨位
+				validators: {
+					notEmpty:{
+						message:'请输入靠泊吨位'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+	                regexp:{
+						regexp:/^\d+(\.\d{1,4})?$/,
+						message:'请最多保留小数点后4位'
+					}	
+				}
+			},
+			total_quantity: {//合计数量
+				validators: {
+					notEmpty:{
+						message:'请输入合计数量'
+					},
+					stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+	                regexp:{
+						regexp:/^\d+(\.\d{1,4})?$/,
+						message:'请最多保留小数点后4位'
+					}				
+				}
+			},
+			remark: {//备注				
+				validators: {
+					stringLength: {
+	                    min: 0,
+	                    max: 100,
+	                    message: '最多100个字符'
+	                },
+				}
+			},
+		}
+	});
+})
+.on('success.form.bv', function(e) {
+	e.preventDefault();
+	 $.post("/planManage/dispatch/savePlanManage", $('#defaultForm').serialize(), function(result) {
+		if(result){
+			layer.msg("保存成功",{time:2000},function(){
+				layer_close();
+				parent.refresh_iframe();
+			})
+		}else{
+			layer.msg("保存失败",{time:2000},function(){
+				
+			})
+		}
+		
+	}); 
+});
+
+</script>
+</body>
+
+</html>
