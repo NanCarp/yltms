@@ -19,17 +19,20 @@
                         <div class="col-sm-1 col-xs-1 head_2">
                             <input type="search" class="form-control" placeholder="客户名称" name="company_name" id="company_name" value="">
                         </div>
+                        <div class="col-sm-1 col-xs-1 head_2">
+                            <input type="search" class="form-control" placeholder="货号" name="art_no" id="art_no" value="">
+                        </div>
+                        <div class="col-sm-1 col-xs-1 head_2">
+                            <input type="search" class="form-control" placeholder="发货港" name="dispatch_port" id="dispatch_port" value="">
+                        </div>
+                        <div class="col-sm-1 col-xs-1 head_2">
+                            <input type="search" class="form-control" placeholder="收货单位" name="consignee" id="consignee" value="">
+                        </div>
                         <div class="col-sm-1 col-xs-2 head_1">
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
                         </div>
                         <div class="col-sm-1 col-xs-1 head_1">
                             <button class="btn btn-success" onclick="_add()">新增</button>
-                        </div>
-                        <div class="col-sm-2 col-xs-6 head_1" >
-                             <button class="btn btn-4" onclick=" _batchDelete()">删除</button>
-                        </div>
-                        <div class="col-sm-1 col-xs-12 head_1">
-                            <button class="btn btn-3"  onclick="_look()">查看</button>
                         </div>
                         <div class="col-sm-1 col-xs-1 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/insidejob/contract')"><i class="fa fa-refresh"></i></button>
@@ -54,28 +57,43 @@ $(function () {
     oTable.Init();
 
     //2.初始化Button的点击事件
-     var oButtonInit = new ButtonInit();
+    var oButtonInit = new ButtonInit();
     oButtonInit.Init(); 
 });
 
-var plan_no,company_name;
+var company_name,art_no,dispatch_port,consignee;
+
 function doQuery(){
     layui.use('layer',function(){
         var layer = layui.layer;
         
-        plan_no = $.trim($('#plan_no').val());
+        art_no = $.trim($('#art_no').val());
         company_name = $.trim($('#company_name').val());
+        dispatch_port = $.trim($('#dispatch_port').val());
+        consignee = $.trim($('#consignee').val());
         
-        if($.trim($('#plan_no').val())!=''){
-            var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
-            if(!reg.test($('#plan_no').val())){
-                layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
+        if($.trim($('#art_no').val())!=''){
+            var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
+            if(!reg.test($('#art_no').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#art_no', {tips: [1, '#34495E']});return;
             }                   
         }
         if($.trim($('#company_name').val())!=''){
             var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
             if(!reg.test($('#company_name').val())){
                 layer.tips('不允许有特殊字符，最多20个字符', '#company_name', {tips: [1, '#34495E']});return;
+            }                   
+        }
+        if($.trim($('#dispatch_port').val())!=''){
+            var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
+            if(!reg.test($('#dispatch_port').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#dispatch_port', {tips: [1, '#34495E']});return;
+            }                   
+        }
+        if($.trim($('#consignee').val())!=''){
+            var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
+            if(!reg.test($('#consignee').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#consignee', {tips: [1, '#34495E']});return;
             }                   
         }
         $('#tb_departments').bootstrapTable('refresh');    //刷新表格
@@ -86,7 +104,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '/insidejob/plandispatch/getJson',         //请求后台的URL（*）
+            url: '/insidejob/contract/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -125,19 +143,19 @@ var TableInit = function () {
                     return index+1;
                 }
             }, {
-                field: 'company_name',
+                field: 'customer',
                 title: '客户名称'
             }, {
-                field: 'goods_name',
-                title: '品种'
+                field: 'art_no',
+                title: '货号'
             }, {
-                field: 'delivery_dock',
+                field: 'dispatch_port',
                 title: '发货港'
             }, {
-                field: 'destination_port',
+                field: 'consignee',
                 title: '收货单位'
             }, {
-                field: 'freight_price',
+                field: 'freight',
                 title: '运价'
             }, {
                 field: 'quantity',
@@ -146,13 +164,14 @@ var TableInit = function () {
                 field: 'attachment',
                 title: '附件',
                 formatter:function(value,row,index){
-                    return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">下载</button>' ]
+                    return['<button class="btn btn-xs btn-5" type="button"  onclick="_watchFile('+row.id+')">查看</button>' ]
                 },
             },{
                 field:'opt',
                 title:'操作',
                 formatter:function(value,row,index){
-                          return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">编辑</button>' ]
+                          return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">编辑</button>'
+                                 +'<button class="btn btn-xs btn-4 bt" style="margin-left:10px" onclick="_delete('+row.id+')">删除</button>' ]
                 },
             }]
         });
@@ -165,8 +184,10 @@ var TableInit = function () {
             offset: params.offset,  //页码
             maxrows: params.limit,
             search: params.search,
-            plan_no: plan_no,
             company_name: company_name,
+            art_no:art_no,
+            dispatch_port:dispatch_port,
+            consignee:consignee
         };
         return temp;
     };
@@ -186,12 +207,12 @@ var ButtonInit = function () {
 
 // 新增
 function _add(){
-    open_window('新增','/insidejob/contract/getRecord', 600, 480);
+    open_window('新增','/insidejob/contract/getRecord', 700, 340);
 }
 
 // 编辑
 function _edit(id){
-    open_window('编辑','/insidejob/contract/getRecord/' + id, 600, 480);
+    open_window('编辑','/insidejob/contract/getRecord/' + id,700, 340);
 }
 
 //全选按钮
@@ -205,25 +226,24 @@ function stateFormatter(value, row, index) {
     return value;
 }
 
-//获取被选中数据的id
-function getIdSelections() {
-    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
-        return row.id;
-    });
+//删除事件
+function _delete(id){
+	layer.confirm("确认删除？",{icon:3},function(index){
+		$.post("/insidejob/contract/delete/"+id,function(data){
+			if(data){
+				layer.msg("删除成功",{time:2000},function(){
+					parent.refresh_iframe();
+				})
+			}else{
+				layer.msg("删除失败",{time:2000})
+			}
+		})
+	})
 }
 
-//日期控件
-$(".form_datetime").datetimepicker({
-    format: "yyyy-mm-dd",
-    autoclose: true,
-    todayBtn: false,
-    todayHighlight: true,
-    showMeridian: true,
-    pickerPosition: "bottom-right",
-    language: 'zh-CN',//中文，需要引用zh-CN.js包
-    startView: 2,// 日视图
-    minView: 2,
-});
+function _watchFile(id){
+	window.open("/insidejob/contract/watchFile/"+id, "_blank");
+}
 </script>
 
 </body>

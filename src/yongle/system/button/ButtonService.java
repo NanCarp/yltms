@@ -6,11 +6,12 @@ import java.util.List;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
+
 /**
- * @ClassName: ButtonService
+ * @ClassName: ButtonService.java
  * @Description: 系统管理_按钮管理
- * @author: xuhui
- * @date: 2017年5月15日下午2:00:00
+ * @author: LiYu
+ * @date: 2017年8月30日上午8:43:53
  * @version: 1.0 版本初成
  */
 public class ButtonService {

@@ -24,9 +24,12 @@
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1">
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
-                        </div>                              
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1">
+                            <button class="btn btn-success" onclick="">保存</button>
+                        </div>                            
                         <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-4" onclick=" _batchDelete()">导出</button>
+                             <button class="btn btn-5" onclick=" _batchDelete()">导出</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
                              <button class="btn btn-4" onclick=" _print()">打印</button>
@@ -36,12 +39,11 @@
                         </div>                  
                     </div>              
                 </div>
-            </div>      
+            </div>
             <table id="tb_departments"></table>
         </div>             
     </div>
 </div>
-
 <script>
 // 阻止键盘点击按钮
 $('button').keydown(function () {
@@ -55,7 +57,17 @@ $(function () {
 
     //2.初始化Button的点击事件
      var oButtonInit = new ButtonInit();
-    oButtonInit.Init(); 
+    oButtonInit.Init();
+    
+    console.log('b');
+    //$('tbody').append('<tr data-index="9999"><td colspan="8">合计</td><td></td></tr>');
+    //$('#tb_departments').bootstrapTable('append', {});
+    $('#tb_departments').bootstrapTable({
+        onLoadSuccess: function () {
+            console.log('load success');
+        }
+    });
+    console.log('a');
 });
 
 var plan_no,company_name;
@@ -112,13 +124,9 @@ var TableInit = function () {
             detailView: false,
             showRefresh:true,           
             locale: "zh-CN",                    //中文支持,
+            //showFooter:true, // 合计
             //是否显示父子表
             columns: [{
-                field:"checked",
-                checkbox: true,
-                formatter:stateFormatter            
-                
-            },{
                 field:"SerialNumber",
                 title:'序号',
                 formatter:function(value,row,index){
@@ -140,15 +148,19 @@ var TableInit = function () {
                 field: 'ship_name',
                 title: '船名'
             }, {
-                field: 'phone',
+                field: 'ship_owner_phone',
                 title: '手机号'
             }, {
                 field: 'id_card_no',
                 title: '身份证号码'
             }, {
-                field: 'tonnage',
-                title: '吨位'
-            }]
+                field: 'loading_tonnage',
+                title: '吨位',
+                //footerFormatter: sumFormatter
+            }],
+            onLoadSuccess: function () {
+                total();
+            }
         });
     };
 
@@ -166,6 +178,26 @@ var TableInit = function () {
     };
     return oTableInit;  
 };
+
+/* function sumFormatter(data) {
+    field = this.field;
+    var a = data.reduce(function(sum, row) { 
+        return sum + (+row[field]);
+    }, 0);
+    return a;
+} */
+// 合计
+function total() {
+    var totalTonnage = 0;
+    $('tbody tr').each(function () {
+        var a = parseFloat($(this).find('td').eq('8').text());
+        if (a) {
+            totalTonnage += a;
+        }
+    });
+    $('tbody').append('<tr><td colspan="8">合计</td><td>'+totalTonnage+'</td></tr>');
+    $('tbody').append('<tr><td class="text-left" colspan="9"><span>公司发货现场负责人：</span><span><input value=""></span><span style="visibility: hidden;">aaa</span></td></tr>');
+}
 
 var ButtonInit = function () {
     var oInit = new Object();
@@ -213,6 +245,9 @@ $(".form_datetime").datetimepicker({
     startView: 2,// 日视图
     minView: 2,
 });
+
+function _print() {
+}
 </script>
 
 </body>

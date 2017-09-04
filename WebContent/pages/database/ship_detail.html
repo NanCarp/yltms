@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>添加船舶信息管理</title>
+	<#include "../include/header.html">
+    <style type="text/css">
+	    #f1 .form-group {
+	        margin: 0;
+	    }
+	    #defaultForm { margin-right: 50px;}
+	    #tab2Form {margin-right: 50px;}
+	    #tab3Form {margin-right: 50px;}
+	     a{
+	    	cursor: pointer;
+	    }
+    </style>
+
+</head>
+
+<body>
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+        <a href="#tab1" data-toggle="tab">船舶基本信息</a>
+    </li>
+    <li>
+    	<a href="#tab2" data-toggle="tab">银行账户信息</a>
+    </li>
+    <li>
+    	<a href="#tab3" data-toggle="tab">船证件信息</a>
+    </li>
+    <li>
+    	<a href="#tab4" data-toggle="tab">船员证件信息</a>
+    </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+	<#if im??>
+	<input hidden="" id="newid" name="newid" value="${im.id!}">
+    <div class="tab-pane fade in active" id="tab1">
+        <form id="defaultForm" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="shipowname">船主姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="shipowname" type="text" placeholder="船主姓名"  name="shipowname" value="${im.shipowname!}"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ship_name">船舶名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="ship_name" type="text" placeholder="船舶名称"  name="ship_name" value="${im.ship_name!}"/>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_num">手机号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="手机号码" name="phone_num" id="phone_num" value="${im.phone_num!}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ID_number">身份证号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="身份证号码" name="ID_number" id="ID_number" value="${im.ID_number!}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ship_ton">吨位：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="ship_ton" type="text" placeholder="吨位" name="ship_ton" value="${im.ship_ton!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="grade_sail">航行航区等级：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="grade_sail" type="text" placeholder="航行航区等级" name="grade_sail" value="${im.grade_sail!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="business_route">业务航线：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="business_route" type="text" placeholder="业务航线" name="business_route" value="${im.business_route!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn1"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn1" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div><!-- tab1 -->
+    <div class="tab-pane fade" id="tab2">
+        <form id="tab2Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="open_bank">开户银行：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="open_bank" type="text" placeholder="开户银行"  name="open_bank" value="${im.open_bank!}"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="name_bank">姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="name_bank" type="text" placeholder="姓名"  name="name_bank" value="${im.name_bank!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="card_bank">卡号：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="card_bank" type="text" placeholder="卡号" name="card_bank" value="${im.card_bank!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="updatetime_bank">更新日期：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control form_datetime" id="updatetime_bank" type="text" placeholder="更新日期" name="updatetime_bank" value="${im.updatetime_bank!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">            
+                            <button id="commit_btn2" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab3">
+        <form id="tab3Form" class="form-horizontal" role="form">
+            <input hidden="" name="id" value="" id="id">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="visa_sheet">签证浦：</label>
+                        <div class="col-xs-8">
+                        <#if im.visa_sheet??>
+                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.visa_sheet!}</span><a href="javascript:;" onclick="del1(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                        	<div hidden="" id="fileflag1">
+	                			<input type="file" class="file" id="visa_sheet" name="visa_sheet" value="">
+	               			</div>
+                        <#else>
+                        	<input type="file" class="file" id="visa_sheet" name="visa_sheet" value="">
+                        </#if>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="ship_inspection">船检证书：</label>
+                        <div class="col-xs-8">
+                        <#if im.ship_inspection??>
+                       		<div hidden="" id="fileflag2">
+	                			<input type="file" class="file" id="ship_inspection" name="ship_inspection" value="">
+	               			</div>
+                           <div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.ship_inspection!}</span><a href="javascript:;" onclick="del2(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                        <#else>
+                        	<input type="file" class="file" id="ship_inspection" name="ship_inspection" value="">
+                        </#if>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="loading">载重证书：</label>
+                        <div class="col-xs-8">
+                        <#if im.loading??>
+                        	<div hidden="" id="fileflag3">
+	                			<input type="file" class="file" id="loading" name="loading" value="">
+	               			</div>
+                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.ship_inspection!}</span><a href="javascript:;" onclick="del3(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                        <#else>
+                        	<input type="file" class="file" id="loading" name="loading" value="">
+                        </#if>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="operation">营运证书：</label>
+                        <div class="col-xs-8">
+                        <#if im.operation??>
+                        	<div hidden="" id="fileflag4">
+	                			<input type="file" class="file" id="operation" name="operation" value="" style="height: 40px">
+	               			</div>
+                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.ship_inspection!}</span><a href="javascript:;" onclick="del4(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                        <#else>
+                        	<input type="file" class="file" id="operation" name="operation" value="" style="height: 40px">
+                        </#if>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">            
+                            <button id="commit_btn3" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+     <div class="tab-pane fade" id="tab4">
+                <div class="panel panel-default">
+                    <!-- panel-heading -->
+                    <div class="panel-heading">
+                        <div class="container container-fluid">
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-2 head_3">
+                                    <button class="btn btn-success" onclick="_addCrew()">新增</button>
+                                </div>
+                                <div class="col-sm-2 col-xs-2 head_3">
+                                    <button class="btn btn-4" onclick="_deleteCrew()">删除</button>
+                                </div>
+                                <div class="col-sm-2 col-xs-2 head_1">
+                                    <button class="btn btn-3" onclick="_editRow()">编辑</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <form id="f1" role="form">
+                        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll"></th>
+                                    <th>序号</th>
+                                    <th>船员姓名</th>
+                                    <th>身份证号码</th>
+                                    <th>船员证书</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody" >
+                            	<#if crews?? && crews?size gt 0>
+                            	<#list crews as crew>
+                                <tr>
+                                    <td><input type="checkbox" name="sub" id="" value="${crew.id!}"></td>
+                                    <td>${crew_index+1}</td>
+                                    <td>${crew.crew_name!}</td>
+                                    <td>${crew.ID_card_certificate!}</td>
+                                    <td>${crew.crew_certificate!}</td>
+                                </tr>
+                                </#list>                                 
+                                <#else>
+                                <tr>
+                                	<td colspan="5">暂无船员信息</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table><!-- /.table-responsive -->
+                        </form>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+    </div><!-- tab2 -->
+    <#else>
+    <input hidden="" id="newid" name="newid" value="14">
+    <div class="tab-pane fade in active" id="tab1">
+        <form id="defaultForm" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="shipowname">船主姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="shipowname" type="text" placeholder="船主姓名"  name="shipowname"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ship_name">船舶名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="ship_name" type="text" placeholder="船舶名称"  name="ship_name"/>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_num">手机号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="手机号码" name="phone_num" id="phone_num">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ID_number">身份证号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="身份证号码" name="ID_number" id="ID_number">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ship_ton">吨位：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="ship_ton" type="text" placeholder="吨位" name="ship_ton"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="grade_sail">航行航区等级：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="grade_sail" type="text" placeholder="航行航区等级" name="grade_sail"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="business_route">业务航线：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="business_route" type="text" placeholder="业务航线" name="business_route"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn1"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn1" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div><!-- tab1 -->
+    <div class="tab-pane fade" id="tab2">
+        <form id="tab2Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="open_bank">开户银行：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="open_bank" type="text" placeholder="开户银行"  name="open_bank"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="name_bank">姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="name_bank" type="text" placeholder="姓名"  name="name_bank"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="card_bank">卡号：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="card_bank" type="text" placeholder="卡号" name="card_bank"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="updatetime_bank">更新日期：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control form_datetime" id="updatetime_bank" type="text" placeholder="更新日期" name="updatetime_bank"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">            
+                            <button id="commit_btn2" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab3">
+        <form id="tab3Form" class="form-horizontal" role="form">
+            <input hidden="" name="id" value="" id="id">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="visa_sheet">签证浦：</label>
+                        <div class="col-xs-8">
+                            <input type="file" class="file" id="visa_sheet" name="visa_sheet" value="">
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="ship_inspection">船检证书：</label>
+                        <div class="col-xs-8">
+                           <input type="file" class="file" id="ship_inspection" name="ship_inspection" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="loading">载重证书：</label>
+                        <div class="col-xs-8">
+                            <input type="file" class="file" id="loading" name="loading" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="operation">营运证书：</label>
+                        <div class="col-xs-8">
+                            <input type="file" class="file" id="operation" name="operation" value="" style="height: 40px">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">            
+                            <button id="commit_btn3" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+     <div class="tab-pane fade" id="tab4">
+                <div class="panel panel-default">
+                    <!-- panel-heading -->
+                    <div class="panel-heading">
+                        <div class="container container-fluid">
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-2 head_3">
+                                    <button class="btn btn-success" onclick="_addCrew()">新增</button>
+                                </div>
+                                <div class="col-sm-2 col-xs-2 head_3">
+                                    <button class="btn btn-4" onclick="_deleteRow()">删除</button>
+                                </div>
+                                <div class="col-sm-2 col-xs-2 head_1">
+                                    <button class="btn btn-3" onclick="_editRow()">编辑</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <form id="f1" role="form">
+                        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="checkAll"></th>
+                                    <th>序号</th>
+                                    <th>船员姓名</th>
+                                    <th>身份证号码</th>
+                                    <th>船员证书</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody" >
+                                <tr>
+                                	<td colspan="5">暂无船员信息</td>
+                                </tr>
+                            </tbody>
+                        </table><!-- /.table-responsive -->
+                        </form>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+    </div><!-- tab2 -->
+    </#if>
+</div><!-- tab content -->
+<script type="text/javascript">
+//附件上传控件
+function initFileInput(ctrlName){
+    var control = $(ctrlName);
+    control.fileinput({
+        language: 'zh', //设置语言
+        showUpload: false, //是否显示上传按钮
+        showRemove:true,
+        dropZoneEnabled: false,
+        showCaption: true,//是否显示标题
+        showPreview :false,//是否显示预览
+        enctype: 'multipart/form-data',
+        uploadAsync: false, //同步上传
+    })
+}
+initFileInput("#visa_sheet");
+initFileInput("#ship_inspection");
+initFileInput("#loading");
+initFileInput("#operation");
+initFileInput("#file");
+//日期控件
+$(".form_datetime").datetimepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true,
+    todayBtn: false,
+    todayHighlight: true,
+    showMeridian: true,
+    pickerPosition: "bottom-right",
+    language: 'zh-CN',//中文，需要引用zh-CN.js包
+    startView: 2,// 日视图
+    minView: 2,
+});
+
+
+//tab1提交验证
+function bindValidator(obj){
+	 // 表单校验
+    var validator = $(obj).bootstrapValidator({
+        //message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	shipowname: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            ship_name: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            phone_num: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^(0|86|17951)?(1[0-9]{2})[0-9]{8}$/,
+                        message: '请输入正确的号码'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            ID_number: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
+                        message: '请输入正确的号码'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            ship_ton: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '请勿输入特殊字符'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            grade_sail: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '请勿输入特殊字符'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            business_route: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '请勿输入特殊字符'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            }
+
+        }
+    });
+    return validator;
+}
+
+$("#commit_btn1").on("click", function(){
+	bindValidator('#tab1');
+    //获取表单对象
+   var bootstrapValidator = $('#tab1').data('bootstrapValidator');
+        //手动触发验证
+       bootstrapValidator.validate(); 
+       if(bootstrapValidator.isValid()){  	
+           //表单提交的方法、比如ajax提交
+           $.post("/dataBase/ship/saveTabOne", $('#defaultForm').serialize(), function(data) {
+        	   if(data.is_success){
+        		   parent.refresh_iframe();
+        		   layer.msg("船舶基础信息保存成功！",{time:2000});
+        		   $("#newid").val(data.flagId); 
+        	   }else{
+        		   layer.msg("船舶基础信息保存失败！")
+        	   }
+           });
+       }
+});
+
+//tab2校验
+//tab1提交验证
+function bindValidator2(obj){
+	 // 表单校验
+    var validator = $(obj).bootstrapValidator({
+        //message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	open_bank: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            name_bank: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            card_bank: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]*$/,
+                        message: '请输入正确的卡号'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            updatetime_bank: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+        }
+    });
+    return validator;
+}
+$("#commit_btn2").on("click", function(){
+	var newid = $("#newid").val();
+	var data;
+	if(newid!=null&&newid!=""){
+		bindValidator2('#tab2');
+	    //获取表单对象
+	   var bootstrapValidator = $('#tab2').data('bootstrapValidator');
+	        //手动触发验证
+	       bootstrapValidator.validate(); 
+	       if(bootstrapValidator.isValid()){
+	           //表单提交的方法、比如ajax提交
+	            var data = $('#tab2Form').serialize()+"&id="+newid;
+	           $.post("/dataBase/ship/saveTabTwo", data, function(data) {
+	        	   if(data){
+	        		   layer.msg("银行账户信息保存成功！",{time:2000});
+	        	   }else{
+	        		   layer.msg("银行账户信息保存失败！")
+	        	   }
+	           });
+	       }
+	}else{
+		window.top.layer.msg("请先保存船舶基本信息",{time:2000})
+	}
+});
+
+//tab2校验
+//tab1提交验证
+function bindValidator3(obj){
+	 // 表单校验
+  var validator = $(obj).bootstrapValidator({
+      //message: 'This value is not valid',
+      feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+    	  visa_sheet: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+              }
+          },
+          ship_inspection: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+              }
+          },
+          loading: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+              }
+          },
+          operation: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  }
+              }
+          },
+      }
+  });
+  return validator;
+}
+$("#commit_btn3").on("click", function(){
+	var newid = $("#newid").val();
+	var data;
+	if(newid!=null&&newid!=""){
+		bindValidator3('#tab3');
+	    //获取表单对象
+	   var bootstrapValidator = $('#tab3').data('bootstrapValidator');
+	        //手动触发验证
+	       bootstrapValidator.validate(); 
+	       if(bootstrapValidator.isValid()){
+	           //表单提交的方法、比如ajax提交
+	            var formData = new FormData();
+				formData.append("visa_sheet",$("#visa_sheet")[0].files[0]);
+				formData.append("ship_inspection",$("#ship_inspection")[0].files[0]);
+				formData.append("loading",$("#loading")[0].files[0]);
+				formData.append("operation",$("#operation")[0].files[0]);
+	           	formData.append("id",newid);
+	           $.ajax({
+	               url:"/dataBase/ship/saveTabThree",
+	               type:"POST",
+	               data:formData,
+	               processData:false,
+	               contentType:false,
+	               success:function(result){
+	                   if(result){
+	                       layer.msg("船证件信息保存成功！",{time:2000});
+	                   }else{
+	                	   layer.msg("船证件信息保存失败！")
+	                   }
+	               },
+	               error:function(e){
+	                   console.log("error");
+	               },
+	           }); 
+	       }
+	}else{
+		window.top.layer.msg("请先保存船舶基本信息",{time:2000})
+	}
+});
+
+//tab4
+//tab2校验
+//tab1提交验证
+function bind(){
+	 // 表单校验
+  var validator = $("#f1").bootstrapValidator({
+      //message: 'This value is not valid',
+      feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+    	  crew_name: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+              }
+          },
+          ID_card_certificate: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+              }
+          },
+          file: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+              }
+          },
+      }
+  });
+  return validator;
+}
+
+//新增船员
+function _addCrew(){
+	var newid = $("#newid").val();
+	if(newid!=null&&newid!=""){
+		open_window('新增船员信息','/dataBase/ship/editCrew?newid='+newid,460,312);	
+	}else{
+		window.top.layer.msg("请先保存船舶基本信息",{time:2000})
+	}
+}
+
+//将船员信息保存展示在页面上
+function showCrew(){
+	var newid = $("#newid").val();
+	$.post("/dataBase/ship/showCrew?newid="+newid,function(data){
+		$("#tbody").find("tr").remove();
+		if(data.length>0){
+			for(var i=0;i<data.length;i++){
+				$("#tbody").append(
+					"<tr>"
+					+"<td><input type='checkbox' name='sub' _id='sub' value="+data[i].id+"></td>"
+					+"<td>"+(i+1)+"</td>"
+					+"<td>"+data[i].crew_name+"</td>"
+					+"<td>"+data[i].ID_card_certificate+"</td>"
+					+"<td>"+data[i].crew_certificate+"</td>"
+					+"</tr>"
+				)
+			}
+		}else{
+			$("#tbody").append(
+				"<tr>"
+                +"<td colspan='5'>暂无船员信息</td>"
+				+"</tr>"
+			)
+		}
+	})
+}
+
+//编辑
+function _editRow(){
+	var newid = $("#newid").val();
+	var count = 0;//计数
+	var id;
+	$('input:checkbox[name=sub]:checked').each(function(k,v){
+		count = k+1;
+		console.log($(v).val());
+		id = $(v).val();
+	})
+	if(count<1){
+		 layer.msg('请选择需要编辑的记录', {time: 2000});
+	}else if(count>1){
+		layer.msg('最多选择需要编辑的记录', {time: 2000});
+	}else{
+		open_window('新增船员信息','/dataBase/ship/editCrew?newid='+newid+"&id="+id,460,312);	
+	}
+}
+
+//删除选中文件
+function del1(_obj){
+	$(_obj).parent('p').remove();
+	$("#fileflag1").removeAttr("hidden");
+	initFileInput("file");
+}
+//删除选中文件
+function del2(_obj){
+	$(_obj).parent('p').remove();
+	$("#fileflag2").removeAttr("hidden");
+	initFileInput("file");
+}
+//删除选中文件
+function del3(_obj){
+	$(_obj).parent('p').remove();
+	$("#fileflag3").removeAttr("hidden");
+	initFileInput("file");
+}
+//删除选中文件
+function del4(_obj){
+	$(_obj).parent('p').remove();
+	$("#fileflag4").removeAttr("hidden");
+	initFileInput("file");
+}
+
+
+//删除船员信息
+function _deleteCrew(){
+	var count = 0;//计数
+	var id;
+	$('input:checkbox[name=sub]:checked').each(function(k,v){
+		count = k+1;
+		console.log($(v).val());
+		id = $(v).val();
+	})
+	if(count<1){
+		 layer.msg('请选择需要删除的记录', {time: 2000});
+	}else if(count>1){
+		layer.msg('请选择单条记录删除', {time: 2000});
+	}else{
+		layer.confirm('确认删除?', function(index){
+				$.post("/dataBase/ship/deleteCrew/"+id,function(result){
+					if(result){
+						layer.msg("删除成功",{time:2000},function(){
+							showCrew();
+						})
+					}else{
+						layer.msg("删除失败",{time:2000})
+					}
+				})
+			  layer.close(index);
+			});  
+	}
+}
+</script>
+</body>
+
+</html>

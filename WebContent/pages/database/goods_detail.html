@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>港口信息-新增/编辑</title>
+    <#include "../include/header.html">
+    <style type="text/css">
+        form { margin-top:20px;}
+        label { padding-top:6px;padding-right:0;}
+    </style>
+</head>
+
+<body style="width:85%;">
+    <form id="defaultForm" class="form-horizontal" role="form" enctype="multipart/form-data">
+        <#if record??>
+        <input hidden="" name="id" value="${record.id}" id="id">
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="goods_name">货物名称：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="port" type="text" placeholder="货物名称"  name="goods_name" value="${record.goods_name!}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="fixed_loss">运输定耗：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="fixed_loss" type="text" placeholder="运输定耗（%）" name="fixed_loss" value="${record.deduct_price!}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="deduct_price">超耗扣价：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="deduct_price" type="text" placeholder="超耗扣价" name="deduct_price" value="${record.deduct_price!}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="remark">备注：</label>
+            <div class="col-xs-6">
+                <textarea class="form-control" id="remark" name="remark">${record.remark}</textarea>
+            </div>
+        </div>
+        <#else>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="goods_name">货物名称：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="goods_name" type="text" placeholder="货物名称"  name="goods_name"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="fixed_loss">运输定耗：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="fixed_loss" type="text" placeholder="运输定耗（%）"  name="fixed_loss"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="deduct_price">超耗扣价：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="deduct_price" type="text" placeholder="超耗扣价"  name="deduct_price"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="remark">备注：</label>
+            <div class="col-xs-6">
+                <textarea class="form-control" id="remark" name="remark"></textarea>
+            </div>
+        </div>
+        </#if>
+        <div class="form-group">
+            <label class="col-xs-5 control-label" for="v5"></label>
+            <div class="col-xs-6 ">
+                <button type="submit" class="btn btn-11" id="save">　保存　</button>
+            </div>
+        </div>
+    </form>
+    
+<script type="text/javascript">
+// 表单校验
+$('#defaultForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    	goods_name: {
+        	validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                    message: '不能包含特殊字符'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
+        fixed_loss: {
+        	 validators: {
+      	        notEmpty:{
+      	            message: '不能为空!'
+      	        },
+      	        regexp: {
+      	            regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+      	            message: '请输入正确的定耗'
+      	        },
+      	        stringLength: {
+      	            min: 0,
+      	            max: 20,
+      	            message: '不能超过 20 个字符',
+      	        }
+      	    }
+        },
+        deduct_price: {
+            validators: {
+               notEmpty:{
+                   message: '不能为空!'
+               },
+               regexp: {
+                   regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                   message: '请输入正确的扣价'
+               },
+               stringLength: {
+                   min: 0,
+                   max: 20,
+                   message: '不能超过 20 个字符',
+               }
+           }
+       },
+        remark: {
+            validators: {
+                stringLength: {
+                    min: 0,
+                    max: 100,
+                    message: '不能超过 100 个字符',
+                }
+            }
+        }
+    }
+})
+.on('success.form.bv', function(e) {
+    e.preventDefault();
+    
+    var postData = $('form').serialize();
+    $.post("/database/goods/save", postData, function(result) {
+    	if (result.code == 1) {
+            parent.layer.msg(result.msg, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.msg, {time: 2000});
+        }
+    });
+});
+
+</script>
+
+</body>
+
+</html>

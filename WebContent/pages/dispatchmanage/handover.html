@@ -23,10 +23,10 @@
                             <input type="search" class="form-control" placeholder="货名" name="goods_name" id="goods_name" value="${company_name!}">
                         </div>
                         <div class="col-sm-1 col-xs-1 head_2">
-                            <input type="search" class="form-control form_datetime" placeholder="录入起始时间" name="entry_start" id="entry_start" value="${company_name!}">
+                            <input type="search" class="form-control form_datetime" placeholder="录入起始时间" name="entry_start" id="entry_start" value="">
                         </div>
                         <div class="col-sm-1 col-xs-1 head_2">
-                            <input type="search" class="form-control form_datetime" placeholder="录入截止时间" name="entry_end" id="entry_start" value="${company_name!}">
+                            <input type="search" class="form-control form_datetime" placeholder="录入截止时间" name="entry_end" id="entry_end" value="">
                         </div>
                         <div class="col-sm-1 col-xs-1 head_2">
                             <input type="search" class="form-control" placeholder="录入人" name="entry_man" id="entry_man" value="${company_name!}">
@@ -35,13 +35,13 @@
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1">
-                            <button class="btn btn-primary" onclick="_review()">审核</button>
+                            <button class="btn btn-12" onclick="_review()">审核</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1">
-                            <button class="btn btn-primary" onclick="_issue()">下发</button>
+                            <button class="btn btn-5" onclick="_issue()">下发</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-4" onclick=" _batchDelete()">导出</button>
+                             <button class="btn btn-4" onclick=" _export()">导出</button>
                         </div>
                         <div class="col-sm-1 col-xs-1 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/planManage/handover')"><i class="fa fa-refresh"></i></button>
@@ -135,6 +135,28 @@ var TableInit = function () {
                 field: 'plan_no',
                 title: '计划号'
             }, {
+                field: 'dispatch_review',
+                title: '审核状态',
+                formatter:function(value,row,index){
+                    if(row.dispatch_review == 0) {
+                    	return "待审核";
+                    } else if (row.dispatch_review == 1) {
+                    	return "已审核";
+                    } else {
+                    	return '取消审核';
+                    }
+                }
+            }, {
+                field: 'dispatch_issue',
+                title: '下发状态',
+                formatter:function(value,row,index){
+                    if(row.dispatch_issue == 0) {
+                        return "待下发";
+                    } else {
+                        return "已下发";
+                    }
+                }
+            }, {
                 field: 'goods_name',
                 title: '货名'
             }, {
@@ -192,10 +214,52 @@ function _edit(id){
 }
 
 // 审核
-function _review(id) {
+function _review() {
+	// 获取选中记录 id
+    var ids = getIdSelections();    
+    // 如果没有选择，提示勾选至少一条数据
+    if (ids.length == 0) {
+        layer.msg('请选择需要审核的记录', {time: 2000});
+    }else if(ids.length >1){
+        layer.msg('最多选择一条审核记录', {time: 2000});
+    }else{
+        $.post("/planManage/handover/getExamineState/"+ids,function(data){
+            if(data){
+                layer.confirm('取消审核?', {icon: 7, title:'审核确认提示'}, function(index){
+                    $.post("/planManage/handover/review/"+ids,function(result){
+                        if(result){
+                            layer.msg('取消审核成功', {time: 2000}, function(){
+                                parent.refresh_iframe();
+                            });
+                        }else{
+                            layer.msg('取消审核失败', {time: 2000}, function(){
+                                
+                            });
+                        }
+                    })    
+                    layer.close(index);
+                });
+            }else{
+                layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
+                    $.post("/planManage/handover/review/"+ids,function(result){
+                        if(result){
+                            layer.msg('完成审核', {time: 2000}, function(){
+                                parent.refresh_iframe();
+                            });
+                        }else{
+                            layer.msg('审核失败', {time: 2000}, function(){
+                                
+                            });
+                        }
+                    })    
+                    layer.close(index);
+                });
+            }
+        })
+    }
 	
 	
-	$.post("/planManage/handover/review/" + id,function (data) {
+/* 	$.post("/planManage/handover/review/" + id,function (data) {
         if (result.isSuccess) {
             parent.layer.msg(result.tips, {time: 2000}, function(){
                 layer_close();
@@ -205,23 +269,42 @@ function _review(id) {
         } else {
             parent.layer.msg(result.tips, {time: 2000});
         }
-    });
+    }); */
 }
 // 下发
-function _issue(id) {
-	
-	$.post("/planManage/handover/issue/" + id,function (data) {
-        if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
+function _issue() {
+	// 获取选中记录 id
+    var ids = getIdSelections();    
+    // 如果没有选择，提示勾选至少一条数据
+    if (ids.length == 0) {
+        layer.msg('请选择一条记录', {time: 2000});
+    }else if(ids.length >1){
+        layer.msg('最多选择一条记录', {time: 2000});
+    }else{
+		layer.confirm('确认下发?', {icon: 1, title:'审核确认提示'}, function(index){
+	        $.post("/planManage/handover/issue/"+ids,function(result){
+	        	if (result.code == 1) {
+	                layer.msg(result.msg, {time: 2000}, function(){
+	                    layer_close();
+	                    parent.parent.refresh_iframe();
+	                });
 
-        } else {
-            parent.layer.msg(result.tips, {time: 2000});
-        }
+	            } else {
+	                layer.msg(result.msg, {time: 2000});
+	            }
+	        })    
+	        layer.close(index);
+	    });
+    }
+}
+
+//获取被选中数据的id
+function getIdSelections() {
+    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        return row.id;
     });
 }
+
 
 //全选按钮
 function stateFormatter(value, row, index) {

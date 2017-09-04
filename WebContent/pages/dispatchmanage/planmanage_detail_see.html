@@ -34,6 +34,7 @@
                 </div>
             <!-- </div> -->
             <!-- <div class="panel-body"> -->
+            	<input id="id" name="id" value="${planId!}" hidden="">
                 <table width="100%" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
@@ -91,26 +92,21 @@ $('#submit').on('click', function () {
         return;
     }
     
-    var id = $('#id').val();
-    var customer = $('#customer').val();
-    var warehouse_id = $('#warehouse_id').val();
-    var location = $('#location').val();
+    var id = $("#id").val();
     var productList = getRecordList(); // 产品列表
-    var postData = {"id": id, "customer": customer, "warehouse_id": warehouse_id, "location": location, "productList": JSON.stringify(productList)};
-    console.log(postData);
-    
-    /* $.post("/leasewarehouse/leaseIn/save", postData, function(result) {
-        if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
+    var postData = {"id":id,"productList": JSON.stringify(productList)};
+    console.log(postData);    
+    $.post("/planManage/dispatch/savePlanDetailSee", postData, function(result) {
+        if (result) {
+            parent.layer.msg("保存成功", {time: 2000}, function(){
                 layer_close();
                 parent.parent.refresh_iframe();
             });
 
         } else {
-            parent.layer.msg(result.tips, {time: 2000});
-        }
-        
-    }); */
+            parent.layer.msg("保存失败", {time: 2000});
+        }  
+    });
 });
 
 function bindValidator(obj){
@@ -126,7 +122,7 @@ function bindValidator(obj){
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            name: {
+            a: {
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
@@ -142,8 +138,11 @@ function bindValidator(obj){
                     }
                 }
             },
-            specification: {
+            b: {
                 validators: {
+                	notEmpty:{
+                        message: '不能为空!'
+                    },
                     regexp: {
                         regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
                         message: '不能包含特殊字符'
@@ -155,7 +154,7 @@ function bindValidator(obj){
                     }
                 }
             },
-            unit: {
+            c: {
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
@@ -167,13 +166,29 @@ function bindValidator(obj){
                     }
                 }
             },
-            quantity: {
+            d: {
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
                     },
                     regexp: {
-                        regexp: /^[0-9]+(\.[0-9]{1,})?$/,
+                        regexp: /^[0-9]+(\.[0-9]{1,4})?$/,
+                        message: '请输入正确的数量'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            e: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,4})?$/,
                         message: '请输入正确的数量'
                     },
                     stringLength: {

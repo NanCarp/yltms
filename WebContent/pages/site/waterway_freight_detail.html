@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>水路货运单</title>
+<#include "../include/header.html">
+<style type="text/css">
+    tbody .form-group {
+        margin-bottom: 0px;
+    }
+    .container{width:100% !important};
+    .form-group {
+        line-height: 34px !important;
+        vertical-align: middle !important;
+    }
+    .row {vertical-align: middle;width:900px;margin-left:0;margin-right:0;}
+</style>
+</head>
+<body>
+<div class="container">
+    <form id="defaultForm">
+        <div class="row" >
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="consignor">托运人：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="consignor" type="text" placeholder="" name="consignor" value="${(record.consignor)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="delivery_dock">发货港：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="delivery_dock" type="text" placeholder="" name="delivery_dock" value="${(record.delivery_dock)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="ship_name">船名：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="ship_name" type="text" placeholder="" name="ship_name" value="${(record.ship_name)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="ship_owner_name">姓名：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="" name="ship_owner_name" value="${(record.ship_owner_name)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="ship_owner_phone">电话：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="ship_owner_phone" type="text" placeholder="" name="ship_owner_phone" value="${(record.ship_owner_phone)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="recipient">收货人：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="recipient" type="text" placeholder="" name="recipient" value="${(record.recipient)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="destination_port">码头名称：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="destination_port" type="text" placeholder="" name="destination_port" value="${(record.destination_port)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="recipient_phone">联系电话：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="recipient_phone" type="text" placeholder="" name="recipient_phone" value="${(record.recipient_phone)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="goods_name">货物名称：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="goods_name" type="text" placeholder="" name="goods_name" value="${(record.goods_name)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="seagoing_vessel_name">海轮名/舱位：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="seagoing_vessel_name" type="text" placeholder="" name="seagoing_vessel_name" value="${(record.seagoing_vessel_name)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="delivery_date">发货日期：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="delivery_date" type="text" placeholder="" name="delivery_date" value="${(record.delivery_date)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="arrival_limit">运到期限：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="arrival_limit" type="text" placeholder="" name="arrival_limit" value="${(record.arrival_limit)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="specifications">规格：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="specifications" type="text" placeholder="" name="specifications" value="${(record.specifications)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="unit">单位：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="unit" type="text" placeholder="" name="unit" value="${(record.unit)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="delivery_quantity">发货数量：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="delivery_quantity" type="text" placeholder="" name="delivery_quantity" value="${(record.delivery_quantity)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="declare_date">报港日期：</label>
+                <div class="col-xs-2">
+                    <input class="form_datetime form-control text-left" id="declare_date" type="text" placeholder="" name="declare_date" value="${(record.declare_date)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="received_quantity">收货数量：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="received_quantity" type="text" placeholder="" name="received_quantity" value="${(record.received_quantity)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="unloaded_date">卸空日期：</label>
+                <div class="col-xs-2">
+                    <input class="form_datetime form-control text-left" id="unloaded_date" type="text" placeholder="" name="unloaded_date" value="${(record.unloaded_date)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="rainy_days">卸货雨天数：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="rainy_days" type="text" placeholder="" name="rainy_days" value="${(record.rainy_days)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label text-right" for="waterway_remark">备注：</label>
+                <div class="col-xs-10">
+                    <textarea rows="7" class="form-control text-left" id="waterway_remark" placeholder="" name="waterway_remark" readonly>${(record.waterway_remark)!}</textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

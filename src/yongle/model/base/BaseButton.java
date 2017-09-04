@@ -54,4 +54,22 @@ public abstract class BaseButton<M extends BaseButton<M>> extends Model<M> imple
 		return get("permision");
 	}
 
+	public M setCreateTime(java.util.Date createTime) {
+		set("create_time", createTime);
+		return (M)this;
+	}
+
+	public java.util.Date getCreateTime() {
+		return get("create_time");
+	}
+
+	public M setReviewTime(java.util.Date reviewTime) {
+		set("review_time", reviewTime);
+		return (M)this;
+	}
+
+	public java.util.Date getReviewTime() {
+		return get("review_time");
+	}
+
 }

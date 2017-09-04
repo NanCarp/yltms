@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>系统管理-角色管理</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="../../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resource/layui/css/layui.css" media="all" />
+    <link href="../../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+    .container{width:100% !important};
+    </style>
+
+</head>
+
+<div id="wrapper">
+    <div class="panel-body" style="padding-bottom:0px;">
+        <div class="panel panel-default">       
+            <div class="panel-heading">                 
+                <div class="container container-fluid" >                
+                    <div class="row">
+                        <input type="hidden" name="dispatch_id" id="dispatch_id" value="${(dispatch.id)!}">
+                        <div class="col-sm-1 col-xs-2 head_2">
+                            <input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no" value="${plan_no!}">
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_2">
+                            <input type="search" class="form-control" placeholder="客户单位" name="consignor" id="consignor" value="${consignor!}">
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1">
+                            <button class="btn btn-primary" onclick="_search()">查询</button>
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1">
+                            <button class="btn btn-success" onclick="_save()">保存</button>
+                        </div>                            
+                        <div class="col-sm-1 col-xs-2 head_1" >
+                             <button class="btn btn-5" onclick="_export()">导出</button>
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1" >
+                             <button class="btn btn-4" onclick="_print()">打印</button>
+                        </div>
+                        <a id="exportLink" style="visibility: hidden;" download="somedata.xls" href="#" onclick="f(this)">Export to Excel</a>
+                        <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/insidejob/plan')"><i class="fa fa-refresh"></i></button>
+                        </div>                  
+                    </div>              
+                </div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>品种</th>
+                            <th>发货日期</th>
+                            <th>发货港</th>
+                            <th>收货单位</th>
+                            <th>船名</th>
+                            <th>手机号</th>
+                            <th>身份证号码</th>
+                            <th>吨位</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <#if recordList?? && recordList?size gt 0>
+                        <#list recordList as record>
+                        <tr>
+                            <td>${record_index+1}</td>
+                            <td>${record.goods_name!}</td>
+                            <td></td>
+                            <td>${record.delivery_dock!}</td>
+                            <td></td>
+                            <td>${record.ship_name!}</td>
+                            <td>${record.ship_owner_phone!}</td>
+                            <td style="mso-number-format:'\@';">${record.id_card_no!}</td>
+                            <td>${record.loading_tonnage!}</td>
+                        </tr>
+                        </#list>
+                        <tr>
+                            <td colspan="8">合计</td>
+                            <td id="total"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="9" class="text-left" id="site_man">公司发货现场负责人：<input type="text" id="site_delivery" value="${(dispatch.site_delivery)!}"></td>
+                        </tr>
+                        <#else>
+                        <tr>
+                            <td colspan="9">没有找到匹配的记录</td>
+                        </tr>
+                        </#if>
+                    </tbody>
+                </table>
+            </div><!-- /.panel-body -->
+        </div>             
+            <!-- <a id="exportLink" style="visibility: hidden;">导出表格</a> -->
+    </div>
+</div>
+                                       
+
+    <!-- jQuery -->
+    <script src="../../../vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../../../resource/layer/layer.js"></script>
+    <script src="../../../resource/layui/layui.js"></script>
+    <script src="../../../js/common/admin.js"></script>
+	<script src="../../../resource/jqprint/jquery-1.4.4.min.js"></script>
+	<script src="../../../resource/jqprint/jquery.jqprint-0.3.js"></script>
+	<script src="../../../resource/jquery-table2excel/jquery.table2excel.js"></script>
+	<script src="../../../resource/jquery-table2excel/excellentexport.js"></script>
+	
+    <script>
+ 	// 查询
+    function _search(){
+		layui.use('layer',function(){
+			var layer = layui.layer;			
+			var plan_no = $.trim($('#plan_no').val());
+			var consignor = $.trim($('#consignor').val());
+			if($.trim($('#plan_no').val())!=''){
+				var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
+				if(!reg.test($('#plan_no').val())){
+					layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
+				}					
+			}
+			if($.trim($('#consignor').val())!=''){
+				var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
+				if(!reg.test($('#consignor').val())){
+					layer.tips('不允许有特殊字符，最多20个字符', '#consignor', {tips: [1, '#34495E']});return;
+				}					
+			}
+			location.replace('/insidejob/plan?plan_no=' + plan_no + '&consignor=' + consignor);
+		})
+	}
+ 	
+ 	// 保存
+ 	function _save() {
+ 		var dispatch_id = $('#dispatch_id').val();
+ 		console.log("dispatch_id " + dispatch_id);
+ 		if (dispatch_id) {
+ 			layui.use('layer',function(){
+ 	            var layer = layui.layer;
+	 			var site_delivery = $.trim($('#site_delivery').val());
+	 			console.log("site_delivery " + site_delivery);
+	            if($.trim($('#site_delivery').val())!=''){
+	                var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
+	                if(!reg.test($('#site_delivery').val())){
+	                    layer.tips('不允许有特殊字符，最多20个字符', '#site_delivery', {tips: [1, '#34495E']});return;
+	                }                   
+	            }
+	            //return;
+	            $.post('/insidejob/plan/save',{"dispatch_id": dispatch_id, "site_delivery": site_delivery}, function (result) {
+	            	if (result.code == 1) {
+	                    layer.msg(result.msg, {time: 2000});
+	
+	                } else {
+	                    layer.msg(result.msg, {time: 2000});
+	                }
+	            })
+ 			});
+ 			
+ 		} else {
+            layer.msg("请输入正确的计划号", {time: 2000});
+        }
+ 	}
+ 	
+ 	function _print() {
+ 		var $td = $('#site_man');
+ 		var $input = $('#site_man').find('input');
+ 		$td.find('input').remove();
+ 		$td.append($input.val());
+ 		
+ 		$("#dataTables-example").jqprint({
+ 		     debug: false, //如果是true则可以显示iframe查看效果（iframe默认高和宽都很小，可以再源码中调大），默认是false
+ 		     importCSS: true, //true表示引进原来的页面的css，默认是true。（如果是true，先会找$("link[media=print]")，若没有会去找$("link")中的css文件）
+ 		     printContainer: true, //表示如果原来选择的对象必须被纳入打印（注意：设置为false可能会打破你的CSS规则）。
+ 		     operaSupport: true//表示如果插件也必须支持歌opera浏览器，在这种情况下，它提供了建立一个临时的打印选项卡。默认是true
+ 		});
+ 		
+ 		$td.empty();
+ 		$td.append('公司发货现场负责人：').append($input);
+ 	}
+    
+ 	/* $(function () {
+ 		var $td = $('#site_man');
+        var $input = $('#site_man').find('input');
+        $td.find('input').remove();
+        $td.append($input.val());
+ 		
+        // 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+        var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+        // 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+        var blob = new Blob([html], { type: "application/vnd.ms-excel" });
+        var a = document.getElementsByTagName("a")[0];
+        // 利用URL.createObjectURL()方法为a元素生成blob URL
+        a.href = URL.createObjectURL(blob);
+        // 设置文件名，目前只有Chrome和FireFox支持此属性
+        a.download = "aaa.xls";
+        
+        $td.empty();
+        $td.append('公司发货现场负责人：').append($input);
+ 	}) */
+ 	
+ 	function _export() {
+        
+ 		document.getElementById("exportLink").click();
+ 	    /* var $a = $('<a download="somedata.xls" href="#"></a>');
+ 	    console.log($a);
+ 	    console.log($a[0]);
+ 	    return ExcellentExport.excel($a[0], 'dataTables-example', 'Sheet Name Here');
+ 	    $a.click(); */
+ 	}
+ 	
+ 	function f(a) {
+ 		var $td = $('#site_man');
+        var $input = $('#site_man').find('input');
+        $td.find('input').remove();
+        $td.append($input.val());
+        var r = ExcellentExport.excel(a, 'dataTables-example', 'Sheet Name Here');
+        $td.empty();
+        $td.append('公司发货现场负责人：').append($input);
+        
+ 		return r;
+ 	}
+ 	
+ 	
+ 	// 统计总吨数
+ 	var totalTonnage = 0;
+    $('tbody tr').each(function () {
+        var a = parseFloat($(this).find('td').eq('8').text());
+        if (a) {
+            totalTonnage += a;
+        }
+    });
+    $('#total').html(totalTonnage);
+    </script>
+
+</body>
+</html>

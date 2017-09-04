@@ -27,12 +27,12 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("plan_no");
 	}
 
-	public M setExamineState(java.lang.Boolean examineState) {
+	public M setExamineState(java.lang.Integer examineState) {
 		set("examine_state", examineState);
 		return (M)this;
 	}
 
-	public java.lang.Boolean getExamineState() {
+	public java.lang.Integer getExamineState() {
 		return get("examine_state");
 	}
 
@@ -196,6 +196,42 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 
 	public java.lang.Boolean getInsurance() {
 		return get("insurance");
+	}
+
+	public M setLeftQuantity(java.math.BigDecimal leftQuantity) {
+		set("left_quantity", leftQuantity);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getLeftQuantity() {
+		return get("left_quantity");
+	}
+
+	public M setSiteDispatch(java.lang.String siteDispatch) {
+		set("site_dispatch", siteDispatch);
+		return (M)this;
+	}
+
+	public java.lang.String getSiteDispatch() {
+		return get("site_dispatch");
+	}
+
+	public M setDispatchReview(java.lang.Integer dispatchReview) {
+		set("dispatch_review", dispatchReview);
+		return (M)this;
+	}
+
+	public java.lang.Integer getDispatchReview() {
+		return get("dispatch_review");
+	}
+
+	public M setDispatchIssue(java.lang.Integer dispatchIssue) {
+		set("dispatch_issue", dispatchIssue);
+		return (M)this;
+	}
+
+	public java.lang.Integer getDispatchIssue() {
+		return get("dispatch_issue");
 	}
 
 }

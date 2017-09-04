@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>客户信息管理明细</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link href="../../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="../../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+    <link href="../../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <style type="text/css">
+	    #f1 .form-group {
+	        margin: 0;
+	    }
+	    #defaultForm { margin-right: 50px;}
+	    a{
+	    	cursor: pointer;
+	    }
+    </style>
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+        <a href="#tab1" data-toggle="tab">客户基本信息</a>
+    </li>
+    <li>
+    	<a href="#tab2" data-toggle="tab">联系人</a>
+    </li>
+    <li>
+    	<a href="#tab3" data-toggle="tab">开票信息</a>
+    </li>
+    <li>
+    	<a href="#tab4" data-toggle="tab">工商资料</a>
+    </li>
+</ul>  
+<div id="myTabContent" class="tab-content">
+    <input hidden="" id="newid" name="newid" value="${record.id}">
+    <div class="tab-pane fade in active" id="tab1">
+        <form id="defaultForm" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="customer_name">客户名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="customer_name" type="text" placeholder="客户名称"  name="customer_name" value="${record.customer_name!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="variety_goods">货物品种：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="variety_goods" type="text" placeholder="货物品种"  name="variety_goods" value="${record.variety_goods!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="common_receiving_company">常用收货码头：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="常用收货码头" name="common_receiving_company" id="common_receiving_company" value="${record.common_receiving_company!}" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="customer_type">客户类型：</label>
+                        <div class="col-xs-7">
+                            <select class="form-control" name="customer_type" id="customer_type" style="padding-right: 2px" disabled="disabled">
+								<option value="">-选择客户类型-</option>
+								<option <#if record.customer_type=='发货人'>selected</#if> value="发货人">发货人</option>
+								<option <#if record.customer_type=='收货人'>selected</#if> value="收货人">收货人</option>
+								<option <#if record.customer_type=='港口公司'>selected</#if> value="港口公司">港口公司</option>
+								<option <#if record.customer_type=='代理公司'>selected</#if> value="代理公司">代理公司</option>
+							</select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="common_delivery_company">常用发货单位：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="common_delivery_company" type="text" placeholder="常用发货单位" name="common_delivery_company" value="${record.common_delivery_company!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="wharf_berth">码头泊位情况：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="wharf_berth" type="text" placeholder="码头泊位情况" name="wharf_berth" value="${record.wharf_berth!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div><!-- tab1 -->
+    <div class="tab-pane fade" id="tab2">
+        <form id="tab2Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="name_content">姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="name_content" type="text" placeholder="姓名"  name="name_content" value="${record.name_content!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_contant">手机号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="phone_contant" type="text" placeholder="手机号码"  name="phone_contant" value="${record.phone_contant!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="fax_contant">传真号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="fax_contant" type="text" placeholder="传真号码" name="fax_contant" value="${record.fax_contant!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="e_mail_content">邮箱：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="e_mail_content" type="text" placeholder="邮箱" name="e_mail_content" value="${record.e_mail_content!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="post_contant">职务：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="post_contant" type="text" placeholder="职务" name="post_contant" value="${record.post_contant!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="fixed_phone_contant">固话号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="deposit" type="fixed_phone_contant" placeholder="固话号码" name="fixed_phone_contant" value="${record.fixed_phone_contant!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="qq_content">QQ：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="qq_content" type="text" placeholder="QQ" name="qq_content" value="${record.qq_content!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="address_contant">地址：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="address_contant" type="text" placeholder="地址" name="address_contant" value="${record.address_contant!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab3">
+        <form id="tab3Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="company_information">单位名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="company_information" type="text" placeholder="单位名称"  name="company_information" value="${record.company_information!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="blankname_information">开户银行：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="blankname_information" type="text" placeholder="开户银行"  name="blankname_information" value="${record.blankname_information!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="address_information">地址：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="address_information" type="text" placeholder="地址"  name="address_information" value="${record.address_information!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="taxpayer_distinguish_information">纳税人识别号：</label>
+                        <div class="col-xs-7">
+                            <input style="padding-right: 2px" class="form-control" id="taxpayer_distinguish_information" type="text" placeholder="纳税人识别号" name="taxpayer_distinguish_information" value="${record.taxpayer_distinguish_information!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="blankaccount_infomation">银行账号：</label>
+                        <div class="col-xs-7">
+                            <input style="padding-right: 2px" class="form-control" id="blankaccount_infomation" type="text" placeholder="银行账号" name="blankaccount_infomation" value="${record.blankaccount_infomation!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_information">电话：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="phone_information" type="text" placeholder="电话"  name="phone_information" value="${record.phone_information!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab4">
+        <form id="tab4Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px;min-width: 700px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="year">营业执照副本：</label>
+                        <div class="col-xs-7">
+                            <#if record.license_copy_commerce??>
+                				<button class="btn btn-xs btn-5"  onclick="_watchFile('license_copy_commerce')">本地查看</button>
+                			<#else>
+                				<span style="color: blue;font-size: 16px">暂无营业执照副本</span>
+                			</#if>
+                			
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="year">税务登记证：</label>
+                        <div class="col-xs-7">
+                            <#if record.registration_commerce??>
+                				<button class="btn btn-xs btn-5"  onclick="_watchFile('registration_commerce')">本地查看</button>
+                			<#else>
+                				<span style="color: blue;font-size: 16px">暂无税务登记证</span>
+                			</#if>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="deposit">组织机构代码证：</label>
+                        <div class="col-xs-7">
+                             <#if record.organization_commerce??>
+                				<button class="btn btn-xs btn-5"  onclick="_watchFile('registration_commerce')">本地查看</button>
+                			<#else>
+                				<span style="color: blue;font-size: 16px">暂无组织机构代码证</span>
+                			</#if>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+</div><!-- tab content -->
+
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+
+<!-- DataTables JavaScript -->
+<script src="../../../vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+<script src="../../../vendor/datatables-responsive/dataTables.responsive.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<!-- <script src="../../../dist/js/sb-admin-2.js"></script> -->
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script> 
+<script src="../../../resource/bootstrap-datetimepicker/js/moment-with-locales.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<!-- <script src="../../../js/common/common.js"></script> -->
+<script type="text/javascript">
+
+</script>
+</body>
+<script>
+function _watchFile(obj){
+	var id = $("#newid").val();
+	window.open("/dataBase/customer/watchFile?id="+id+"&filename="+obj,"_blank");
+}
+</script>
+</html>

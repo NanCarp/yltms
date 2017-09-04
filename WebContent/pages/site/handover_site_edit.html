@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+<#include "../include/header.html">
+<style type="text/css">
+    tbody .form-group {
+        margin-bottom: 0px;
+    }
+    .container{width:100% !important};
+    .form-group {
+        line-height: 34px !important;
+        vertical-align: middle !important;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <form id="f1">
+        <input type="hidden" id="id" name="id" value="${(record.id)!}">
+        <div class="col-xs-12">
+            <div class="container container-fluid" style="margin-top:20px">
+                <div class="row">
+                    <div class="col-sm-2 col-xs-2 head_1">
+                        <button  type="button" class="btn btn-3" onclick="_editRow()">修改</button>
+                    </div>
+                    <div class="col-sm-2 col-xs-2 head_1">
+                        <button id="submit" class="btn btn-11" >保存</button>
+                    </div>
+                </div>
+            </div>
+            <table width="100%" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="checkAll"></th>
+                        <th>序号</th>
+                        <th>船名</th>
+                        <th>姓名</th>
+                        <th width="120px">手机号</th>
+                        <th width="180px">身份证号</th>
+                        <th>配载吨位</th>
+                        <th>可载吨位</th>
+                        <th width="120px">到港日期</th>
+                        <th>运价</th>
+                        <th>预付款</th>
+                        <th>预加油</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <#if recordList?? && recordList?size gt 0>
+                    <#list recordList as record>
+                    <tr _id="${record.id}">
+                        <td><input type="checkbox" name="sub"></td>
+                        <td>${record_index+1}</td>
+                        <td>${record.ship_name!}</td>
+                        <td>${record.ship_owner_name!}</td>
+                        <td>${record.ship_owner_phone!}</td>
+                        <td>${record.id_card_no!}</td>
+                        <td class="loading_tonnage">${record.loading_tonnage!}</td>
+                        <td>${record.available_tonnage!}</td>
+                        <td>${record.arrival_date!}</td>
+                        <td>${record.freight_price!}</td>
+                        <td class="prepay">${record.prepay!}</td>
+                        <td class="pre_refuel">${record.pre_refuel!}</td>
+                    </tr>
+                    </#list>
+                    </#if>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+
+<script>
+/* var item = {
+    ship_name:null,
+    ship_owner_name:null,
+    ship_owner_phone:null,
+    id_card_no:null,
+    loading_tonnage:null,
+    available_tonnage:null,
+    arrival_date:null,
+    freight_price:null,
+    prepay:null,
+    pre_refuel:null,
+} */
+
+//提交
+$('#submit').on('click', function () {
+    // 校验
+    var validator = bindValidator('form');
+    validator.data('bootstrapValidator').validate();
+    var flag = validator.data('bootstrapValidator').isValid();
+    if (flag) {
+        console.log('ok');
+    } else {
+        return;
+    }
+    
+    var postData = {
+    		"id": $('#id').val(),
+    		"recordList": JSON.stringify(getRecordList())
+    };
+    console.log(postData);
+    // return;
+    $.post("/site/handoversite/save", postData, function(result) {
+        if (result.code == 1) {
+            parent.layer.msg(result.msg, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.msg, {time: 2000});
+        }
+        
+    });
+});
+
+function bindValidator(obj){
+    if ($(obj).data('bootstrapValidator')) {
+        $(obj).data('bootstrapValidator', null);
+    }
+    // 表单校验
+    var validator = $(obj).bootstrapValidator({
+        //message: 'This value is not valid',
+        /* feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        }, */
+        fields: {
+            prepay: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            pre_refuel: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+
+        }
+    });
+    return validator;
+}
+
+//表操作
+var count = $('#tbody tr').length; // 当前记录条数
+// 记录为零时，新增一行
+if (count === 0) {
+    _newRow();
+}
+
+// 编辑行
+function _editRow() {
+    // 获取选中记录数量
+    var amount = $(":checked[name='sub']").length;
+    // 如果没有选择，提示勾选至少一条数据
+    if (amount === 0) {
+        layer.msg('请至少选择一条记录', {time: 2000});
+        return;
+    }
+    // 内容改为 input
+    $(":checked[name='sub']").each(function(){
+        var $tr = $(this).parent().parent();
+        var type = $tr.attr('class');
+        if("edit" === type) {
+            return true; // 跳过编辑状态的记录
+        }
+        var $tdList = $tr.find("td");
+        var valueArray = new Array();
+        var i = 0;
+        for (var p in item) {
+        	valueArray.push($tdList.eq(i+2).html());
+        	i = i + 1;
+        }
+        var index = $tdList.eq(1).html();
+        var row = '<td><input type="checkbox" name="sub"></td>'+
+                '<td name="count">'+ index +'</td>';
+        for (var p in item) {
+            row += '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="'+p+'" value=""/></div></td>';
+        }
+        $tr.empty().append(row);
+        var $inputList = $tr.find("input");
+        for (var i = 0; i < valueArray.length; i++) {
+        	$inputList.eq(i+1).val(valueArray[i]);
+        }
+        $tr.attr('class','edit'); // 编辑状态
+    });
+    // 清除勾选
+    $("input[name='sub']").prop("checked", false);
+    $("#checkAll").prop("checked" , false);
+}
+
+//编辑行
+function _editRow() {
+    // 获取选中记录数量
+    var amount = $(":checked[name='sub']").length;
+    // 如果没有选择，提示勾选至少一条数据
+    if (amount === 0) {
+        layer.msg('请至少选择一条记录', {time: 2000});
+        return;
+    }
+    // 内容改为 input
+    $(":checked[name='sub']").each(function(){
+        var $tr = $(this).parent().parent();
+        var type = $tr.attr('class');
+        if("edit" === type) {
+            return true; // 跳过编辑状态的记录
+        }
+        
+        var $td1 = $tr.find('td[class="prepay"]');
+        var prepay = $td1.html();
+        $td1.empty().append('<div class="form-group"><input class="form-control" type="text" name="prepay" value="'+ prepay +'"/></div>');
+        
+        var $td2 = $tr.find('td[class="pre_refuel"]');
+        var pre_refuel = $td2.html();
+        $td2.empty().append('<div class="form-group"><input class="form-control" type="text" name="pre_refuel" value="'+ pre_refuel +'"/></div>');
+        
+        $tr.attr('class','edit'); // 编辑状态
+        
+    });
+    // 清除勾选
+    $("input[name='sub']").prop("checked", false);
+    $("#checkAll").prop("checked" , false);
+}
+
+// 获取列表
+function getRecordList() {
+    var recordList = []; 
+    // 
+    $('#tbody tr').each(function() {
+        var $tr = $(this);
+        var type = $tr.attr("class");
+        var record = {}; // 单条记录对象
+        if ("edit" === type) {
+            var id = $tr.attr('_id');        	
+            var prepay = $.trim($tr.find('input[name="prepay"]').val());
+            var pre_refuel = $.trim($tr.find('input[name="pre_refuel"]').val());
+            record.id = id;
+            record.prepay = prepay;
+            record.pre_refuel = pre_refuel;
+        } else {
+            return true; // 未修改的不保存
+        }
+        
+        recordList.push(record);
+    });
+    
+    return recordList;
+}
+//全选、全不选
+$("#checkAll").click(function() {
+    $("input[name='sub']").prop("checked", this.checked);
+});
+$("input[name='sub']").click(function() {
+    var $subs = $("input[name='sub']");
+    $("#checkAll").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);
+});
+
+</script>
+</body>
+</html>

@@ -1,14 +1,24 @@
 package yongle.config;
 import com.jfinal.config.Routes;
 
+import yongle.dataBase.goods.GoodsController;
+import yongle.dataBase.port.PortController;
+import yongle.dataBase.customer.CustomerController;
+import yongle.dataBase.ship.ShipController;
 import yongle.dispatchmanage.handover.HandoverController;
 import yongle.dispatchmanage.planmanage.PlanManageController;
+import yongle.dispatchmanage.settle.SettleController;
+import yongle.dispatchmanage.waitsettle.WaitSettleController;
 import yongle.insidejob.contract.ContractController;
+import yongle.insidejob.plandispatch.PlanController;
 import yongle.insidejob.plandispatch.PlanDispatchController;
 import yongle.login.HomeController;
 import yongle.login.LoginController;
+import yongle.site.handoversite.HandoverSiteController;
+import yongle.site.waterwayfreight.WaterwayFreightController;
 import yongle.system.authority.AuthorityController;
 import yongle.system.button.ButtonController;
+import yongle.system.dictionary.DictionaryController;
 import yongle.system.menu.MenuController;
 import yongle.system.role.RoleController;
 import yongle.system.user.UserController;
@@ -40,12 +50,34 @@ public class AdminRoutes extends Routes{
 		add("/planManage/dispatch",PlanManageController.class,"/dispatchmanage");
 		//调度管理 - 调度交接
 		add("/planManage/handover",HandoverController.class,"/dispatchmanage");
+		//调度管理 - 待结算审核表
+		add("/planManage/waitsettle",WaitSettleController.class,"/dispatchmanage");
+		//调度管理 - 结算审核表
+		add("/planManage/settle",SettleController.class,"/dispatchmanage");
 		
 		// 内勤管理-计划调度
 		add("/insidejob/plandispatch", PlanDispatchController.class, "/insidejob");
-		// 内勤管理-计划调度
-        add("/insidejob/contract", ContractController.class, "/insidejob");
 
+		add("/insidejob/plan", PlanController.class, "/insidejob");
+		// 内勤管理-计划调度
+
+        add("/insidejob/contract", ContractController.class, "/insidejob");
+        
+        // 现场管理-水路货物运输
+        add("/site/handoversite", HandoverSiteController.class, "/site");
+        // 现场管理-水路货物运输
+        add("/site/waterwayfreight", WaterwayFreightController.class, "/site");
+        
+        // 基础数据-港口信息
+        add("/database/port", PortController.class, "/database");
+        // 基础数据-货物信息
+        add("/database/goods", GoodsController.class, "/database");
+
+        //基础数据 - 客户信息管理
+        add("/dataBase/customer",CustomerController.class,"/database");
+        //基础数据 - 船舶信息管理
+        add("/dataBase/ship",ShipController.class,"/database");
+        
 		//系统管理-角色管理控制器
 		add("/system/role",RoleController.class,"/system");
 		//系统管理-用户管理控制器
@@ -56,6 +88,8 @@ public class AdminRoutes extends Routes{
 		add("/system/button",ButtonController.class,"/system");
 		//系统管理-权限管理控制器
 		add("/system/authority",AuthorityController.class,"/system");
+		// 系统管理-基础数据
+        add("/system/dictionary",DictionaryController.class,"/system");
 		
 	}
 }

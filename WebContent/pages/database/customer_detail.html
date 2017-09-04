@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>添加客户信息管理</title>
+	<#include "../include/header.html">
+    <style type="text/css">
+	    #f1 .form-group {
+	        margin: 0;
+	    }
+	    #defaultForm { margin-right: 50px;}
+	    a{
+	    	cursor: pointer;
+	    }
+    </style>
+
+</head>
+
+<body>
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+        <a href="#tab1" data-toggle="tab">客户基本信息</a>
+    </li>
+    <li>
+    	<a href="#tab2" data-toggle="tab">联系人</a>
+    </li>
+    <li>
+    	<a href="#tab3" data-toggle="tab">开票信息</a>
+    </li>
+    <li>
+    	<a href="#tab4" data-toggle="tab">工商资料</a>
+    </li>
+</ul>  
+<div id="myTabContent" class="tab-content">
+	<#if record??>
+	<input hidden="" id="newid" name="newid" value="${record.id}">
+    <div class="tab-pane fade in active" id="tab1">
+        <form id="defaultForm" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="customer_name">客户名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="customer_name" type="text" placeholder="客户名称"  name="customer_name" value="${record.customer_name!}"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="variety_goods">货物品种：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="variety_goods" type="text" placeholder="货物品种"  name="variety_goods" value="${record.variety_goods!}"/>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="common_receiving_company">常用收货码头：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="常用收货码头" name="common_receiving_company" id="common_receiving_company" value="${record.common_receiving_company!}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="customer_type">客户类型：</label>
+                        <div class="col-xs-7">
+                            <select class="form-control" name="customer_type" id="customer_type" style="padding-right: 2px">
+								<option value="">-选择客户类型-</option>
+								<option <#if record.customer_type=='发货人'>selected</#if> value="发货人">发货人</option>
+								<option <#if record.customer_type=='收货人'>selected</#if> value="收货人">收货人</option>
+								<option <#if record.customer_type=='港口公司'>selected</#if> value="港口公司">港口公司</option>
+								<option <#if record.customer_type=='代理公司'>selected</#if> value="代理公司">代理公司</option>
+							</select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="common_delivery_company">常用发货单位：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="common_delivery_company" type="text" placeholder="常用发货单位" name="common_delivery_company" value="${record.common_delivery_company!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="wharf_berth">码头泊位情况：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="wharf_berth" type="text" placeholder="码头泊位情况" name="wharf_berth" value="${record.wharf_berth!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn1" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div><!-- tab1 -->
+    <div class="tab-pane fade" id="tab2">
+        <form id="tab2Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="name_content">姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="name_content" type="text" placeholder="姓名"  name="name_content" value="${record.name_content!}"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_contant">手机号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="phone_contant" type="text" placeholder="手机号码"  name="phone_contant" value="${record.phone_contant!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="fax_contant">传真号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="fax_contant" type="text" placeholder="传真号码" name="fax_contant" value="${record.fax_contant!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="e_mail_content">邮箱：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="e_mail_content" type="text" placeholder="邮箱" name="e_mail_content" value="${record.e_mail_content!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="post_contant">职务：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="post_contant" type="text" placeholder="职务" name="post_contant" value="${record.post_contant!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="fixed_phone_contant">固话号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="deposit" type="fixed_phone_contant" placeholder="固话号码" name="fixed_phone_contant" value="${record.fixed_phone_contant!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="qq_content">QQ：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="qq_content" type="text" placeholder="QQ" name="qq_content" value="${record.qq_content!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="address_contant">地址：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="address_contant" type="text" placeholder="地址" name="address_contant" value="${record.address_contant!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn2" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab3">
+        <form id="tab3Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="company_information">单位名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="company_information" type="text" placeholder="单位名称"  name="company_information" value="${record.company_information!}"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="blankname_information">开户银行：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="blankname_information" type="text" placeholder="开户银行"  name="blankname_information" value="${record.blankname_information!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="address_information">地址：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="address_information" type="text" placeholder="地址"  name="address_information" value="${record.address_information!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="taxpayer_distinguish_information">纳税人识别号：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="taxpayer_distinguish_information" type="text" placeholder="纳税人识别号" name="taxpayer_distinguish_information" value="${record.taxpayer_distinguish_information!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="blankaccount_infomation">银行账号：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="blankaccount_infomation" type="text" placeholder="银行账号" name="blankaccount_infomation" value="${record.blankaccount_infomation!}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_information">电话：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="phone_information" type="text" placeholder="电话"  name="phone_information" value="${record.phone_information!}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <button id="commit_btn3" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab4">
+        <form id="tab4Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px;min-width: 700px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="year">营业执照副本：</label>
+                        <div class="col-xs-7">
+                        	<div id="id1" <#if record.license_copy_commerce??> hidden="hidden"</#if>> 
+                            <input type="file" class="file" id="license_copy_commerce" name="license_copy_commerce" value="">
+                            </div>
+                            <#if record.license_copy_commerce??>
+                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.license_copy_commerce!}</span><a href="javascript:;" onclick="del1(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                			</#if>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="year">税务登记证：</label>
+                        <div class="col-xs-7">
+                        	<div id="id2" <#if record.registration_commerce??> hidden="hidden" </#if>>
+                            	<input type="file" class="file" id="registration_commerce" name="registration_commerce" value="">
+                            </div>
+                            <#if record.registration_commerce??>
+                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.registration_commerce!}</span><a href="javascript:;" onclick="del2(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                			</#if>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="deposit">组织机构代码证：</label>
+                        <div class="col-xs-7">
+                        	<div id="id3" <#if record.organization_commerce??> hidden="hidden" </#if>>
+                            	<input type="file" class="file" id="organization_commerce" name="organization_commerce" value="">
+                            </div>
+                             <#if record.organization_commerce??>
+                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.organization_commerce!}</span><a href="javascript:;" onclick="del3(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                			</#if>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn4" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+	<#else>
+	<input hidden="" id="newid" name="newid" value="">
+    <div class="tab-pane fade in active" id="tab1">
+        <form id="defaultForm" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="customer_name">客户名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="customer_name" type="text" placeholder="客户名称"  name="customer_name"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="variety_goods">货物品种：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="variety_goods" type="text" placeholder="货物品种"  name="variety_goods"/>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="common_receiving_company">常用收货码头：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="常用收货码头" name="common_receiving_company" id="common_receiving_company">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="customer_type">客户类型：</label>
+                        <div class="col-xs-7">
+                            <select class="form-control" name="customer_type" id="customer_type" style="padding-right: 2px">
+								<option value="">-选择客户类型-</option>
+								<option value="发货人">发货人</option>
+								<option value="收货人">收货人</option>
+								<option value="港口公司">港口公司</option>
+								<option value="代理公司">代理公司</option>
+							</select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="common_delivery_company">常用发货单位：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="common_delivery_company" type="text" placeholder="常用发货单位" name="common_delivery_company"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="wharf_berth">码头泊位情况：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="wharf_berth" type="text" placeholder="码头泊位情况" name="wharf_berth"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn1" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div><!-- tab1 -->
+    <div class="tab-pane fade" id="tab2">
+        <form id="tab2Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="name_content">姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="name_content" type="text" placeholder="姓名"  name="name_content"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_contant">手机号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="phone_contant" type="text" placeholder="手机号码"  name="phone_contant"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="fax_contant">传真号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="fax_contant" type="text" placeholder="传真号码" name="fax_contant"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="e_mail_content">邮箱：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="e_mail_content" type="text" placeholder="邮箱" name="e_mail_content"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="post_contant">职务：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="post_contant" type="text" placeholder="职务" name="post_contant"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="fixed_phone_contant">固话号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="deposit" type="fixed_phone_contant" placeholder="固话号码" name="fixed_phone_contant"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="qq_content">QQ：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="qq_content" type="text" placeholder="QQ" name="qq_content"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="address_contant">地址：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="address_contant" type="text" placeholder="地址" name="address_contant"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn2" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab3">
+        <form id="tab3Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="company_information">单位名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="company_information" type="text" placeholder="单位名称"  name="company_information"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="blankname_information">开户银行：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="blankname_information" type="text" placeholder="开户银行"  name="blankname_information"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="address_information">地址：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="address_information" type="text" placeholder="地址"  name="address_information"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="taxpayer_distinguish_information">纳税人识别号：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="taxpayer_distinguish_information" type="text" placeholder="纳税人识别号" name="taxpayer_distinguish_information" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="blankaccount_infomation">银行账号：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="blankaccount_infomation" type="text" placeholder="银行账号" name="blankaccount_infomation" value=""/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_information">电话：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="phone_information" type="text" placeholder="电话"  name="phone_information" value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <button id="commit_btn3" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab4">
+        <form id="tab4Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px;min-width: 700px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="year">营业执照副本：</label>
+                        <div class="col-xs-7">
+                            <input type="file" class="file" id="license_copy_commerce" name="license_copy_commerce" value="">
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="year">税务登记证：</label>
+                        <div class="col-xs-7">
+                            <input type="file" class="file" id="registration_commerce" name="registration_commerce" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="deposit">组织机构代码证：</label>
+                        <div class="col-xs-7">
+                            <input type="file" class="file" id="organization_commerce" name="organization_commerce" value="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <div class="col-xs-10 text-left">
+                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                            <button id="commit_btn4" class="btn btn-11">　保存　</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+</#if>
+</div><!-- tab content -->
+<script type="text/javascript">
+function initFileInput(ctrlName){
+    var control = $('#'+ctrlName);
+    control.fileinput({
+        language: 'zh', //设置语言
+        showUpload: false, //是否显示上传按钮
+        showRemove:true,
+        dropZoneEnabled: false,
+        showCaption: true,//是否显示标题
+        showPreview :false,//是否显示预览
+        enctype: 'multipart/form-data',
+        uploadAsync: false, //同步上传
+    })
+}
+initFileInput("license_copy_commerce");
+initFileInput("organization_commerce");
+initFileInput("registration_commerce");
+
+//日期控件
+$(".form_datetime").datetimepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true,
+    todayBtn: false,
+    todayHighlight: true,
+    showMeridian: true,
+    pickerPosition: "bottom-right",
+    language: 'zh-CN',//中文，需要引用zh-CN.js包
+    startView: 2,// 日视图
+    minView: 2,
+});
+
+
+//tab1提交验证
+function bindValidator(obj){
+	 // 表单校验
+  var validator = $(obj).bootstrapValidator({
+      //message: 'This value is not valid',
+      feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+    	  customer_name: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  regexp: {
+                      regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                      message: '不能包含特殊字符'
+                  }, 
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          customer_type: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+              }
+          },
+          variety_goods: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  regexp: {
+                      regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                      message: '请输入正确的号码'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          common_delivery_company: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  regexp: {
+                      regexp:  /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                      message: '请勿输入特殊字符'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          common_receiving_company: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  regexp: {
+                      regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                      message: '请勿输入特殊字符'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          wharf_berth: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  regexp: {
+                      regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                      message: '请勿输入特殊字符'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+      }
+  });
+  return validator;
+}
+
+$("#commit_btn1").on("click", function(){
+	bindValidator('#tab1');
+	var newid = $("#newid").val();
+  //获取表单对象
+ var bootstrapValidator = $('#tab1').data('bootstrapValidator');
+      //手动触发验证
+     bootstrapValidator.validate(); 
+     if(bootstrapValidator.isValid()){  	
+         //表单提交的方法、比如ajax提交
+         var data = $('#defaultForm').serialize()+"&id="+newid;
+         $.post("/dataBase/customer/saveTabOne", data, function(data) {
+      	   if(data.is_success){
+      		   parent.refresh_iframe();
+      		   layer.msg("客户基本信息保存成功！",{time:2000});
+      		   $("#newid").val(data.flagId); 
+      	   }else{
+      		   layer.msg("客户基本信息保存失败！")
+      	   }
+         });
+     }
+});
+
+//tab2校验
+//tab1提交验证
+function bindValidator2(obj){
+	 // 表单校验
+  var validator = $(obj).bootstrapValidator({
+      //message: 'This value is not valid',
+      feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+      },
+      fields: {
+    	  name_content: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  regexp: {
+                      regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                      message: '不能包含特殊字符'
+                  }, 
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          post_contant: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  regexp: {
+                      regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                      message: '不能包含特殊字符'
+                  }, 
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          phone_contant: {
+              validators: {
+                  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          fixed_phone_contant: {
+              validators: {
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          fax_contant: {
+              validators: {
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          qq_content: {
+              validators: {
+            	  regexp: {
+                      regexp: /^[0-9]*$/,
+                      message: '请输入正确的QQ'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          e_mail_content: {
+              validators: {
+            	  regexp: {
+                      regexp: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+                      message: '请输入正确的邮箱'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 20,
+                      message: '不能超过 20 个字符',
+                  }
+              }
+          },
+          address_contant: {
+              validators: {
+            	  notEmpty:{
+                      message: '不能为空!'
+                  },
+                  stringLength: {
+                      min: 0,
+                      max: 30,
+                      message: '不能超过 30 个字符',
+                  }
+              }
+          },
+      }
+  });
+  return validator;
+}
+$("#commit_btn2").on("click", function(){
+	var newid = $("#newid").val();
+	var data;
+	if(newid!=null&&newid!=""){
+		bindValidator2('#tab2');
+	    //获取表单对象
+	   var bootstrapValidator = $('#tab2').data('bootstrapValidator');
+	        //手动触发验证
+	       bootstrapValidator.validate(); 
+	       if(bootstrapValidator.isValid()){
+	           //表单提交的方法、比如ajax提交
+	            var data = $('#tab2Form').serialize()+"&id="+newid;
+	           $.post("/dataBase/customer/saveTabTwo", data, function(data) {
+	        	   if(data){
+	        		   layer.msg("联系人信息保存成功！",{time:2000});
+	        	   }else{
+	        		   layer.msg("联系人信息保存失败！")
+	        	   }
+	           });
+	       }
+	}else{
+		window.top.layer.msg("请先保存客户基本信息",{time:2000})
+	}
+});
+
+//tab3校验
+function bindValidator3(obj){
+	 // 表单校验
+var validator = $(obj).bootstrapValidator({
+    //message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    	company_information: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                    message: '不能包含特殊字符'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
+        taxpayer_distinguish_information: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                    message: '不能包含特殊字符'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
+        blankname_information: {
+            validators: {
+            	 notEmpty:{
+                     message: '不能为空!'
+                 },
+                 regexp: {
+                     regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                     message: '不能包含特殊字符'
+                 }, 
+                 stringLength: {
+                     min: 0,
+                     max: 20,
+                     message: '不能超过 20 个字符',
+                 }
+            }
+        },
+        blankaccount_infomation: {
+            validators: {
+            	 notEmpty:{
+                     message: '不能为空!'
+                 },
+                 regexp: {
+                     regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                     message: '不能包含特殊字符'
+                 }, 
+                 stringLength: {
+                     min: 0,
+                     max: 20,
+                     message: '不能超过 20 个字符',
+                 }
+            }
+        },
+        address_information: {
+            validators: {
+            	 notEmpty:{
+                     message: '不能为空!'
+                 },
+                 regexp: {
+                     regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                     message: '不能包含特殊字符'
+                 }, 
+                 stringLength: {
+                     min: 0,
+                     max: 20,
+                     message: '不能超过 20 个字符',
+                 }
+            }
+        },
+        phone_information: {
+            validators: {
+            	 notEmpty:{
+                     message: '不能为空!'
+                 },
+                 regexp: {
+                     regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                     message: '不能包含特殊字符'
+                 }, 
+                 stringLength: {
+                     min: 0,
+                     max: 20,
+                     message: '不能超过 20 个字符',
+                 }
+            }
+        },
+    }
+});
+return validator;
+}
+$("#commit_btn3").on("click", function(){
+	var newid = $("#newid").val();
+	var data;
+	if(newid!=null&&newid!=""){
+		bindValidator3('#tab3');
+	    //获取表单对象
+	   var bootstrapValidator = $('#tab3').data('bootstrapValidator');
+	        //手动触发验证
+	       bootstrapValidator.validate(); 
+	       if(bootstrapValidator.isValid()){
+	           //表单提交的方法、比如ajax提交
+	            var data = $('#tab3Form').serialize()+"&id="+newid;
+	           $.post("/dataBase/customer/saveTabThree", data, function(data) {
+	        	   if(data){
+	        		   layer.msg("开票信息保存成功！",{time:2000});
+	        	   }else{
+	        		   layer.msg("开票信息保存失败！")
+	        	   }
+	           });
+	       }
+	}else{
+		window.top.layer.msg("请先保存客户基本信息",{time:2000})
+	}
+});
+
+//tab2校验
+//tab1提交验证
+function bindValidator4(obj){
+	 // 表单校验
+var validator = $(obj).bootstrapValidator({
+  //message: 'This value is not valid',
+  feedbackIcons: {
+      valid: 'glyphicon glyphicon-ok',
+      invalid: 'glyphicon glyphicon-remove',
+      validating: 'glyphicon glyphicon-refresh'
+  },
+  fields: {
+	  license_copy_commerce: {
+          validators: {
+              notEmpty:{
+                  message: '不能为空!'
+              }
+          }
+      },
+      registration_commerce: {
+          validators: {
+              notEmpty:{
+                  message: '不能为空!'
+              }
+          }
+      },
+      organization_commerce: {
+          validators: {
+          	 notEmpty:{
+                   message: '不能为空!'
+               }
+          }
+      }
+  }
+});
+return validator;
+}
+$("#commit_btn4").on("click", function(){
+	var newid = $("#newid").val();
+	var data;
+	if(newid!=null&&newid!=""){
+		bindValidator4('#tab4');
+	    //获取表单对象
+	   var bootstrapValidator = $('#tab4').data('bootstrapValidator');
+	        //手动触发验证
+	       bootstrapValidator.validate(); 
+	       if(bootstrapValidator.isValid()){
+	    	   var formData = new FormData();
+	    	   formData.append("id",newid);
+	    	   formData.append("license_copy_commerce",$("#license_copy_commerce")[0].files[0]);
+	    	   formData.append("registration_commerce",$("#registration_commerce")[0].files[0]);
+	    	   formData.append("organization_commerce",$("#organization_commerce")[0].files[0]);
+	    	   console.log(newid);
+	           //表单提交的方法、比如ajax提交
+	    	   $.ajax({
+	               url:"/dataBase/customer/saveTabFour",
+	               type:"POST",
+	               data:formData,
+	               processData:false,
+	               contentType:false,
+	               success:function(result){
+	                   if(result){
+	                       layer.msg("工商资料保存成功！",{time:2000});
+	                   }else{
+	                	   layer.msg("工商资料保存失败！")
+	                   }
+	               },
+	               error:function(e){
+	                   console.log("error");
+	               },
+	           }); 
+	       }
+	}else{
+		window.top.layer.msg("请先保存客户基本信息",{time:2000})
+	}
+});
+
+//删除选中文件
+function del1(_obj){
+	$(_obj).parent('p').remove();
+	$("#id1").removeAttr("hidden");
+	initFileInput("license_copy_commerce");
+}
+function del2(_obj){
+	$(_obj).parent('p').remove();
+	$("#id2").removeAttr("hidden");
+	initFileInput("registration_commerce");
+}
+function del3(_obj){
+	$(_obj).parent('p').remove();
+	$("#id3").removeAttr("hidden");
+	initFileInput("organization_commerce");
+}
+
+</script>
+</body>
+
+</html>

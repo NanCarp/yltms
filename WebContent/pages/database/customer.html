@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>客户信息管理</title>
+	<#include "../include/header.html">   	
+</head>
+
+<body>
+<div id="wrapper">
+	<div class="panel-body" style="padding-bottom:0px;">
+		<div class="panel panel-default">		
+			<div class="panel-heading">					
+				<div class="container container-fluid" style="padding-right: 0px">				
+					<div class="row" >                        	    		                                            		
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<input type="search" class="form-control" placeholder="客户名称" name="customer_name" id="customer_name">
+						</div>
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<select class="form-control" name="customer_type" id="customer_type" style="padding-right: 2px">
+								<option value="">-选择客户类型-</option>
+								<option value="发货人">发货人</option>
+								<option value="收货人">收货人</option>
+								<option value="港口公司">港口公司</option>
+								<option value="代理公司">代理公司</option>
+							</select>
+						</div>
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<input type="search" class="form-control" placeholder="开票单位" name="company_information" id="company_information">
+						</div>
+						<div class="col-sm-1 col-xs-1 head_1">
+							<button class="btn btn-primary" onclick="doQuery()">查询</button>
+						</div>                    			
+						<div class="col-sm-1 col-xs-1 head_1">
+		                    <button class="btn btn-success" onclick="_add()">新增</button>
+		                </div>	  
+		                <div class="col-sm-1 col-xs-1 head_4" >
+		                     <button class="btn btn-5" onclick="_seeDatil()">查看明细</button>
+		                </div>                     									
+		                <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9" onclick="location.replace()"><i class="fa fa-refresh"></i></button>
+                        </div>                  
+					</div>				
+				</div>
+			</div>		
+			<table id="tb_departments"></table>
+		</div>             
+	</div>
+</div>
+
+
+<script>
+var customer_name="";
+var customer_type="";
+var company_information="";
+
+$(function () {	 
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+    //2.初始化Button的点击事件
+     var oButtonInit = new ButtonInit();
+    oButtonInit.Init(); 
+});
+
+function doQuery(){
+	layui.use('layer',function(){
+		var layer = layui.layer;
+		customer_name = $.trim($('#customer_name').val());
+		customer_type = $.trim($('#customer_type').val());
+		company_information = $.trim($('#company_information').val());
+		if($.trim($('#customer_name').val())!=''){
+			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
+			if(!reg.test($('#customer_name').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#customer_name', {tips: [1, '#34495E']});return;
+			}					
+		}
+		if($.trim($('#customer_type').val())!=''){
+			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
+			if(!reg.test($('#customer_type').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#customer_type', {tips: [1, '#34495E']});return;
+			}					
+		}
+		if($.trim($('#company_information').val())!=''){
+			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
+			if(!reg.test($('#company_information').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#company_information', {tips: [1, '#34495E']});return;
+			}					
+		}
+		 $('#tb_departments').bootstrapTable('refresh');    //刷新表格
+	})
+}
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/dataBase/customer/getJson',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            showExport: true,                     //是否显示导出
+            buttonsAlign:"right",  				//按钮位置  
+            exportDataType: "basic",              //basic', 'all', 'selected'.
+            exportTypes:['excel'],
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 12,                       //每页的记录行数（*）
+            pageList: [3, 6, 12, 100],        //可供选择的每页的行数（*）
+            strictSearch: true,
+            clickToSelect: true,                //是否启用点击选中行
+            showColumns: true,					//列选择按钮
+            height: 640,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            cardView: false,                    //是否显示详细视图
+            detailView: false,
+            showRefresh:true,  
+            locale: "zh-CN",					//中文支持,
+            //是否显示父子表
+            columns: [{
+            	field:"checked",
+            	checkbox: true,
+            },{
+            	field:"SerialNumber",
+            	title:'序号',
+            	formatter:function(value,row,index){
+            		return index+1;
+            	}
+            },{
+                field: 'customer_name',
+                title: '客户名称'
+            },{
+                field: 'customer_type',
+                title: '客户类型'
+            },{
+                field: 'company_information',
+                title: '开票单位名称'
+            },{
+                field: 'taxpayer_distinguish_information',
+                title: '纳税人识别号'
+            },{
+                field: 'variety_goods',
+                title: '货物品种'
+            },{
+                field: 'common_delivery_company',
+                title: '常用发货单位'
+            },{
+                field: 'common_receiving_company',
+                title: '常用收货单位'
+            },{
+                field: 'wharf_berth',
+                title: '码头泊位情况'
+            },{
+            	field:'opt',
+            	title:'操作',
+            	formatter:function(value,row,index){
+            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_edit('+row.id+')">编辑明细</button>'
+            			  +'<button class="btn btn-xs btn-4 bt" style="margin-left:10px" onclick="_delete('+row.id+')">删除</button>' ]
+            	},
+            }]
+        });
+    };
+    
+   //得到查询的参数
+  oTableInit.queryParams = function (params) {
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            maxrows: params.limit,
+            search: params.search,
+            customer_name: customer_name,
+            customer_type: customer_type,
+            company_information: company_information,
+        };
+        return temp;
+    };
+    return oTableInit;  
+};
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+    oInit.Init = function () {
+        //初始化页面上面的按钮事件
+    };
+    return oInit;
+};
+
+//新增
+function _add(){
+	parent.open_window('新增客户信息管理','/dataBase/customer/getTab',840,360);
+}
+
+//编辑
+function _edit(id){
+	parent.open_window('编辑客户信息管理','/dataBase/customer/getTab/'+id,840,360);
+}
+
+//删除操作
+function _delete(id){
+	layer.confirm("确认删除",{icon:3},function(){
+		$.post("/dataBase/customer/delete/"+id,function(data){
+			if(data){
+				layer.msg("删除成功",{time:2000},function(){
+					parent.refresh_iframe();
+				})
+			}else{
+				layer.msg("删除失败",{time:2000})
+			}
+		})
+	})
+}
+
+//获取被选中数据的id
+function getIdSelections() {
+    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        return row.id;
+    });
+}
+
+//获取被选中数据的id
+function getIdSelections() {
+    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        return row.id;
+    });
+}
+
+//审核
+function _seeDatil(){
+	// 获取选中记录 id
+	var ids = getIdSelections();	
+	// 如果没有选择，提示勾选至少一条数据
+	if (ids.length == 0) {
+        layer.msg('请选择需要查看的记录', {time: 2000});
+	}else if(ids.length >1){
+		layer.msg('最多选择一条查看记录', {time: 2000});
+	}else{
+		parent.open_window('客户信息管理明细','/dataBase/customer/seeDetail/'+ids,840,320);
+	}
+}
+</script>
+</body>
+</html>

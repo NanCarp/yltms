@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>船舶信息管理明细</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link href="../../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="../../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+    <link href="../../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <style type="text/css">
+	    #f1 .form-group {
+	        margin: 0;
+	    }
+	    #defaultForm { margin-right: 50px;}
+	     a{
+	    	cursor: pointer;
+	    }
+    </style>
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+        <a href="#tab1" data-toggle="tab">船基本信息</a>
+    </li>
+    <li>
+    	<a href="#tab2" data-toggle="tab">银行账户信息</a>
+    </li>
+    <li>
+    	<a href="#tab3" data-toggle="tab">船证件信息</a>
+    </li>
+    <li>
+    	<a href="#tab4" data-toggle="tab">船员证件信息</a>
+    </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+	<#if im??>
+	<input hidden="" id="newid" name="newid" value="${im.id!}">
+    <div class="tab-pane fade in active" id="tab1">
+        <form id="defaultForm" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="shipowname">船主姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="shipowname" type="text" placeholder="船主姓名"  name="shipowname" value="${im.shipowname!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ship_name">船舶名称：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="ship_name" type="text" placeholder="船舶名称"  name="ship_name" value="${im.ship_name!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="phone_num">手机号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="手机号码" name="phone_num" id="phone_num" value="${im.phone_num!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ID_number">身份证号码：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" placeholder="身份证号码" name="ID_number" id="ID_number" value="${im.ID_number!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="ship_ton">吨位：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="ship_ton" type="text" placeholder="吨位" name="ship_ton" value="${im.ship_ton!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="grade_sail">航行航区等级：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="grade_sail" type="text" placeholder="航行航区等级" name="grade_sail" value="${im.grade_sail!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="business_route">业务航线：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="business_route" type="text" placeholder="业务航线" name="business_route" value="${im.business_route!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div><!-- tab1 -->
+    <div class="tab-pane fade" id="tab2">
+        <form id="tab2Form" class="form-horizontal" role="form">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="open_bank">开户银行：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="open_bank" type="text" placeholder="开户银行"  name="open_bank" value="${im.open_bank!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="name_bank">姓名：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="name_bank" type="text" placeholder="姓名"  name="name_bank" value="${im.name_bank!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="card_bank">卡号：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control" id="card_bank" type="text" placeholder="卡号" name="card_bank" value="${im.card_bank!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label text-right" for="updatetime_bank">更新日期：</label>
+                        <div class="col-xs-7">
+                            <input class="form-control form_datetime" id="updatetime_bank" type="text" placeholder="更新日期" name="updatetime_bank" value="${im.updatetime_bank!}" disabled="disabled"/>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+    <div class="tab-pane fade" id="tab3">
+        <form id="tab3Form" class="form-horizontal" role="form">
+            <input hidden="" name="id" value="" id="id">
+            <div class="container" style="margin-top: 20px">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="visa_sheet">签证浦：</label>
+                        <div class="col-xs-8">
+                        <#if im.visa_sheet??>
+                			<button class="btn btn-xs btn-5" type="button"  onclick="_watchFile('visa_sheet')">本地查看</button>
+               			<#else>
+               				<span style="color: blue;font-size: 16px">暂无签证浦</span>
+               			</#if>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="ship_inspection">船检证书：</label>
+                        <div class="col-xs-8">
+                        <#if im.ship_inspection??>
+                			<button class="btn btn-xs btn-5" type="button"  onclick="_watchFile('ship_inspection')">本地查看</button>
+               			<#else>
+               				<span style="color: blue;font-size: 16px">暂无船检证书</span>
+               			</#if>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="loading">载重证书：</label>
+                        <div class="col-xs-8">
+                        <#if im.loading??>
+                			<button class="btn btn-xs btn-5" type="button"  onclick="_watchFile('loading')">本地查看</button>
+               			<#else>
+               				<span style="color: blue;font-size: 16px">暂无载重证书</span>
+               			</#if>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" for="operation">营运证书：</label>
+                        <div class="col-xs-8">
+                        <#if im.operation??>
+                			<button class="btn btn-xs btn-5"  type="button" onclick="_watchFile('operation')">本地查看</button>
+               			<#else>
+               				<span style="color: blue;font-size: 16px">暂无营运证书</span>
+               			</#if>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- contianer -->
+        </form>
+    </div>
+     <div class="tab-pane fade" id="tab4">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- <form id="f1" role="form"> -->
+                        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>船员姓名</th>
+                                    <th>身份证号码</th>
+                                    <th>船员证书</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody" >
+                            	<#if crews?? && crews?size gt 0>
+                            	<#list crews as crew>
+                                <tr>
+                                    <td>${crew_index+1}</td>
+                                    <td>${crew.crew_name!}</td>
+                                    <td>${crew.ID_card_certificate!}</td>
+                                    <td>
+                                    	<button class="btn btn-xs btn-5"  type="button" onclick="_watchCrewFile('${crew.id!}','${crew.crew_certificate!}')">本地查看</button>
+                                    </td>
+                                </tr>
+                                </#list>                                 
+                                <#else>
+                                <tr>
+                                	<td colspan="5">暂无船员信息</td>
+                                </tr>
+                                </#if>
+                            </tbody>
+                        </table><!-- /.table-responsive -->
+                       <!--  </form> -->
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+    </div><!-- tab2 -->
+    </#if>
+    
+</div>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+
+<!-- DataTables JavaScript -->
+<script src="../../../vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+<script src="../../../vendor/datatables-responsive/dataTables.responsive.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<!-- <script src="../../../dist/js/sb-admin-2.js"></script> -->
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script> 
+<script src="../../../resource/bootstrap-datetimepicker/js/moment-with-locales.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<!-- <script src="../../../js/common/common.js"></script> -->
+<script type="text/javascript">
+//船证书下载
+function _watchFile(_obj){
+	var id = $("#newid").val();
+	window.open("/dataBase/ship/watchFile?id="+id+"&filename="+_obj,"_blank");
+}
+
+//船员证书下载
+function _watchCrewFile(id,_obj){
+	window.open("/dataBase/ship/watchCrewFile?id="+id+"&filename="+_obj,"_blank");
+}
+
+</script>
+</body>
+</html>

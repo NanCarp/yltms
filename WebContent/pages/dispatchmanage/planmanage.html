@@ -58,7 +58,6 @@
 	</div>
 </div>
 
-
 <script>
 $(".form_datetime").datetimepicker({
 	format: "yyyy-mm-dd",
@@ -177,10 +176,12 @@ var TableInit = function () {
                 field: 'examine_state',
                 title: '审核状态',
                 formatter:function(value,row,index){
-                	if(value){
-                		return '通过';
+                	if(value == 1){
+                		return '已审核';
+                	}else if(value == 0){
+                		return '待审核';
                 	}else{
-                		return '未通过';
+                		return '取消审核';
                 	}
                 }
             },{
@@ -273,26 +274,34 @@ function _add(){
 
 //编辑
 function _edit(id){
-	parent.open_window('编辑基础数据','/planManage/dispatch/getPlanManage/'+id,1000, 420);
+	$.post("/planManage/dispatch/getExamineState/"+id,function(result){
+		if(result){
+			layer.msg("该计划号已通过审核，不可修改",{time:2000})
+		}else{
+			parent.open_window('编辑计划管理','/planManage/dispatch/getPlanManage/'+id,1000, 420);
+		}
+	})
 }
 
 //删除操作
 function _delete(id){
-	$.post("/planManage/dispatch/delete/"+id,function(data){
-		if(data.Plan_no_state){
+	$.post("/planManage/dispatch/getExamineState/"+id,function(result){
+		if(result){
 			layer.msg("该计划号已审核，禁止删除",{time:2000})
 		}else{
-			layer.confirm("确认删除？",{icon:3},function(){
-				if(data.delstate){
-					layer.msg("删除成功",{time:2000},function(){
-						parent.refresh_iframe();
-					})
-				}else{
-					layer.msg("删除失败",{time:2000})
-				}
+			layer.confirm("确认删除？",{icon:3},function(index){
+				$.post("/planManage/dispatch/delete/"+id,function(data){
+					if(data.delstate){
+						layer.msg("删除成功",{time:2000},function(){
+							parent.refresh_iframe();
+						})
+					}else{
+						layer.msg("删除失败",{time:2000})
+					}
+				})
 			})
 		}
-	})	
+	})
 }
 
 //查看详情
@@ -303,7 +312,7 @@ function _seeDatil(){
 	if (ids.length == 0) {
         layer.msg('请选择需要查看详情的记录', {time: 2000});
 	}else if(ids.length >1){
-		layer.msg('最多选择一条记录', {time: 2000});
+		layer.msg('最多选择一条记录查看详情', {time: 2000});
 	}else{
 		parent.open_window('计划明细','/planManage/dispatch/getPlanDetailSee/'+ids,1000, 420);
 	}
@@ -321,8 +330,20 @@ function examine(){
 	}else{
 		$.post("/planManage/dispatch/getExamineState/"+ids,function(data){
 			if(data){
-				layer.msg('该计划号已完成审核', {time: 2000}, function(){
-                });
+				layer.confirm('取消审核?', {icon: 7, title:'审核确认提示'}, function(index){
+					$.post("/planManage/dispatch/examine/"+ids,function(result){
+						if(result){
+							layer.msg('取消审核成功', {time: 2000}, function(){
+								parent.refresh_iframe();
+			                });
+						}else{
+							layer.msg('取消审核失败', {time: 2000}, function(){
+								
+			                });
+						}
+					})    
+					layer.close(index);
+				});
 			}else{
 				layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
 					$.post("/planManage/dispatch/examine/"+ids,function(result){

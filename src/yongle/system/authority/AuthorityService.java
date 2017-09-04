@@ -80,8 +80,6 @@ public class AuthorityService {
                 } else {// 新增
                     result2 = Db.save("t_role_button", record2);
                 }
-
-
                 return result1 && result2;
             }
         });
@@ -100,6 +98,7 @@ public class AuthorityService {
                 "WHERE a.id = ? ";
         return Db.find(sql, roleId).get(0);
     }
+    
     /**
      * @desc:获取公司列表
      * @return
@@ -108,7 +107,7 @@ public class AuthorityService {
 		return Db.find(" SELECT * FROM `t_company` WHERE state = 1 ");
 	}
     
- // 菜单列表，ztree 使用
+    // 菜单列表，ztree 使用
     public static List<Record> getMenuListForZTree() {
         String sql = " SELECT id ,pid AS pId, module_name AS `name`  FROM t_menu " +
                 "UNION " +

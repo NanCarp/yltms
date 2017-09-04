@@ -17,51 +17,52 @@
 <body>
 <div class="container">
     <form id="f1">
+        <input type="hidden" id="id" name="id" value="${(record.id)!}">
         <div class="row" style="line-height: 34px;vertical-align: middle;width:1200px;">
             <div class="form-group"></div>
             <div class="form-group">
-                <label class="col-xs-1 control-label text-right" for="storage_number">序号：</label>
-                <div class="col-xs-2">
-                    <input class="form-control text-left" id="storage_number" type="text" placeholder="序号" name="storage_number" value="1" disabled="disabled"/>
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="col-xs-1 control-label text-right" for="storage_number">计划号：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="storage_number" type="text" placeholder="计划号" name="plan_no" value="P20170822001" disabled="disabled"/>
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="计划号" name="plan_no" value="${(record.plan_no)!}" readonly/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-xs-1 control-label text-right" for="storage_number">海船名：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="storage_number" type="text" placeholder="海船名" name="seagoing_vessel_name" value="海轮1" disabled="disabled"/>
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="海船名" name="seagoing_vessel_name" value="${(record.seagoing_vessel_name)!}" readonly/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-xs-1 control-label text-right" for="storage_number">发货码头：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="storage_number" type="text" placeholder="发货码头" name="delivery_dock" value="港口A" disabled="disabled"/>
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="发货码头" name="delivery_dock" value="${(record.delivery_dock)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="storage_number">目的港：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="目的港" name="destination_port" value="${(record.destination_port)!}" readonly/>
                 </div>
             </div>
         </div>
         <div class="row" style="line-height: 34px;vertical-align: middle;width:1200px;">
             <div class="form-group"></div>
             <div class="form-group">
-                <label class="col-xs-1 control-label text-right" for="storage_number">目的港：</label>
+                <label class="col-xs-1 control-label text-right" for="total_quantity">总吨数：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="storage_number" type="text" placeholder="目的港" name="destination_port" value="港口B" disabled="disabled"/>
+                    <input class="form-control text-left" id="total_quantity" type="text" placeholder="总吨数" name="total_quantity" value="${(record.total_quantity)!}" readonly/>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-xs-1 control-label text-right" for="storage_number">总吨数：</label>
+                <label class="col-xs-1 control-label text-right" for="left_quantity">剩余吨数：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="storage_number" type="text" placeholder="总吨数" name="total_quantity" value="2000" disabled="disabled"/>
+                    <input class="form-control text-left" id="left_quantity" type="text" placeholder="剩余吨数" name="left_quantity" value="${(record.left_quantity)!}" readonly/>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-xs-1 control-label text-right" for="storage_number">剩余吨数：</label>
+                <label class="col-xs-1 control-label text-right" for="site_dispatch">现场调度：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="storage_number" type="text" placeholder="剩余吨数" name="left_quantity" value="1500" disabled="disabled"/>
+                    <input class="form-control text-left" id="site_dispatch" type="text" placeholder="现场调度" name="site_dispatch" value="${(record.site_dispatch)!}"/>
                 </div>
             </div>
         </div>
@@ -72,7 +73,7 @@
                         <button type="button" class="btn btn-success" onclick="_newRow()">增行</button>
                     </div>
                     <div class="col-sm-2 col-xs-2 head_1">
-                        <button type="button" class="btn btn-4" onclick="_deleteRow()">删行</button>
+                        <button type="button" class="btn btn-4" onclick="_deleteRow()" id="delBtn">删行</button>
                     </div>
                     <div class="col-sm-2 col-xs-2 head_1">
                         <button  type="button" class="btn btn-3" onclick="_editRow()">修改</button>
@@ -95,36 +96,33 @@
                         <th>可载吨位</th>
                         <th width="120px">到港日期</th>
                         <th>运价</th>
+                        <th>总价</th>
+                        <th>预付款</th>
+                        <th>预加油</th>
+                        <th>剩余费用</th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
                     <#if recordList?? && recordList?size gt 0>
                     <#list recordList as record>
                     <tr>
-                        <td><input type="checkbox" name="sub" _id="${record.id}"></td>
+                        <td><input type="checkbox" name="sub"></td>
                         <td>${record_index+1}</td>
                         <td>${record.ship_name!}</td>
-                        <td>${product.phone!}</td>
-                        <td>${product.id_card_no!}</td>
-                        <td>${product.loading_tonnage!}</td>
-                        <td>${product.available_tonnage!}</td>
-                        <td>${product.arrival_date!}</td>
-                        <td>${product.freight_price!}</td>
+                        <td>${record.ship_owner_name!}</td>
+                        <td>${record.ship_owner_phone!}</td>
+                        <td>${record.id_card_no!}</td>
+                        <td class="loading_tonnage">${record.loading_tonnage!}</td>
+                        <td>${record.available_tonnage!}</td>
+                        <td>${record.arrival_date!}</td>
+                        <td>${record.freight_price!}</td>
+                        <td>${record.total_freight!}</td>
+                        <td>${record.prepay!}</td>
+                        <td>${record.pre_refuel!}</td>
+                        <td>${record.left_amount!}</td>
                     </tr>
                     </#list>
                     </#if>
-                    <tr>
-                        <td><input type="checkbox" name="sub" _id="1"></td>
-                        <td>1</td>
-                        <td>驳船A</td>
-                        <td>船主A</td>
-                        <td>13011112222</td>
-                        <td>120104199901012359</td>
-                        <td>500</td>
-                        <td>500</td>
-                        <td>2017-08-26</td>
-                        <td>50</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -135,13 +133,17 @@
 <script>
 var item = {
     ship_name:null,
-    name:null,
-    phone:null,
+    ship_owner_name:null,
+    ship_owner_phone:null,
     id_card_no:null,
     loading_tonnage:null,
     available_tonnage:null,
     arrival_date:null,
-    freight_price:null
+    freight_price:null,
+    total_freight:null,
+    prepay:null,
+    pre_refuel:null,
+    left_amount:null
 }
 
 //提交
@@ -156,24 +158,35 @@ $('#submit').on('click', function () {
         return;
     }
     
-    var id = $('#id').val();
-    var plan_no = $('#plan_no').val();
-    var recordtList = getRecordList(); // 列表
-    var postData = {"id": id, "plan_no": plan_no, "recordList": JSON.stringify(recordList)};
-    console.log(postData);
+    /* var id = $('#id').val();
+    var left_quantity = $('#left_quantity').val();
+    var site_dispatch = $.trim($('#site_dispatch').val());
+    var recordList = getRecordList(); // 列表 */
     
-    /* $.post("/leasewarehouse/leaseIn/save", postData, function(result) {
-        if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
+    var left_quantity = $('#left_quantity').val();
+    if (left_quantity < 0) {
+    	layer.msg("剩余吨数不能为负，请重新分配", {time: 2000});
+    	return;
+    }
+    var postData = {
+    		"id": $('#id').val(),
+    		"left_quantity": $('#left_quantity').val(),
+    		"site_dispatch": $.trim($('#site_dispatch').val()),
+    		"recordList": JSON.stringify(getRecordList())
+    };
+    console.log(postData);
+    $.post("/planManage/handover/save", postData, function(result) {
+        if (result.code == 1) {
+            parent.layer.msg(result.msg, {time: 2000}, function(){
                 layer_close();
                 parent.parent.refresh_iframe();
             });
 
         } else {
-            parent.layer.msg(result.tips, {time: 2000});
+            parent.layer.msg(result.msg, {time: 2000});
         }
         
-    }); */
+    });
 });
 
 function bindValidator(obj){
@@ -183,12 +196,25 @@ function bindValidator(obj){
     // 表单校验
     var validator = $(obj).bootstrapValidator({
         //message: 'This value is not valid',
-        feedbackIcons: {
+        /* feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
-        },
+        }, */
         fields: {
+        	site_dispatch: {
+                validators: {
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
         	ship_name: {
                 validators: {
                     notEmpty:{
@@ -205,7 +231,7 @@ function bindValidator(obj){
                     }
                 }
             },
-            name: {
+            owner_name: {
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
@@ -239,9 +265,6 @@ function bindValidator(obj){
             },
             id_card_no: {
                 validators: {
-                    notEmpty:{
-                        message: '不能为空!'
-                    },
                     regexp: {
                         regexp: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
                         message: '请输入正确的号码'
@@ -255,9 +278,6 @@ function bindValidator(obj){
             },
             arrival_date: {
                 validators: {
-                    notEmpty:{
-                        message: '不能为空!'
-                    },
                     regexp: {
                         regexp: /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/,
                         message: '格式：2017-01-01'
@@ -271,10 +291,10 @@ function bindValidator(obj){
             },
             loading_tonnage: {
                 validators: {
-                    notEmpty:{
+                	notEmpty:{
                         message: '不能为空!'
                     },
-                    regexp: {
+                	regexp: {
                         regexp: /^[0-9]+(\.[0-9]{1,3})?$/,
                         message: '请输入正确的吨位'
                     },
@@ -287,9 +307,6 @@ function bindValidator(obj){
             },
             available_tonnage: {
                 validators: {
-                    notEmpty:{
-                        message: '不能为空!'
-                    },
                     regexp: {
                         regexp: /^[0-9]+(\.[0-9]{1,3})?$/,
                         message: '请输入正确的吨位'
@@ -303,12 +320,61 @@ function bindValidator(obj){
             },
             freight_price: {
                 validators: {
-                    notEmpty:{
-                        message: '不能为空!'
-                    },
                     regexp: {
                         regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
-                        message: '请输入正确的运价'
+                        message: '请输入正确的金额'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            total_freight: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            prepay: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            pre_refuel: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            left_amount: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
                     },
                     stringLength: {
                         min: 0,
@@ -333,7 +399,7 @@ if (count === 0) {
 function _newRow() {
     var $tbody = $('#tbody');
     var row = '<tr class="edit">'+
-                  '<td><input type="checkbox" name="sub" _id=""></td>'+
+                  '<td><input type="checkbox" name="sub"></td>'+
                   '<td name="count">'+ (count+1) +'</td>';
     for (var p in item) {
         row += '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="'+p+'" value=""/></div></td>';
@@ -369,6 +435,7 @@ function _deleteRow() {
     }
     // 清除勾选
     $("#checkAll").prop("checked" , false);
+    //calculateLeftQuantity();
 }
 // 编辑行
 function _editRow() {
@@ -394,7 +461,7 @@ function _editRow() {
         	i = i + 1;
         }
         var index = $tdList.eq(1).html();
-        var row = '<td><input type="checkbox" name="sub" _id=""></td>'+
+        var row = '<td><input type="checkbox" name="sub"></td>'+
                 '<td name="count">'+ index +'</td>';
         for (var p in item) {
             row += '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="'+p+'" value=""/></div></td>';
@@ -423,19 +490,23 @@ function getRecordList() {
             var $inputList = $tr.find('input');
             var i = 0;
             for (var p in item) {
-                valueArray.push($.trim($inputList.eq(i+1).val()));
+                var v = $.trim($inputList.eq(i+1).val());
+            	valueArray.push(v == '' ? null : v);
                 i = i + 1;
             }
         } else {
             var $tdList = $tr.find("td");
             var i = 0;
             for (var p in item) {
-                valueArray.push($.trim($tdList.eq(i+2).html()));
+                //valueArray.push($.trim($tdList.eq(i+2).html()));
+                var v = $.trim($tdList.eq(i+2).html());
+                valueArray.push(v == '' ? null : v);
                 i = i + 1;
             }
         }
         // 去除空记录
-        if (!valueArray.length>0) {
+        var arr = $.grep(valueArray, function () { return this != ''; });
+        if (!(arr.length>0)) {
             return true;
         }
         // 联系人对象
@@ -458,6 +529,36 @@ $("input[name='sub']").click(function() {
     var $subs = $("input[name='sub']");
     $("#checkAll").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);
 });
+
+// 统计剩余吨数
+$('form').on('change', 'input[name=loading_tonnage]', function () {
+	calculateLeftQuantity();
+})
+$('#delBtn').on('click', function () {
+	calculateLeftQuantity();
+})
+/* $('form').on('change', 'tbody', function () {
+    calculateLeftQuantity();
+}) */
+function calculateLeftQuantity() {
+	var total_quantity = parseFloat($('#total_quantity').val());
+	console.log(total_quantity);
+	var amount = 0.0;
+	//console.log(this);
+    $('input[name=loading_tonnage]').each(function () {
+        console.log("input: " + $(this).val());
+        var v = $(this).val();
+        amount = amount + parseFloat(v == '' ? 0 : v);
+    });
+    $('td.loading_tonnage').each(function () {
+        console.log("td: " + $(this).text());
+        var v = $(this).text();
+        amount = amount + parseFloat(v == '' ? 0 : v);
+    });
+    console.log("amount: " + amount.toFixed(3));
+    var left_quantity = (total_quantity - amount).toFixed(3);
+    $('#left_quantity').val(left_quantity);
+}
 
 </script>
 </body>

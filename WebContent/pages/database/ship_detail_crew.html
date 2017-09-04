@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<#include "../include/header.html">
+</head>
+<body>
+<form id="defaultForm" class="form-horizontal" role="form" enctype="multipart/form-data" style="padding-right: 60px;padding-top: 20px">
+	<#if im??>
+	 <input hidden="" id="shipid" name="shipid" value="${shipid!}">
+	 <input hidden="" id="crewid" name="crewid" value="${crewid!}">
+     <div class="form-group">
+         <label class="col-xs-5 control-label text-right" for="crew_name">船员姓名：</label>
+         <div class="col-xs-7">
+             <input class="form-control" id="crew_name" type="text" placeholder="船员姓名"  name="crew_name" value="${im.crew_name!}" style="padding-right: 2px"/>
+         </div>
+     </div>
+     <div class="form-group">
+         <label class="col-xs-5 control-label text-right" for="ID_card_certificate">身份证：</label>
+         <div class="col-xs-7">
+             <input class="form-control" id="ID_card_certificate" type="text" placeholder="身份证号码"  name="ID_card_certificate" value="${im.ID_card_certificate!}"/>
+         </div>
+     </div>
+     <div class="form-group">
+         <label class="col-xs-5 control-label text-right" for="crew_certificate">船员证书：</label>
+         <div class="col-xs-7">
+         	<#if im.crew_certificate??>
+         		<div id="fileflag" hidden="">
+         			<input type="file" class="file" id="crew_certificate" name="crew_certificate" value="">
+         		</div>
+     			<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.crew_certificate!}</span><a href="javascript:;" onclick="del(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+         	<#else>
+         		<input type="file" class="file" id="crew_certificate" name="crew_certificate" value="">
+         	</#if>
+         </div>
+     </div>
+     <#else>
+     <input hidden="" id="shipid" name="shipid" value="${shipid!}">
+	 <input hidden="" id="crewid" name="crewid" value="${crewid!}">
+     <div class="form-group">
+         <label class="col-xs-5 control-label text-right" for="crew_name">船员姓名：</label>
+         <div class="col-xs-7">
+             <input class="form-control" id="crew_name" type="text" placeholder="船员姓名"  name="crew_name" value="" style="padding-right: 2px"/>
+         </div>
+     </div>
+     <div class="form-group">
+         <label class="col-xs-5 control-label text-right" for="ID_card_certificate">身份证：</label>
+         <div class="col-xs-7">
+             <input class="form-control" id="ID_card_certificate" type="text" placeholder="身份证号码"  name="ID_card_certificate" value=""/>
+         </div>
+     </div>
+     <div class="form-group">
+         <label class="col-xs-5 control-label text-right" for="crew_certificate">船员证书：</label>
+         <div class="col-xs-7">
+         	<div id="fileflag">
+             	<input type="file" class="file" id="crew_certificate" name="crew_certificate" value="">
+             </div>
+         </div>
+     </div>
+     </#if>
+     <div class="col-xs-12">
+         <div class="form-group">
+             <label class="col-xs-2 control-label" for="commit_btn"></label>
+             <div class="col-xs-10 text-left">            
+                 <button id="commit_btn3" class="btn btn-11">　保存　</button>
+             </div>
+         </div>
+     </div>
+</form>
+</body>
+<script>
+//附件上传控件
+function initFileInput(ctrlName){
+    var control = $(ctrlName);
+    control.fileinput({
+        language: 'zh', //设置语言
+        showUpload: false, //是否显示上传按钮
+        showRemove:true,
+        dropZoneEnabled: false,
+        showCaption: true,//是否显示标题
+        showPreview :false,//是否显示预览
+        enctype: 'multipart/form-data',
+        uploadAsync: false, //同步上传
+    })
+}
+initFileInput("#crew_certificate");
+
+//表单校验
+$('#defaultForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    	crew_name: {
+        	validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                    message: '不能包含特殊字符'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
+        ID_card_certificate: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp:/^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
+                    message: '请输入正确的身份证号码'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
+        crew_certificate: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+            }
+        },
+    },
+})
+.on('success.form.bv', function(e) {
+    e.preventDefault();
+    var formData = new FormData();
+    var crew_name = $.trim($("#crew_name").val());
+    var ID_card_certificate = $.trim($("#ID_card_certificate").val());
+    var shipid = $.trim($("#shipid").val());
+    var crewid = $.trim($("#crewid").val());
+	formData.append("file",$("#crew_certificate")[0].files[0]);
+	formData.append("crew_name",crew_name);
+	formData.append("ID_card_certificate",ID_card_certificate);
+	formData.append("shipid",shipid);
+	formData.append("crewid",crewid);
+    $.ajax({
+        url:"/dataBase/ship/saveCrew",
+        type:"POST",
+        data:formData,
+        processData:false,
+        contentType:false,
+        success:function(result){
+            if(result){
+                layer.msg('保存成功', {time: 2000}, function(){
+                    parent.showCrew();
+                    layer_close();
+                });
+            }else{
+                layer.msg('保存失败',{time:2000})
+            }
+        },
+        error:function(e){
+            console.log("error");
+        },
+    });
+});
+
+//删除选中文件
+function del(_obj){
+	$(_obj).parent('p').remove();
+	$("#fileflag").removeAttr("hidden");
+	initFileInput("file");
+}
+
+</script>
+</html>

@@ -11,48 +11,103 @@
 </head>
 
 <body style="width:85%;">
-    <form id="defaultForm" class="form-horizontal" role="form" enctype="multipart/form-data">
+    <form id="defaultForm" class="form-horizontal" role="form" enctype="multipart/form-data" style="min-width: 680px">
         <#if record??>
-        <input hidden="" name="id" value="${record.id}" id="id">
+        <input hidden="" name="id" value="${record.id}" id="id"> 
+        <div style="display: inline-block">	
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="customer">客户名称：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="customer" type="text" placeholder="客户名称"  name="customer" value="${record.customer!}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="art_no">发货港：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="dispatch_port" type="text" placeholder="发货港"  name="dispatch_port" value="${record.dispatch_port!}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="freight">运价：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="freight" type="text" placeholder="运价"  name="freight" value="${record.freight!}"/>
+            </div>
+        </div>
+        </div>
+        <div style="display: inline-block">
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="recipient">货号：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="art_no" type="text" placeholder="货号"  name="art_no" value="${record.art_no!}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="consignee">收货单位：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="consignee" type="text" placeholder="收货单位"  name="consignee" value="${record.consignee!}" style="padding-right: 2px"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="quantity">发货数量：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="quantity" type="text" placeholder="发货数量"  name="quantity" value="${record.quantity!}"/>
+            </div>
+        </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 control-label text-right" for="file" style="padding-top:0;width: 148.53px">附件：</label>
+            <div class="col-xs-6">
+            	<div hidden="" id="fileflag">
+                	<input type="file" class="file" id="file" name="file" value="">
+                </div>
+                <#if record.attachment??>
+                <div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.attachment!}</span><a href="javascript:;" onclick="del(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                </#if>
+            </div>
+        </div>
         <#else>
+        <div style="display: inline-block">	
         <div class="form-group">
-            <label class="col-xs-5 control-label text-right" for="company_name">客户名称：</label>
+            <label class="col-xs-5 control-label text-right" for="customer">客户名称：</label>
             <div class="col-xs-6">
-                <input class="form-control" id="abbreviation" type="text" placeholder="客户名称"  name="company_name"/>
+                <input class="form-control" id="customer" type="text" placeholder="客户名称"  name="customer"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-5 control-label text-right" for="goods_name">货号：</label>
+            <label class="col-xs-5 control-label text-right" for="art_no">发货港：</label>
             <div class="col-xs-6">
-                <input class="form-control" id="abbreviation" type="text" placeholder="货号"  name="goods_name"/>
+                <input class="form-control" id="dispatch_port" type="text" placeholder="发货港"  name="dispatch_port"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-5 control-label text-right" for="delivery_dock">发货港：</label>
+            <label class="col-xs-5 control-label text-right" for="freight">运价：</label>
             <div class="col-xs-6">
-                <input class="form-control" id="abbreviation" type="text" placeholder="发货港"  name="delivery_dock"/>
+                <input class="form-control" id="freight" type="text" placeholder="运价"  name="freight"/>
+            </div>
+        </div>
+        </div>
+        <div style="display: inline-block">
+        <div class="form-group">
+            <label class="col-xs-5 control-label text-right" for="recipient">货号：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="art_no" type="text" placeholder="货号"  name="art_no"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-5 control-label text-right" for="recipient">收货单位：</label>
+            <label class="col-xs-5 control-label text-right" for="consignee">收货单位：</label>
             <div class="col-xs-6">
-                <input class="form-control" id="abbreviation" type="text" placeholder="收货单位"  name="recipient"/>
+                <input class="form-control" id="consignee" type="text" placeholder="收货单位"  name="consignee" style="padding-right: 2px"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-5 control-label text-right" for="freight_price">运价：</label>
+            <label class="col-xs-5 control-label text-right" for="quantity">发货数量：</label>
             <div class="col-xs-6">
-                <input class="form-control" id="abbreviation" type="text" placeholder="运价"  name="freight_price"/>
+                <input class="form-control" id="quantity" type="text" placeholder="发货数量"  name="quantity"/>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-xs-5 control-label text-right" for="delivery_quantity">发货数量：</label>
-            <div class="col-xs-6">
-                <input class="form-control" id="abbreviation" type="text" placeholder="发货数量"  name="delivery_quantity"/>
-            </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-5 control-label text-right" for="file" style="padding-top:0;">附件：</label>
+            <label class="col-xs-2 control-label text-right" for="file" style="padding-top:0;width: 148.53px">附件：</label>
             <div class="col-xs-6">
                 <input type="file" class="file" id="file" name="file" value="">
                 <div id="url"></div>
@@ -60,92 +115,38 @@
         </div>
         </#if>
         <div class="form-group">
-            <label class="col-xs-5 control-label" for="v5"></label>
+            <label class="col-xs-2 control-label" for="v5" style="width: 148.53px"></label>
             <div class="col-xs-6 ">
-                <!-- <button type="button" class="btn btn-10" onclick="_close()">取消</button> -->
                 <button type="submit" class="btn btn-11" id="save">　保存　</button>
             </div>
         </div>
     </form>
     
 <script type="text/javascript">
-
-// 文件上传
-// 初始化fileinput控件（第一次初始化）
-//var fileList = new Array();//定义一个全局变量去接受文件名和id
-
-function initFileInput(ctrlName, uploadUrl) {
-    var control = $('#' + ctrlName);
-
+function initFileInput(ctrlName){
+    var control = $('#'+ctrlName);
     control.fileinput({
         language: 'zh', //设置语言
-        uploadUrl: uploadUrl, //上传的地址
-        // allowedFileExtensions : ['jpg', 'png','gif'],//接收的文件后缀
         showUpload: false, //是否显示上传按钮
-        showCaption: false,//是否显示标题
-        showRemove: false, //
-        //showUploadedThumbs: false,//
-        browseClass: "btn btn-primary", //按钮样式
-        dropZoneEnabled: false,//是否显示拖拽区域
+        showRemove:true,
+        dropZoneEnabled: false,
+        showCaption: true,//是否显示标题
         showPreview :false,//是否显示预览
         enctype: 'multipart/form-data',
-        previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
-    }).on("filebatchselected", function(event, files) {// 上传文件
-        $(this).fileinput("upload");
-    }).on("fileuploaded", function(event, data, previewId, index) {// 上传成功后的回调函数
-        if(data.response) {
-            var fileName = data.response.fileName;
-            //var fullName = fileName;
-            console.log("fileName: " + fileName);
-            var file = fileName.substring(0, fileName.indexOf("@"));
-            //fileList.push({fileName: fileName, keyId : previewId});
-            $('#url').append('<p><span _url="'+fileName+'" style="width: 90%;float: left;">'+file+'</span><a _url="'+fileName+'" href="javascript:;" onclick="del(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p>');
-        }
-    }).on('filesuccessremove', function(event,id) {// 上传成功后，点击删除按钮的回调函数
-        console.log("filesuccessremove: " + id);
-    }).on('fileclear', function(event) {
-        console.log("fileclear");
-    });
+        uploadAsync: false, //同步上传
+    })
 }
+initFileInput("file");
 
-initFileInput("file", "/insidejob/contract/uploadFile");
-
-
-/*// 文件上传，显示文件名
-$('body').delegate('#file','change',function(e){
-    //console.log($(this).val())//e就是你获取的file对象
-    var file = $(this).val();
-    var strFileName=file.replace(/^.+?\\([^\\]+?)(\.[^\.\\]*?)?$/gi,"$1");  //正则表达式获取文件名，不带后缀
-    var FileExt=file.replace(/.+\./,"");   //正则表达式获取后缀
-    var fileName = strFileName + "." + FileExt;
-    //console.log(fileName);
-    if ("." !== fileName) {
-        $('#url').empty().append('<p><span style="width: 90%;float: left;">'+fileName+'</span><a href="javascript:;" onclick="del(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p>');
-    } else {
-        $('#url').empty();
-    }
-})*/
 // 删除选中文件
 function del(_obj){
-    var fileName = $(_obj).attr('_url');
-    //console.log(fileName);
-    $.post("/insidejob/contract/deleteFile",{"fileName":fileName},function (data) {
-    	if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
-
-        } else {
-            parent.layer.msg(result.tips, {time: 2000});
-        }
-    });
-    $(_obj).parent('p').remove();
-    $("#file").val("");
+	$(_obj).parent('p').remove();
+	$("#fileflag").removeAttr("hidden");
+	initFileInput("file");
 }
 // 回显文件
 $(function () {
-    var fileName = '${fileName!""}'.split(",");
+    var fileName = '${attachment!}'.split(",");
     if (fileName.length > 0) {
         for(var i in fileName){
             if(fileName[i] != ''){
@@ -153,9 +154,8 @@ $(function () {
                 $('#url').append('<p><span _url="'+fileName[i]+'" style="width: 90%;float: left;">'+file+'</span><a _url="'+fileName[i]+'" href="javascript:;" onclick="del(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p>');
             }
         }
-    }
+    } 
 });
-
 
 // 表单校验
 $('#defaultForm').bootstrapValidator({
@@ -166,7 +166,7 @@ $('#defaultForm').bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-        company_name: {
+    	customer: {
         	validators: {
                 notEmpty:{
                     message: '不能为空!'
@@ -182,7 +182,7 @@ $('#defaultForm').bootstrapValidator({
                 }
             }
         },
-        goods_name: {
+        art_no: {
             validators: {
                 notEmpty:{
                     message: '不能为空!'
@@ -198,7 +198,7 @@ $('#defaultForm').bootstrapValidator({
                 }
             }
         },
-        delivery_dock: {
+        dispatch_port: {
             validators: {
                 notEmpty:{
                     message: '不能为空!'
@@ -214,7 +214,7 @@ $('#defaultForm').bootstrapValidator({
                 }
             }
         },
-        recipient: {
+        consignee: {
             validators: {
                 notEmpty:{
                     message: '不能为空!'
@@ -230,7 +230,7 @@ $('#defaultForm').bootstrapValidator({
                 }
             }
         },
-        freight_price: {
+        freight: {
             validators: {
                 notEmpty:{
                     message: '不能为空!'
@@ -246,7 +246,7 @@ $('#defaultForm').bootstrapValidator({
                 }
             }
         },
-        delivery_quantity: {
+        quantity: {
             validators: {
                 notEmpty:{
                     message: '不能为空!'
@@ -262,59 +262,48 @@ $('#defaultForm').bootstrapValidator({
                 }
             }
         },
+        file:{
+            validators:{
+                notEmpty:{
+                    message:'请选择附件'
+                }
+            }
+        }
     },
 })
 .on('success.form.bv', function(e) {
     e.preventDefault();
-    
-    var fileName = "";
-    $('#url span').each(function () {
-        console.log($(this).attr('_url'));
-        fileName += $(this).attr('_url') + ",";
-    });
-    fileName = fileName.substring(0, fileName.length - 1);
-    console.log(fileName);
-    // var file = fileList[0]["fileName"];
-    var postData = $('form').serialize();
-    postData += '&fileName=' + fileName;
-    
-    $.post("/insidejob/contract/save", postData, function(result) {
-    	if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
-
-        } else {
-            parent.layer.msg(result.tips, {time: 2000});
-        }
-    });
-
-    /*
-    // 同步传输
-    var postdata = new FormData(document.getElementById('defaultForm'));
+    var formData = new FormData();
+	formData.append("file",$("#file")[0].files[0]);
+    if($("#id").val()!=null&&$("#id").val()!=""){
+    	formData.append("id",$("#id").val());
+    }
+    formData.append("customer",$("#customer").val());
+    formData.append("art_no",$("#art_no").val());
+    formData.append("dispatch_port",$("#dispatch_port").val());
+    formData.append("consignee",$("#consignee").val());
+    formData.append("freight",$("#freight").val());
+    formData.append("quantity",$("#quantity").val());
     $.ajax({
-        url:"/supplier/quality/saveQuality",
-        type:"post",
-        data:postdata,
-        cache: false,
-        processData: false,
-        contentType: false,
+        url:"/insidejob/contract/saveContract",
+        type:"POST",
+        data:formData,
+        processData:false,
+        contentType:false,
         success:function(result){
-            if (result) {
-                parent.layer.msg("保存成功", {time: 2000}, function(){
-                    layer_close();
+            if(result){
+                layer.msg('保存成功', {time: 2000}, function(){
                     parent.parent.refresh_iframe();
                 });
-
-            } else {
-                parent.layer.msg('保存失败', {time: 2000});
+            }else{
+                layer_close();
             }
         },
         error:function(e){
-            alert("网络错误，请重试！！");
-        }
-    });*/
+            console.log("error");
+        },
+    });
+
 });
 
 </script>
