@@ -99,18 +99,33 @@ public class PlanManageController extends Controller {
 	 * @author xuhui
 	 */
 	public void examine(){
+		boolean result = false;
 		Integer id = getParaToInt(0);
 		Record record = new Record();
-		record.set("id", id);
-		//判断审核状态 0、待审核，1、已审核，2、取消审核
-		Integer value = Db.findById("t_dispatch", id).getInt("examine_state");
-		if(value==0||value==2){
-			record.set("examine_state", 1);
-		}else{
-			record.set("examine_state", 2);
+		 Map<String,Object> map = new HashMap<String,Object>();
+		//是否产生后续业务,true已经产生，false未产生
+		boolean flagnext = false;
+		//判断是否有后续业务逻辑产生，判断‘调度交接表’是否审核，0:待审核 1:已审核 2:取消审核
+		Integer dispatch_review = Db.findById("t_dispatch", id).getInt("dispatch_review");
+		//判断调度交接明细表是否有数据产生
+		String sql = "select * from t_dispatch_ship where dispatch_id = "+id;
+		if(Db.findFirst(sql)!=null&&dispatch_review==1){
+			flagnext = true;
 		}
-		boolean result = Db.update("t_dispatch", record);
-		renderJson(result);
+		if(!flagnext){
+			record.set("id", id);
+			//判断审核状态 0、待审核，1、已审核，2、取消审核
+			Integer value = Db.findById("t_dispatch", id).getInt("examine_state");
+			if(value==0||value==2){
+				record.set("examine_state", 1);
+			}else{
+				record.set("examine_state", 2);
+			}
+			result = Db.update("t_dispatch", record);
+		}
+		map.put("flag", result);
+		map.put("flagnext", flagnext);
+		renderJson(map);
 	}
 	
 	/**

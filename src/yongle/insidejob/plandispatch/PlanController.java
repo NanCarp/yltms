@@ -18,13 +18,16 @@ import yongle.utils.ResponseObj;
  */
 //@Before(ManageInterceptor.class)
 public class PlanController extends Controller {
+    public void index() {
+        render("plan_dispatch2.html");
+    }
 
     /** 
     * @Title: index 
     * @Description: 页面
     * @author liyu
     */
-    public void index() {
+    public void search() {
     	
     	String plan_no = getPara("plan_no");
     	setAttr("plan_no", plan_no);

@@ -33,7 +33,15 @@
 	    #f1 .form-group {
 	        margin: 0;
 	    }
-	    #defaultForm { margin-right: 50px;}
+	    #defaultForm{ margin-right: 50px;}
+	    #tab2Form{
+	    	width:750px;
+	    	margin-right: 50px;
+	    }
+	    #tab3Form{
+	    	width:750px;
+	    	margin-right: 50px;
+	    }
 	    a{
 	    	cursor: pointer;
 	    }
@@ -232,18 +240,17 @@
                         <label class="col-xs-5 control-label text-right" for="year">营业执照副本：</label>
                         <div class="col-xs-7">
                             <#if record.license_copy_commerce??>
-                				<button class="btn btn-xs btn-5"  onclick="_watchFile('license_copy_commerce')">本地查看</button>
+                				<button class="btn btn-xs btn-5" style="font-size: 14px;margin-top: 6px" onclick="_watchFile('license_copy_commerce')">本地查看</button>
                 			<#else>
                 				<span style="color: blue;font-size: 16px">暂无营业执照副本</span>
                 			</#if>
-                			
                         </div>
                     </div>
                      <div class="form-group">
                         <label class="col-xs-5 control-label text-right" for="year">税务登记证：</label>
                         <div class="col-xs-7">
                             <#if record.registration_commerce??>
-                				<button class="btn btn-xs btn-5"  onclick="_watchFile('registration_commerce')">本地查看</button>
+                				<button class="btn btn-xs btn-5" style="font-size: 14px;margin-top: 6px"  onclick="_watchFile('registration_commerce')">本地查看</button>
                 			<#else>
                 				<span style="color: blue;font-size: 16px">暂无税务登记证</span>
                 			</#if>
@@ -255,7 +262,7 @@
                         <label class="col-xs-5 control-label text-right" for="deposit">组织机构代码证：</label>
                         <div class="col-xs-7">
                              <#if record.organization_commerce??>
-                				<button class="btn btn-xs btn-5"  onclick="_watchFile('registration_commerce')">本地查看</button>
+                				<button class="btn btn-xs btn-5" style="font-size: 14px;margin-top: 6px"  onclick="_watchFile('registration_commerce')">本地查看</button>
                 			<#else>
                 				<span style="color: blue;font-size: 16px">暂无组织机构代码证</span>
                 			</#if>
@@ -291,9 +298,6 @@
 <script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="../../../js/common/admin.js"></script>
 <!-- <script src="../../../js/common/common.js"></script> -->
-<script type="text/javascript">
-
-</script>
 </body>
 <script>
 function _watchFile(obj){

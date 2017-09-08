@@ -102,8 +102,8 @@ $('#submit').on('click', function () {
     		"id": $('#id').val(),
     		"recordList": JSON.stringify(getRecordList())
     };
-    console.log(postData);
-    // return;
+    //console.log(postData);
+    
     $.post("/site/handoversite/save", postData, function(result) {
         if (result.code == 1) {
             parent.layer.msg(result.msg, {time: 2000}, function(){

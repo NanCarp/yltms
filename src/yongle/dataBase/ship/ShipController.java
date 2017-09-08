@@ -74,6 +74,7 @@ public class ShipController extends Controller{
 	public void saveTabOne(){
 		Map<String, Object> map = new HashMap<String,Object>();//返回数据map
 		boolean is_success = false;//判断数据是否保存成功
+		Integer id = getParaToInt("newid");
 		String shipowname = getPara("shipowname");
 		String ship_name = getPara("ship_name");
 		String ID_number = getPara("ID_number");
@@ -81,7 +82,7 @@ public class ShipController extends Controller{
 		String ship_ton = getPara("ship_ton");
 		String grade_sail = getPara("grade_sail");
 		String business_route = getPara("business_route");
-		Integer flagId = ShipService.saveTabOne(shipowname, ship_name
+		Integer flagId = ShipService.saveTabOne(id,shipowname, ship_name
 				, ID_number, phone_num, ship_ton, grade_sail, business_route);
 		if(flagId==0){
 			map.put("is_success", is_success);
@@ -127,22 +128,32 @@ public class ShipController extends Controller{
 		if(!file.exists()){
 			file.mkdirs();
 		}
-		String visa_sheet = visa_sheetfile.getOriginalFileName();
-		String ship_inspection = ship_inspectionfile.getOriginalFileName();
-		String loading = loadingfile.getOriginalFileName();
-		String operation = operationfile.getOriginalFileName();
-		//保存文件
-		visa_sheetfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+visa_sheet));
-		ship_inspectionfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+ship_inspection));
-		loadingfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+loading));
-		operationfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+operation));
-		//保存信息
+		
 		Record record = new Record();
-		record.set("visa_sheet", visa_sheet);
+		
+		if(visa_sheetfile!=null){
+			String visa_sheet = visa_sheetfile.getOriginalFileName();
+			//保存文件
+			visa_sheetfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+visa_sheet));
+			record.set("visa_sheet", visa_sheet);
+		}
+		if(ship_inspectionfile!=null){
+			String ship_inspection = ship_inspectionfile.getOriginalFileName();
+			//保存文件
+			ship_inspectionfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+ship_inspection));
+			record.set("ship_inspection", ship_inspection);
+		}
+		if(loadingfile!=null){
+			String loading = loadingfile.getOriginalFileName();
+			loadingfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+loading));
+			record.set("loading", loading);
+		}
+		if(operationfile!=null){
+			String operation = operationfile.getOriginalFileName();
+			operationfile.getFile().renameTo(new File(PropKit.get("filepath_ship")+"/"+id+"/"+operation));
+			record.set("operation", operation);
+		}	
 		record.set("id", id);
-		record.set("ship_inspection", ship_inspection);
-		record.set("loading", loading);
-		record.set("operation", operation);
 		flag = Db.update("t_base_ship", record);
 		renderJson(flag);
 	}
@@ -232,7 +243,8 @@ public class ShipController extends Controller{
 		record.set("ID_card_certificate", ID_card_certificate);
 		record.set("crew_certificate", crew_certificate);
 		if(crewid!=null){
-			
+			record.set("id", crewid.longValue());
+			flag = Db.update("t_base_ship_crew", record);
 		}else{
 			flag = Db.save("t_base_ship_crew", record);
 		}

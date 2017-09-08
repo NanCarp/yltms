@@ -15,6 +15,7 @@
 </style>
 </head>
 <body>
+<input type="hidden" id="consigneeList" value="${consigneeList!}">
 <div class="container">
     <form id="f1">
         <input type="hidden" id="id" name="id" value="${(record.id)!}">
@@ -81,6 +82,9 @@
                     <div class="col-sm-2 col-xs-2 head_1">
                         <button id="submit" class="btn btn-11" >保存</button>
                     </div>
+                    <!-- <div class="col-sm-2 col-xs-2 head_1">
+                        <button id="submit" class="btn btn-11">分配小船</button>
+                    </div> -->
                 </div>
             </div>
             <table width="100%" class="table table-striped table-bordered table-hover">
@@ -88,6 +92,7 @@
                     <tr>
                         <th><input type="checkbox" id="checkAll"></th>
                         <th>序号</th>
+                        <th>收货单位</th>
                         <th>船名</th>
                         <th>姓名</th>
                         <th width="120px">手机号</th>
@@ -108,14 +113,14 @@
                     <tr>
                         <td><input type="checkbox" name="sub"></td>
                         <td>${record_index+1}</td>
-                        <td>${record.ship_name!}</td>
-                        <td>${record.ship_owner_name!}</td>
-                        <td>${record.ship_owner_phone!}</td>
-                        <td>${record.id_card_no!}</td>
+                        <td class="ship_name">${record.ship_name!}</td>
+                        <td class="ship_owner_name">${record.ship_owner_name!}</td>
+                        <td class="ship_owner_phone">${record.ship_owner_phone!}</td>
+                        <td class="id_card_no">${record.id_card_no!}</td>
                         <td class="loading_tonnage">${record.loading_tonnage!}</td>
                         <td>${record.available_tonnage!}</td>
                         <td>${record.arrival_date!}</td>
-                        <td>${record.freight_price!}</td>
+                        <td class="freight_price">${record.freight_price!}</td>
                         <td>${record.total_freight!}</td>
                         <td>${record.prepay!}</td>
                         <td>${record.pre_refuel!}</td>
@@ -132,6 +137,7 @@
 
 <script>
 var item = {
+	consignee:null,	
     ship_name:null,
     ship_owner_name:null,
     ship_owner_phone:null,
@@ -231,7 +237,7 @@ function bindValidator(obj){
                     }
                 }
             },
-            owner_name: {
+            ship_owner_name: {
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
@@ -247,7 +253,7 @@ function bindValidator(obj){
                     }
                 }
             },
-            phone: {
+            ship_owner_phone: {
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
@@ -537,9 +543,6 @@ $('form').on('change', 'input[name=loading_tonnage]', function () {
 $('#delBtn').on('click', function () {
 	calculateLeftQuantity();
 })
-/* $('form').on('change', 'tbody', function () {
-    calculateLeftQuantity();
-}) */
 function calculateLeftQuantity() {
 	var total_quantity = parseFloat($('#total_quantity').val());
 	console.log(total_quantity);
@@ -559,6 +562,40 @@ function calculateLeftQuantity() {
     var left_quantity = (total_quantity - amount).toFixed(3);
     $('#left_quantity').val(left_quantity);
 }
+//根据船名带出相关信息
+$('form').on('change', 'input[name="ship_name"]', function () {
+    console.log($(this).val());
+    var $this = $(this);
+    var $tr = $this.parent().parent().parent();
+    console.log($tr);
+    var postData = {
+            ship_name: $.trim($this.val()),
+    }
+    $.post("/planManage/handover/getShipInfoByShipName", postData, function(result) {
+        if (result.code == 1) {
+            console.log(result.data);
+            var data = result.data;
+            $tr.find('input[name="ship_owner_name"]').val(data.shipowname);
+            $tr.find('input[name="ship_owner_phone"]').val(data.phone_num);
+            $tr.find('input[name="id_card_no"]').val(data.ID_number);
+            $tr.find('input[name="available_tonnage"]').val(data.ship_ton);
+
+        } else {
+            console.log("查无此船");
+        }
+        
+    });
+});
+// 收货单位列表
+/* var consigneeList = $('#consigneeList').val();
+console.log(typeof consigneeList);
+console.log(consigneeList); */
+var consigneeList = ${consigneeList}[0];
+console.log(typeof consigneeList);
+console.log(consigneeList);
+$(consigneeList).each(function () {
+    
+});
 
 </script>
 </body>

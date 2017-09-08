@@ -35,18 +35,15 @@
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
 							<input type="search" class="form-control" placeholder="开票单位" name="company_information" id="company_information">
 						</div>
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>                    			
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-2 head_1">
 		                    <button class="btn btn-success" onclick="_add()">新增</button>
 		                </div>	  
-		                <div class="col-sm-1 col-xs-1 head_4" >
+		                <div class="col-sm-1 col-xs-2 head_4" >
 		                     <button class="btn btn-5" onclick="_seeDatil()">查看明细</button>
-		                </div>                     									
-		                <div class="col-sm-1 col-xs-1 head_1">
-                             <button class="btn btn-9" onclick="location.replace()"><i class="fa fa-refresh"></i></button>
-                        </div>                  
+		                </div>                     									                
 					</div>				
 				</div>
 			</div>		
@@ -201,12 +198,12 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	parent.open_window('新增客户信息管理','/dataBase/customer/getTab',840,360);
+	parent.open_window('新增客户信息管理','/dataBase/customer/getTab',800,360);
 }
 
 //编辑
 function _edit(id){
-	parent.open_window('编辑客户信息管理','/dataBase/customer/getTab/'+id,840,360);
+	parent.open_window('编辑客户信息管理','/dataBase/customer/getTab/'+id,800,360);
 }
 
 //删除操作
@@ -231,14 +228,7 @@ function getIdSelections() {
     });
 }
 
-//获取被选中数据的id
-function getIdSelections() {
-    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
-        return row.id;
-    });
-}
-
-//审核
+//查看明细
 function _seeDatil(){
 	// 获取选中记录 id
 	var ids = getIdSelections();	
@@ -248,7 +238,7 @@ function _seeDatil(){
 	}else if(ids.length >1){
 		layer.msg('最多选择一条查看记录', {time: 2000});
 	}else{
-		parent.open_window('客户信息管理明细','/dataBase/customer/seeDetail/'+ids,840,320);
+		parent.open_window('客户信息管理明细','/dataBase/customer/seeDetail/'+ids,800,320);
 	}
 }
 </script>

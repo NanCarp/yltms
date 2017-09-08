@@ -35,21 +35,18 @@
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
 							<input type="search" class="form-control form_datetime" placeholder="计划截止时间" name="plan_endtime" id="plan_endtime">
 						</div>
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>                    			
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-2 head_1">
 		                    <button class="btn btn-success" onclick="_add()">新增</button>
 		                </div>	          
-                        <div class="col-sm-1 col-xs-1 head_1" >
+                        <div class="col-sm-1 col-xs-2 head_1" >
 		                     <button class="btn btn-12" onclick="examine()">审核</button>
 		                </div>   
-		                <div class="col-sm-1 col-xs-1 head_4" >
+		                <div class="col-sm-1 col-xs-2 head_4" >
 		                     <button class="btn btn-5" onclick=" _seeDatil()">查看详情</button>
-		                </div>             									
-		                <div class="col-sm-1 col-xs-1 head_1">
-                             <button class="btn btn-9" onclick="location.replace()"><i class="fa fa-refresh"></i></button>
-                        </div>                  
+		                </div>             									                 
 					</div>				
 				</div>
 			</div>		
@@ -332,14 +329,16 @@ function examine(){
 			if(data){
 				layer.confirm('取消审核?', {icon: 7, title:'审核确认提示'}, function(index){
 					$.post("/planManage/dispatch/examine/"+ids,function(result){
-						if(result){
-							layer.msg('取消审核成功', {time: 2000}, function(){
-								parent.refresh_iframe();
-			                });
+						if(result.flagnext){
+							layer.msg("已有后续业务产生，取消失败",{time:2000})
 						}else{
-							layer.msg('取消审核失败', {time: 2000}, function(){
-								
-			                });
+							if(result.flag){
+								layer.msg("已取消审核",{time:2000},function(){
+									parent.refresh_iframe();
+								})
+							}else{
+								layer.msg("取消失败",{time:2000})
+							}
 						}
 					})    
 					layer.close(index);
@@ -347,7 +346,7 @@ function examine(){
 			}else{
 				layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
 					$.post("/planManage/dispatch/examine/"+ids,function(result){
-						if(result){
+						if(result.flag){
 							layer.msg('完成审核', {time: 2000}, function(){
 								parent.refresh_iframe();
 			                });

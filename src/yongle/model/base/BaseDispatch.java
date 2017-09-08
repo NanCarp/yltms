@@ -234,4 +234,13 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("dispatch_issue");
 	}
 
+	public M setSiteDelivery(java.lang.String siteDelivery) {
+		set("site_delivery", siteDelivery);
+		return (M)this;
+	}
+
+	public java.lang.String getSiteDelivery() {
+		return get("site_delivery");
+	}
+
 }

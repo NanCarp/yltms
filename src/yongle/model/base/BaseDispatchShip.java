@@ -81,6 +81,15 @@ public abstract class BaseDispatchShip<M extends BaseDispatchShip<M>> extends Mo
 		return get("available_tonnage");
 	}
 
+	public M setArrivalLimit(java.util.Date arrivalLimit) {
+		set("arrival_limit", arrivalLimit);
+		return (M)this;
+	}
+
+	public java.util.Date getArrivalLimit() {
+		return get("arrival_limit");
+	}
+
 	public M setArrivalDate(java.util.Date arrivalDate) {
 		set("arrival_date", arrivalDate);
 		return (M)this;
@@ -196,6 +205,15 @@ public abstract class BaseDispatchShip<M extends BaseDispatchShip<M>> extends Mo
 
 	public java.lang.String getWaterwayRemark() {
 		return get("waterway_remark");
+	}
+
+	public M setDispatchDetailId(java.lang.Integer dispatchDetailId) {
+		set("dispatch_detail_id", dispatchDetailId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getDispatchDetailId() {
+		return get("dispatch_detail_id");
 	}
 
 }

@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.jfinal.core.Controller;
+import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-
 import yongle.utils.ResponseObj;
 
 /**
@@ -71,10 +71,15 @@ public class HandoverController extends Controller {
         Integer id = getParaToInt();
         Record record = Db.findById("t_dispatch", id);
         setAttr("record", record);
-        List<Record> recordList = Db.find("SELECT * FROM `t_dispatch_ship` WHERE dispatch_id = ? ", id);
+        List<Record> recordList = Db.find("SELECT *,a.id FROM `t_dispatch_ship` AS a LEFT JOIN t_dispatch_detail AS b ON a.dispatch_detail_id = b.id WHERE dispatch_id = ? ", id);
         setAttr("recordList", recordList);
         
-        render("handover_detail.html");
+        // 收货单位
+        List<Record> consigneeList = Db.find("SELECT * FROM t_dispatch_detail WHERE plan_no_id = ?", id);
+        // setAttr("consigneeList", consigneeList);
+        setAttr("consigneeList", JsonKit.toJson(consigneeList));
+        
+        render("handover_detail2.html");
     }
     
     /** 
@@ -87,7 +92,11 @@ public class HandoverController extends Controller {
         String left_quantity = getPara("left_quantity"); // 剩余吨数
         String site_dispatch = getPara("site_dispatch"); // 现场调度
         String recordList = getPara("recordList"); // 驳船列表
-        msg = HandoverService.save(dispatch_id, left_quantity, site_dispatch, recordList);
+        Record user = getSessionAttr("admin");
+        user = Db.findById("t_user", 1);
+        String dispatcher = user.getStr("user_name");
+        
+        msg = HandoverService.save(dispatch_id, left_quantity, site_dispatch, recordList, dispatcher);
         renderJson(msg);
     }
     
@@ -97,18 +106,34 @@ public class HandoverController extends Controller {
     * @author liyu
     */
     public void review() {
+        ResponseObj res = new ResponseObj(); // 返回信息
         Integer id = getParaToInt(0);
         Record record = new Record();
         record.set("id", id);
+        
+        Record dbRecord = Db.findById("t_dispatch", id);
+        // 已下发不允许取消审核
+        if (dbRecord.getInt("dispatch_issue") == 1) {
+            res.setCode(ResponseObj.FAILED);
+            res.setMsg("已下发不能取消审核");
+            renderJson(res);
+            return;
+        }
         //判断审核状态 0、待审核，1、已审核，2、取消审核
-        Integer value = Db.findById("t_dispatch", id).getInt("dispatch_review");
+        Integer value = dbRecord.getInt("dispatch_review");
         if(value==0||value==2){
             record.set("dispatch_review", 1);
+            boolean result = Db.update("t_dispatch", record);
+            res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
+            res.setMsg(result ? "完成审核" : "审核失败");
         }else{
             record.set("dispatch_review", 2);
+            boolean result = Db.update("t_dispatch", record);
+            res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
+            res.setMsg(result ? "取消审核成功" : "取消审核失败");
         }
-        boolean result = Db.update("t_dispatch", record);
-        renderJson(result);
+        
+        renderJson(res);
     }
     /**
      * @desc 获取计划单审核状态
@@ -145,6 +170,14 @@ public class HandoverController extends Controller {
             renderJson(res);
             return;
         }
+        // 已下发
+        if (r.getInt("dispatch_issue") == 1) {
+            res.setCode(ResponseObj.FAILED);
+            res.setMsg("已下发");
+            renderJson(res);
+            return;
+        }
+        
         // 修改下发状态
         r.set("dispatch_issue", 1);
         boolean result = Db.update("t_dispatch", r);
@@ -153,4 +186,29 @@ public class HandoverController extends Controller {
         
         renderJson(res);
     }
+    
+    /** 
+    * @Title: getShipInfoByShipName 
+    * @Description: 根据船名获取相关信息
+    * @author liyu
+    */
+    public void getShipInfoByShipName() {
+        ResponseObj res = new ResponseObj(); // 返回信息
+        String ship_name = getPara("ship_name"); // 船名
+        Record ship = Db.findFirst("SELECT * FROM t_base_ship WHERE ship_name = ?", ship_name);
+        
+        res.setCode(ship != null ? ResponseObj.OK : ResponseObj.FAILED);
+        res.setData(ship);
+        
+        renderJson(res);
+    }
+    
+    public void export() {
+        Integer id = getParaToInt();
+        Record record = Db.findById("t_dispatch", id);
+        setAttr("record", record);
+        List<Record> recordList = Db.find("SELECT *,a.id FROM `t_dispatch_ship` AS a LEFT JOIN t_dispatch_detail AS b ON a.dispatch_detail_id = b.id WHERE dispatch_id = ? ", id);
+        setAttr("recordList", recordList);
+    }
+    
 }

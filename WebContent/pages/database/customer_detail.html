@@ -16,6 +16,9 @@
 	        margin: 0;
 	    }
 	    #defaultForm { margin-right: 50px;}
+	    #tab2Form{margin-right: 50px;width: 750px}
+	    #tab3Form{margin-right: 50px;width: 750px}
+	    #tab4Form{margin-right: 80px;width: 750px}
 	    a{
 	    	cursor: pointer;
 	    }
@@ -235,7 +238,7 @@
                             <input type="file" class="file" id="license_copy_commerce" name="license_copy_commerce" value="">
                             </div>
                             <#if record.license_copy_commerce??>
-                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.license_copy_commerce!}</span><a href="javascript:;" onclick="del1(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;margin-top: 8px">${record.license_copy_commerce!}</span><a href="javascript:;" onclick="del1(this)" style="width: 10%;float: left;margin-top: 8px"><i class="fa fa-times" title="删除"></i></a></br></p></div>
                 			</#if>
                         </div>
                     </div>
@@ -246,7 +249,7 @@
                             	<input type="file" class="file" id="registration_commerce" name="registration_commerce" value="">
                             </div>
                             <#if record.registration_commerce??>
-                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.registration_commerce!}</span><a href="javascript:;" onclick="del2(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                				<div id="url"><p><span style="margin-top: 8px;color:#009100;font-size:16px;width: 90%;float: left;">${record.registration_commerce!}</span><a href="javascript:;" onclick="del2(this)" style="margin-top: 8px;width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
                 			</#if>
                         </div>
                     </div>
@@ -259,7 +262,7 @@
                             	<input type="file" class="file" id="organization_commerce" name="organization_commerce" value="">
                             </div>
                              <#if record.organization_commerce??>
-                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.organization_commerce!}</span><a href="javascript:;" onclick="del3(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                				<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;margin-top: 8px">${record.organization_commerce!}</span><a href="javascript:;" onclick="del3(this)" style="margin-top: 8px;width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
                 			</#if>
                         </div>
                     </div>
@@ -467,13 +470,13 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label class="col-xs-5 control-label text-right" for="year">营业执照副本：</label>
-                        <div class="col-xs-7">
+                        <div class="col-xs-7 text-left">
                             <input type="file" class="file" id="license_copy_commerce" name="license_copy_commerce" value="">
                         </div>
                     </div>
                      <div class="form-group">
                         <label class="col-xs-5 control-label text-right" for="year">税务登记证：</label>
-                        <div class="col-xs-7">
+                        <div class="col-xs-7 text-left">
                             <input type="file" class="file" id="registration_commerce" name="registration_commerce" value="">
                         </div>
                     </div>
@@ -481,7 +484,7 @@
                 <div class="col-xs-6">
                     <div class="form-group">
                         <label class="col-xs-5 control-label text-right" for="deposit">组织机构代码证：</label>
-                        <div class="col-xs-7">
+                        <div class="col-xs-7 text-left">
                             <input type="file" class="file" id="organization_commerce" name="organization_commerce" value="">
                         </div>
                     </div>
@@ -490,7 +493,6 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label" for="commit_btn"></label>
                         <div class="col-xs-10 text-left">
-                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
                             <button id="commit_btn4" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
@@ -511,6 +513,7 @@ function initFileInput(ctrlName){
         showCaption: true,//是否显示标题
         showPreview :false,//是否显示预览
         enctype: 'multipart/form-data',
+        browseClass: "btn btn-primary", //按钮样式
         uploadAsync: false, //同步上传
     })
 }

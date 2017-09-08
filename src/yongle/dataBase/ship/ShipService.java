@@ -50,7 +50,7 @@ public class ShipService {
 	 * @desc 保存新增数据
 	 * @author xuhui
 	 */
-	public static Integer saveTabOne(String shipowname,String ship_name,String ID_number
+	public static Integer saveTabOne(Integer id,String shipowname,String ship_name,String ID_number
 			,String phone_num,String ship_ton,String grade_sail,String business_route){
 		Integer flag = 0;//设置返回值，如果返回值为0，则表示保存失败
 		boolean flagDb = false;//判断是否保存成功
@@ -62,10 +62,16 @@ public class ShipService {
 		record.set("ship_ton", ship_ton);
 		record.set("grade_sail", grade_sail);
 		record.set("business_route", business_route);
-		flagDb = Db.save("t_base_ship", record);
+		if(id!=null){
+			record.set("id", id.longValue());
+			flagDb = Db.update("t_base_ship", record);
+		}else{
+			flagDb = Db.save("t_base_ship", record);
+		}
+		//判断是否保存成功,true表示保存成功，false表示保存失败
 		if(flagDb){
 			flag = record.getLong("id").intValue();
-			}
+		}
 		return flag;
 	}
 	
@@ -93,7 +99,7 @@ public class ShipService {
 	public static void downloadFile(HttpServletResponse response, Integer id,String fileName) throws IOException{
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment; filename=" + EncodeUtil.toUtf8String(fileName));
-		String fullFileName = PropKit.get("filepath_commerce")+id+"/"+fileName;
+		String fullFileName = PropKit.get("filepath_ship")+id+"/"+fileName;
 		//读文件
 		InputStream in = new FileInputStream(fullFileName);
 		OutputStream out = response.getOutputStream();

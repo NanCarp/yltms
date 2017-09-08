@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>结算审核表</title>
+    <title>结算批改申请</title>
 	<#include "../include/header.html">   	
 </head>
 
@@ -21,20 +21,23 @@
 				<div class="container container-fluid" style="padding-right: 0px">				
 					<div class="row" >                        	    		                                            		
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control" placeholder="计划截止时间" name="plan_endtime" id="plan_endtime">
+							<input type="search" class="form-control" placeholder="计划号" name="shipowname" id="shipowname">
 						</div>
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<input type="search" class="form-control form_datetime" placeholder="起始申请日期" name="ship_name" id="ship_name">
+						</div>
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<input type="search" class="form-control form_datetime" placeholder="截止申请日期" name="ship_name" id="ship_name">
+						</div>
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<input type="search" class="form-control" placeholder="调度员" name="ship_name" id="ship_name">
+						</div>
+						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
-						</div>                    			  
-		                <div class="col-sm-1 col-xs-1 head_4" style="max-width: 59px">
-		                     <button class="btn btn-5" onclick=" _seeDatil()">查看</button>
-		                </div>  
-		                <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-4" onclick=" _print()">打印</button>
-                        </div>           									
-		                <div class="col-sm-1 col-xs-1 head_1">
-                             <button class="btn btn-9" onclick="location.replace()"><i class="fa fa-refresh"></i></button>
-                        </div>                  
+						</div>                    			
+						<div class="col-sm-1 col-xs-2 head_1">
+		                    <button class="btn btn-success" onclick="_add()">新增</button>
+		                </div>	                      									                 
 					</div>				
 				</div>
 			</div>		
@@ -57,11 +60,8 @@ $(".form_datetime").datetimepicker({
 	minView: 2,
 });
 
-var plan_no="";
-var goods_name="";
-var consignor="";
-var plan_begintime="";
-var plan_endtime="";
+var shipowname="";
+var ship_name="";
 
 $(function () {	 
     //1.初始化Table
@@ -75,39 +75,18 @@ $(function () {
 function doQuery(){
 	layui.use('layer',function(){
 		var layer = layui.layer;
-		plan_no = $.trim($('#plan_no').val());
-		goods_name = $.trim($('#goods_name').val());
-		consignor = $.trim($('#consignor').val());
-		plan_begintime = $.trim($('#plan_begintime').val());
-		plan_endtime = $.trim($('#plan_endtime').val());
-		if($.trim($('#plan_no').val())!=''){
+		shipowname = $.trim($('#shipowname').val());
+		ship_name = $.trim($('#ship_name').val());
+		if($.trim($('#shipowname').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#plan_no').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
+			if(!reg.test($('#shipowname').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#shipowname', {tips: [1, '#34495E']});return;
 			}					
 		}
-		if($.trim($('#goods_name').val())!=''){
+		if($.trim($('#ship_name').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#goods_name').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#goods_name', {tips: [1, '#34495E']});return;
-			}					
-		}
-		if($.trim($('#consignor').val())!=''){
-			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#consignor').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#consignor', {tips: [1, '#34495E']});return;
-			}					
-		}
-		if($.trim($('#plan_begintime').val())!=''){
-			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#plan_begintime').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#plan_begintime', {tips: [1, '#34495E']});return;
-			}					
-		}
-		if($.trim($('#plan_endtime').val())!=''){
-			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#plan_endtime').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#plan_endtime', {tips: [1, '#34495E']});return;
+			if(!reg.test($('#ship_name').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#ship_name', {tips: [1, '#34495E']});return;
 			}					
 		}
 		 $('#tb_departments').bootstrapTable('refresh');    //刷新表格
@@ -156,47 +135,57 @@ var TableInit = function () {
             		return index+1;
             	}
             },{
-                field: 'plan_no',
-                title: '托运人'
+                field: 'shipowname',
+                title: '申请日期'
             },{
-                field: 'goods_name',
-                title: '货物名称'
+                field: 'ship_name',
+                title: '调度员'
             },{
-                field: 'seagoing_vessel_name',
-                title: '海轮名称'
-            },{
-                field: 'consignor',
-                title: '发货港'
-            }, {
-                field: 'delivery_dock',
+                field: 'phone_num',
                 title: '计划号'
             },{
-                field: 'destination_port',
-                title: '计划日期'
+                field: 'ID_number',
+                title: '托运人'
             },{
-                field: 'seagoing_vessel_name',
-                title: '流向'
-            },{
-                field: 'settle_price',
+                field: 'ship_ton',
                 title: '船名'
             },{
-                field: 'estimated_arrvial_date',
-                title: '计划数量'
+                field: 'grade_sail',
+                title: '姓名'
             },{
-                field: 'transport_consumption',
-                title: '损耗'
+                field: 'business_route',
+                title: '手机号码'
             },{
-                field: 'discharge_period',
-                title: '卸货期限'
+                field: 'business_route',
+                title: '货物名称'
             },{
-                field: 'Excess_deduction_price',
-                title: '运价'
+                field: 'business_route',
+                title: '海轮名'
             },{
-                field: 'berthing_tonnage',
-                title: '加油方式'
+                field: 'business_route',
+                title: '运输起讫'
             },{
-                field: 'total_quantity',
-                title: '金额'
+                field: 'business_route',
+                title: '实装吨位'
+            },{
+                field: 'business_route',
+                title: '调整运费'
+            },{
+                field: 'business_route',
+                title: '申请调整事由'
+            },{
+                field: 'business_route',
+                title: '经理审批'
+            },{
+                field: 'business_route',
+                title: '备注'
+            },{
+            	field:'opt',
+            	title:'操作',
+            	formatter:function(value,row,index){
+            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_edit('+row.id+')">编辑</button>'
+            			  +'<button class="btn btn-xs btn-4 bt" style="margin-left:10px" onclick="_delete('+row.id+')">删除</button>' ]
+            	},
             }]
         });
     };
@@ -208,11 +197,8 @@ var TableInit = function () {
             offset: params.offset,  //页码
             maxrows: params.limit,
             search: params.search,
-            plan_no: plan_no,
-            goods_name: goods_name,
-            consignor: consignor,
-            plan_begintime: plan_begintime,
-            plan_endtime: plan_endtime,
+            shipowname: shipowname,
+            ship_name: ship_name,
         };
         return temp;
     };
@@ -230,31 +216,27 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	parent.open_window('新增计划管理','/planManage/dispatch/getPlanManage',1000, 420);
+	parent.open_window('新增结算批改申请表','',800,360);
 }
 
 //编辑
 function _edit(id){
-	parent.open_window('编辑计划管理','/planManage/dispatch/getPlanManage/'+id,1000, 420);
+	parent.open_window('编辑结算批改申请表','',800,360);
 }
 
 //删除操作
 function _delete(id){
-	$.post("/planManage/dispatch/delete/"+id,function(data){
-		if(data.Plan_no_state){
-			layer.msg("该计划号已审核，禁止删除",{time:2000})
-		}else{
-			layer.confirm("确认删除？",{icon:3},function(){
-				if(data.delstate){
-					layer.msg("删除成功",{time:2000},function(){
-						parent.refresh_iframe();
-					})
-				}else{
-					layer.msg("删除失败",{time:2000})
-				}
-			})
-		}
-	})	
+	layer.confirm("确认删除",{icon:3},function(){
+		$.post("/dataBase/ship/delete/"+id,function(data){
+			if(data){
+				layer.msg("删除成功",{time:2000},function(){
+					parent.refresh_iframe();
+				})
+			}else{
+				layer.msg("删除失败",{time:2000})
+			}
+		})
+	})
 }
 
 //查看详情
@@ -267,41 +249,7 @@ function _seeDatil(){
 	}else if(ids.length >1){
 		layer.msg('最多选择一条记录', {time: 2000});
 	}else{
-		parent.open_window('计划明细','/planManage/dispatch/getPlanDetailSee/'+ids,1000, 420);
-	}
-}
-
-//审核
-function examine(){
-	// 获取选中记录 id
-	var ids = getIdSelections();	
-	// 如果没有选择，提示勾选至少一条数据
-	if (ids.length == 0) {
-        layer.msg('请选择需要审核的记录', {time: 2000});
-	}else if(ids.length >1){
-		layer.msg('最多选择一条审核记录', {time: 2000});
-	}else{
-		$.post("/planManage/dispatch/getExamineState/"+ids,function(data){
-			if(data){
-				layer.msg('该计划号已完成审核', {time: 2000}, function(){
-                });
-			}else{
-				layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
-					$.post("/planManage/dispatch/examine/"+ids,function(result){
-						if(result){
-							layer.msg('完成审核', {time: 2000}, function(){
-								parent.refresh_iframe();
-			                });
-						}else{
-							layer.msg('审核失败', {time: 2000}, function(){
-								
-			                });
-						}
-					})    
-					layer.close(index);
-				});
-			}
-		})
+		parent.open_window('查看明细','/dataBase/ship/getInfo?id='+ids,800,320);
 	}
 }
 

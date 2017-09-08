@@ -61,7 +61,8 @@ public class HandoverService {
     * @return ResponseObject
     * @author liyu
     */
-    public static ResponseObj save(Integer dispatch_id, String left_quantity, String site_dispatch, String recordList) {
+    public static ResponseObj save(Integer dispatch_id, String left_quantity, 
+            String site_dispatch, String recordList, String dispatcher) {
         ResponseObj msg = new ResponseObj();
         
         boolean result = Db.tx(new IAtom() {
@@ -79,17 +80,7 @@ public class HandoverService {
                 Record dispatch = Db.findById("t_dispatch", dispatch_id);
                 dispatch.set("left_quantity", left_quantity);
                 dispatch.set("site_dispatch", site_dispatch);
-                // 剩余吨数
-                //BigDecimal total_quantity = dispatch.getBigDecimal("total_quantity");
-                /*BigDecimal remain = dispatch.getBigDecimal("total_quantity");
-                for (Record r : list) {
-                    remain = remain.subtract(r.getBigDecimal("loading_tonnage"));
-                    if (remain.compareTo(BigDecimal.ZERO) == -1) {
-                        msg.setCode(ResponseObject.FAILED);
-                        msg.setMsg("剩余吨数不足");
-                    }
-                }*/
-                
+                dispatch.set("dispatcher", dispatcher);                
                 Db.update("t_dispatch", dispatch);
                 
                 return true;

@@ -97,8 +97,7 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label" for="commit_btn1"></label>
                         <div class="col-xs-10 text-left">
-                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
-                            <button id="commit_btn1" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn1" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -138,9 +137,9 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <label class="col-xs-2 control-label" for="commit_btn2"></label>
                         <div class="col-xs-10 text-left">            
-                            <button id="commit_btn2" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn2" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -156,7 +155,7 @@
                         <label class="col-xs-4 control-label text-right" for="visa_sheet">签证浦：</label>
                         <div class="col-xs-8">
                         <#if im.visa_sheet??>
-                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.visa_sheet!}</span><a href="javascript:;" onclick="del1(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;margin-top: 8px">${im.visa_sheet!}</span><a href="javascript:;" onclick="del1(this)" style="width: 10%;float: left;margin-top: 8px"><i class="fa fa-times" title="删除"></i></a></br></p></div>
                         	<div hidden="" id="fileflag1">
 	                			<input type="file" class="file" id="visa_sheet" name="visa_sheet" value="">
 	               			</div>
@@ -172,7 +171,7 @@
                        		<div hidden="" id="fileflag2">
 	                			<input type="file" class="file" id="ship_inspection" name="ship_inspection" value="">
 	               			</div>
-                           <div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.ship_inspection!}</span><a href="javascript:;" onclick="del2(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                           <div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;margin-top: 8px">${im.ship_inspection!}</span><a href="javascript:;" onclick="del2(this)" style="width: 10%;float: left;margin-top: 8px"><i class="fa fa-times" title="删除"></i></a></br></p></div>
                         <#else>
                         	<input type="file" class="file" id="ship_inspection" name="ship_inspection" value="">
                         </#if>
@@ -187,7 +186,7 @@
                         	<div hidden="" id="fileflag3">
 	                			<input type="file" class="file" id="loading" name="loading" value="">
 	               			</div>
-                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.ship_inspection!}</span><a href="javascript:;" onclick="del3(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;margin-top: 8px">${im.ship_inspection!}</span><a href="javascript:;" onclick="del3(this)" style="width: 10%;float: left;margin-top: 8px"><i class="fa fa-times" title="删除"></i></a></br></p></div>
                         <#else>
                         	<input type="file" class="file" id="loading" name="loading" value="">
                         </#if>
@@ -200,7 +199,7 @@
                         	<div hidden="" id="fileflag4">
 	                			<input type="file" class="file" id="operation" name="operation" value="" style="height: 40px">
 	               			</div>
-                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${im.ship_inspection!}</span><a href="javascript:;" onclick="del4(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
+                        	<div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;margin-top: 8px">${im.ship_inspection!}</span><a href="javascript:;" onclick="del4(this)" style="width: 10%;float: left;margin-top: 8px"><i class="fa fa-times" title="删除"></i></a></br></p></div>
                         <#else>
                         	<input type="file" class="file" id="operation" name="operation" value="" style="height: 40px">
                         </#if>
@@ -209,9 +208,9 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <label class="col-xs-2 control-label" for="commit_btn3"></label>
                         <div class="col-xs-10 text-left">            
-                            <button id="commit_btn3" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn3" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -224,10 +223,10 @@
                     <div class="panel-heading">
                         <div class="container container-fluid">
                             <div class="row">
-                                <div class="col-sm-2 col-xs-2 head_3">
+                                <div class="col-sm-2 col-xs-2 head_1">
                                     <button class="btn btn-success" onclick="_addCrew()">新增</button>
                                 </div>
-                                <div class="col-sm-2 col-xs-2 head_3">
+                                <div class="col-sm-2 col-xs-2 head_1">
                                     <button class="btn btn-4" onclick="_deleteCrew()">删除</button>
                                 </div>
                                 <div class="col-sm-2 col-xs-2 head_1">
@@ -272,7 +271,7 @@
                 </div><!-- /.panel -->
     </div><!-- tab2 -->
     <#else>
-    <input hidden="" id="newid" name="newid" value="14">
+    <input hidden="" id="newid" name="newid" value="">
     <div class="tab-pane fade in active" id="tab1">
         <form id="defaultForm" class="form-horizontal" role="form">
             <div class="container" style="margin-top: 20px">
@@ -327,8 +326,7 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label" for="commit_btn1"></label>
                         <div class="col-xs-10 text-left">
-                            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
-                            <button id="commit_btn1" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn1" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -368,9 +366,9 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <label class="col-xs-2 control-label" for="commit_btn2"></label>
                         <div class="col-xs-10 text-left">            
-                            <button id="commit_btn2" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn2" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -411,9 +409,9 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="form-group">
-                        <label class="col-xs-2 control-label" for="commit_btn"></label>
+                        <label class="col-xs-2 control-label" for="commit_btn3"></label>
                         <div class="col-xs-10 text-left">            
-                            <button id="commit_btn3" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn3" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -426,11 +424,11 @@
                     <div class="panel-heading">
                         <div class="container container-fluid">
                             <div class="row">
-                                <div class="col-sm-2 col-xs-2 head_3">
+                                <div class="col-sm-2 col-xs-2 head_1">
                                     <button class="btn btn-success" onclick="_addCrew()">新增</button>
                                 </div>
-                                <div class="col-sm-2 col-xs-2 head_3">
-                                    <button class="btn btn-4" onclick="_deleteRow()">删除</button>
+                                <div class="col-sm-2 col-xs-2 head_1">
+                                    <button class="btn btn-4" onclick="_deleteCrew()">删除</button>
                                 </div>
                                 <div class="col-sm-2 col-xs-2 head_1">
                                     <button class="btn btn-3" onclick="_editRow()">编辑</button>
@@ -630,11 +628,13 @@ $("#commit_btn1").on("click", function(){
 	bindValidator('#tab1');
     //获取表单对象
    var bootstrapValidator = $('#tab1').data('bootstrapValidator');
+   var newid = $("#newid").val();
+   var data = $('#defaultForm').serialize()+"&newid="+newid;
         //手动触发验证
        bootstrapValidator.validate(); 
        if(bootstrapValidator.isValid()){  	
            //表单提交的方法、比如ajax提交
-           $.post("/dataBase/ship/saveTabOne", $('#defaultForm').serialize(), function(data) {
+           $.post("/dataBase/ship/saveTabOne", data, function(data) {
         	   if(data.is_success){
         		   parent.refresh_iframe();
         		   layer.msg("船舶基础信息保存成功！",{time:2000});
@@ -914,7 +914,6 @@ function _editRow(){
 	var id;
 	$('input:checkbox[name=sub]:checked').each(function(k,v){
 		count = k+1;
-		console.log($(v).val());
 		id = $(v).val();
 	})
 	if(count<1){

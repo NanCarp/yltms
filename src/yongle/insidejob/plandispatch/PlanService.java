@@ -10,13 +10,14 @@ public class PlanService {
 	      String sql = " SELECT *  FROM `t_dispatch` AS a "
 	                + " RIGHT JOIN t_dispatch_ship AS b "
 	                + " ON a.id = b.dispatch_id "
-	                + " WHERE a.dispatch_issue = 1 "
-	                + " AND plan_no = " + plan_no;
+	                + " LEFT JOIN t_dispatch_detail AS c "
+	                + " ON b.dispatch_detail_id = c.id "
+	                + " WHERE a.dispatch_issue = 1 ";
 	        
-	        /*if (plan_no != null && !"".equals(plan_no)) {
+	        if (plan_no != null && !"".equals(plan_no)) {
 	            sql += " AND plan_no = '"+ plan_no +"'";
-	        }*/
-	        
+	        }
+	        System.out.println(sql);
 	        if (consignor != null && !"".equals(consignor)) {
 	            sql += " AND consignor like '%"+ consignor +"'";
 	        }

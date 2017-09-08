@@ -26,18 +26,15 @@
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
 							<input type="search" class="form-control" placeholder="船舶名称" name="ship_name" id="ship_name">
 						</div>
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>                    			
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-2 head_1">
 		                    <button class="btn btn-success" onclick="_add()">新增</button>
 		                </div>
-		               	<div class="col-sm-1 col-xs-1 head_4" >
+		               	<div class="col-sm-1 col-xs-2 head_4" >
 		                     <button class="btn btn-5" onclick=" _seeDatil()">查看明细</button>
-		                </div> 	                      									
-		                <div class="col-sm-1 col-xs-1 head_1">
-                             <button class="btn btn-9" onclick="location.replace()"><i class="fa fa-refresh"></i></button>
-                        </div>                  
+		                </div> 	                      									                 
 					</div>				
 				</div>
 			</div>		
@@ -181,12 +178,12 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	parent.open_window('新增船舶信息管理','/dataBase/ship/getTab',700,360);
+	parent.open_window('新增船舶信息管理','/dataBase/ship/getTab',800,360);
 }
 
 //编辑
 function _edit(id){
-	parent.open_window('编辑船舶信息管理','/dataBase/ship/getTab?id='+id,700,360);
+	parent.open_window('编辑船舶信息管理','/dataBase/ship/getTab?id='+id,800,360);
 }
 
 //删除操作

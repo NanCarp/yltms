@@ -23,6 +23,7 @@ public class _MappingKit {
 		arp.addMapping("t_base_ship_crew", "id", BaseShipCrew.class);
 		arp.addMapping("t_button", "id", Button.class);
 		arp.addMapping("t_contract", "id", Contract.class);
+		arp.addMapping("t_customer_settle", "id", CustomerSettle.class);
 		arp.addMapping("t_dictionary", "id", Dictionary.class);
 		arp.addMapping("t_dispatch", "id", Dispatch.class);
 		arp.addMapping("t_dispatch_detail", "id", DispatchDetail.class);

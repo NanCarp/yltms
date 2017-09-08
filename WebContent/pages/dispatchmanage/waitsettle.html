@@ -17,24 +17,21 @@
 <div id="wrapper">
 	<div class="panel-body" style="padding-bottom:0px;">
 		<div class="panel panel-default">		
-			<div class="panel-heading">					
+			<div class="panel-heading" style="max-height: 59px">					
 				<div class="container container-fluid" style="padding-right: 0px">				
 					<div class="row" >                        	    		                                            		
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control" placeholder="计划截止时间" name="plan_endtime" id="plan_endtime">
+							<input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no">
 						</div>
-						<div class="col-sm-1 col-xs-1 head_1">
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<input type="search" class="form-control" placeholder="托运人" name="plan_endtime" id="plan_endtime">
+						</div>
+						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
-						</div>   
-						<div class="col-sm-1 col-xs-1 head_1">
-		                    <button class="btn btn-2" onclick="_add()">下发</button>
-		                </div>	                 			  
-		                <div class="col-sm-1 col-xs-1 head_4" style="max-width: 59px">
-		                     <button class="btn btn-5" onclick=" _seeDatil()">查看</button>
-		                </div>             									
-		                <div class="col-sm-1 col-xs-1 head_1">
-                             <button class="btn btn-9" onclick="location.replace()"><i class="fa fa-refresh"></i></button>
-                        </div>                  
+						</div>   	                 			  
+		                <div class="col-sm-1 col-xs-2 head_1" >
+		                    <button class="btn btn-12" onclick="examine()">审核</button>   
+		                </div>           									               
 					</div>				
 				</div>
 			</div>		
@@ -92,24 +89,6 @@ function doQuery(){
 				layer.tips('不允许有特殊字符，最多20个字符', '#goods_name', {tips: [1, '#34495E']});return;
 			}					
 		}
-		if($.trim($('#consignor').val())!=''){
-			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#consignor').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#consignor', {tips: [1, '#34495E']});return;
-			}					
-		}
-		if($.trim($('#plan_begintime').val())!=''){
-			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#plan_begintime').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#plan_begintime', {tips: [1, '#34495E']});return;
-			}					
-		}
-		if($.trim($('#plan_endtime').val())!=''){
-			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#plan_endtime').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#plan_endtime', {tips: [1, '#34495E']});return;
-			}					
-		}
 		 $('#tb_departments').bootstrapTable('refresh');    //刷新表格
 	})
 }
@@ -157,51 +136,30 @@ var TableInit = function () {
             	}
             },{
                 field: 'plan_no',
-                title: '托运人'
-            },{
-                field: 'goods_name',
-                title: '货物名称'
-            },{
-                field: 'seagoing_vessel_name',
-                title: '海轮名称'
-            },{
-                field: 'consignor',
-                title: '发货港'
-            }, {
-                field: 'delivery_dock',
                 title: '计划号'
             },{
-                field: 'destination_port',
-                title: '计划日期'
+                field: 'goods_name',
+                title: '托运人'
             },{
                 field: 'seagoing_vessel_name',
-                title: '流向'
+                title: '货物名称'
             },{
-                field: 'settle_price',
-                title: '船名'
+                field: 'consignor',
+                title: '海轮名称'
+            }, {
+                field: 'delivery_dock',
+                title: '发货港'
             },{
-                field: 'estimated_arrvial_date',
-                title: '计划数量'
+                field: 'destination_port',
+                title: '单据状态'
             },{
-                field: 'transport_consumption',
-                title: '损耗'
-            },{
-                field: 'discharge_period',
-                title: '卸货期限'
-            },{
-                field: 'Excess_deduction_price',
-                title: '运价'
-            },{
-                field: 'berthing_tonnage',
-                title: '加油方式'
-            },{
-                field: 'total_quantity',
-                title: '金额'
+                field: 'seagoing_vessel_name',
+                title: '调度员'
             },{
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_edit('+row.id+')">编辑</button>' ]
+            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_edit('+row.id+')>查看明细</button>' ]
             	},
             }]
         });
@@ -234,33 +192,8 @@ var ButtonInit = function () {
     return oInit;
 };
 
-//新增
-function _add(){
-	parent.open_window('新增计划管理','/planManage/dispatch/getPlanManage',1000, 420);
-}
-
-//编辑
-function _edit(id){
-	parent.open_window('编辑计划管理','/planManage/dispatch/getPlanManage/'+id,1000, 420);
-}
-
-//删除操作
-function _delete(id){
-	$.post("/planManage/dispatch/delete/"+id,function(data){
-		if(data.Plan_no_state){
-			layer.msg("该计划号已审核，禁止删除",{time:2000})
-		}else{
-			layer.confirm("确认删除？",{icon:3},function(){
-				if(data.delstate){
-					layer.msg("删除成功",{time:2000},function(){
-						parent.refresh_iframe();
-					})
-				}else{
-					layer.msg("删除失败",{time:2000})
-				}
-			})
-		}
-	})	
+function examine(){
+	open_window('审核明细','/planManage/waitsettle/examDetail',1000, 420);
 }
 
 //查看详情

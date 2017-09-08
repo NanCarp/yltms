@@ -184,7 +184,7 @@ var TableInit = function () {
                 field:'opt',
                 title:'操作',
                 formatter:function(value,row,index){
-                          return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id +')">编辑明细</button>' ]
+                          return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+','+row.dispatch_review +')">编辑明细</button>' ]
                 },
             }]
         });
@@ -209,8 +209,12 @@ var TableInit = function () {
 };
 
 // 编辑
-function _edit(id){
-    parent.open_window('编辑详细','/planManage/handover/getRecord/' + id, 1200, 450);
+function _edit(id, dispatch_review){
+	if (dispatch_review == 1) {
+		layer.msg("已审核不能编辑", {time: 2000});
+		return;
+	}
+    parent.open_window('编辑详细','/planManage/handover/getRecord/' + id, 1350, 500);
 }
 
 // 审核
@@ -227,12 +231,12 @@ function _review() {
             if(data){
                 layer.confirm('取消审核?', {icon: 7, title:'审核确认提示'}, function(index){
                     $.post("/planManage/handover/review/"+ids,function(result){
-                        if(result){
-                            layer.msg('取消审核成功', {time: 2000}, function(){
+                        if(result == 1){
+                            layer.msg(result.msg, {time: 2000}, function(){
                                 parent.refresh_iframe();
                             });
                         }else{
-                            layer.msg('取消审核失败', {time: 2000}, function(){
+                            layer.msg(result.msg, {time: 2000}, function(){
                                 
                             });
                         }
@@ -242,12 +246,12 @@ function _review() {
             }else{
                 layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
                     $.post("/planManage/handover/review/"+ids,function(result){
-                        if(result){
-                            layer.msg('完成审核', {time: 2000}, function(){
+                        if(result == 1){
+                            layer.msg(result.msg, {time: 2000}, function(){
                                 parent.refresh_iframe();
                             });
                         }else{
-                            layer.msg('审核失败', {time: 2000}, function(){
+                            layer.msg(result.msg, {time: 2000}, function(){
                                 
                             });
                         }
@@ -257,19 +261,6 @@ function _review() {
             }
         })
     }
-	
-	
-/* 	$.post("/planManage/handover/review/" + id,function (data) {
-        if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
-
-        } else {
-            parent.layer.msg(result.tips, {time: 2000});
-        }
-    }); */
 }
 // 下发
 function _issue() {
@@ -281,7 +272,7 @@ function _issue() {
     }else if(ids.length >1){
         layer.msg('最多选择一条记录', {time: 2000});
     }else{
-		layer.confirm('确认下发?', {icon: 1, title:'审核确认提示'}, function(index){
+		layer.confirm('确认下发?', {icon: 1, title:'下发确认提示'}, function(index){
 	        $.post("/planManage/handover/issue/"+ids,function(result){
 	        	if (result.code == 1) {
 	                layer.msg(result.msg, {time: 2000}, function(){
@@ -295,6 +286,33 @@ function _issue() {
 	        })    
 	        layer.close(index);
 	    });
+    }
+}
+
+// 导出
+function _export() {
+	// 获取选中记录 id
+    var ids = getIdSelections();    
+    // 如果没有选择，提示勾选至少一条数据
+    if (ids.length == 0) {
+        layer.msg('请选择一条记录', {time: 2000});
+    }else if(ids.length >1){
+        layer.msg('最多选择一条记录', {time: 2000});
+    }else{
+        layer.confirm('确认导出?', {icon: 1, title:'导出提示'}, function(index){
+            $.post("/planManage/handover/export/"+ids,function(result){
+                if (result.code == 1) {
+                    layer.msg(result.msg, {time: 2000}, function(){
+                        layer_close();
+                        parent.parent.refresh_iframe();
+                    });
+
+                } else {
+                    layer.msg(result.msg, {time: 2000});
+                }
+            })    
+            layer.close(index);
+        });
     }
 }
 

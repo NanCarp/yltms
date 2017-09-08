@@ -1,5 +1,5 @@
 # 数据库相关配置
-jdbcUrl = jdbc:mysql://localhost/yongle?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+jdbcUrl = jdbc:mysql://192.168.2.143/yongle?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
 user = root
 password = 123456
 
@@ -9,3 +9,14 @@ devMode=true
 #文件下载地址
 filepath = D:/upload/yongle/file/
 
+#文件下载地址(合同管理)
+filepath_contant=D:/upload/yongle/file/contant/
+
+#文件下载地址(船舶信息管理-船证件信息)
+filepath_ship=D:/upload/yongle/file/ship/
+
+#文件下载地址(客户信息管理-工商资料)
+filepath_commerce=D:/upload/yongle/file/commerce/
+
+#文件下载地址(船员证件)
+filepath_shipCrew=D:/upload/yongle/file/shipCrew/

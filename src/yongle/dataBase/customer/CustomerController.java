@@ -40,6 +40,10 @@ public class CustomerController extends Controller{
 		String customer_name = getPara("customer_name");
 		String customer_type = getPara("customer_type");
 		String company_information = getPara("company_information");
+		
+		System.out.println(customer_name+":"+customer_type+":"+company_information);
+		
+		
     	Integer	pageindex = 0;
     	Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit");
     	Integer offset = getParaToInt("offset")==null?0:getParaToInt("offset");

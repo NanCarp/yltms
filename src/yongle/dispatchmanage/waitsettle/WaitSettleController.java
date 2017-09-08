@@ -10,7 +10,20 @@ import com.jfinal.core.Controller;
  */
 public class WaitSettleController extends Controller {
 
+	/**
+	 * @desc 展示待审核清单页
+	 * @author xuhui
+	 */
 	public void index(){
 		render("waitsettle.html");
 	}
+	
+	/**
+	 * @desc 审核明细
+	 * @author xuhui
+	 */
+	public void examDetail(){
+		render("waitsettle_confirm.html");
+	}
+	
 }

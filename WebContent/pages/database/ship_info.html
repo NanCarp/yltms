@@ -34,6 +34,10 @@
 	        margin: 0;
 	    }
 	    #defaultForm { margin-right: 50px;}
+	    #tab2Form{
+	    	width: 750px;
+	    	margin-right: 50px;
+	    }
 	     a{
 	    	cursor: pointer;
 	    }
@@ -164,9 +168,9 @@
                         <label class="col-xs-4 control-label text-right" for="visa_sheet">签证浦：</label>
                         <div class="col-xs-8">
                         <#if im.visa_sheet??>
-                			<button class="btn btn-xs btn-5" type="button"  onclick="_watchFile('visa_sheet')">本地查看</button>
+                			<button class="btn btn-xs btn-5" type="button" style="margin-top: 6px;font-size: 14px"  onclick="_watchFile('visa_sheet')">本地查看</button>
                			<#else>
-               				<span style="color: blue;font-size: 16px">暂无签证浦</span>
+               				<div style="color: blue;font-size: 15px;margin-top: 6px">暂无签证浦</div>
                			</#if>
                         </div>
                     </div>
@@ -174,9 +178,9 @@
                         <label class="col-xs-4 control-label text-right" for="ship_inspection">船检证书：</label>
                         <div class="col-xs-8">
                         <#if im.ship_inspection??>
-                			<button class="btn btn-xs btn-5" type="button"  onclick="_watchFile('ship_inspection')">本地查看</button>
+                			<button class="btn btn-xs btn-5" type="button" style="margin-top: 6px;font-size: 14px"  onclick="_watchFile('ship_inspection')">本地查看</button>
                			<#else>
-               				<span style="color: blue;font-size: 16px">暂无船检证书</span>
+               				<div style="color: blue;font-size: 15px;margin-top: 6px">暂无船检证书</div>
                			</#if>
                         </div>
                     </div>
@@ -186,9 +190,9 @@
                         <label class="col-xs-4 control-label text-right" for="loading">载重证书：</label>
                         <div class="col-xs-8">
                         <#if im.loading??>
-                			<button class="btn btn-xs btn-5" type="button"  onclick="_watchFile('loading')">本地查看</button>
+                			<button class="btn btn-xs btn-5" type="button" style="margin-top: 6px;font-size: 14px"  onclick="_watchFile('loading')">本地查看</button>
                			<#else>
-               				<span style="color: blue;font-size: 16px">暂无载重证书</span>
+               				<div style="color: blue;font-size: 15px;margin-top: 6px">暂无载重证书</div>
                			</#if>
                         </div>
                     </div>
@@ -196,9 +200,9 @@
                         <label class="col-xs-4 control-label text-right" for="operation">营运证书：</label>
                         <div class="col-xs-8">
                         <#if im.operation??>
-                			<button class="btn btn-xs btn-5"  type="button" onclick="_watchFile('operation')">本地查看</button>
+                			<button class="btn btn-xs btn-5"  style="margin-top: 6px;font-size: 14px" type="button" onclick="_watchFile('operation')">本地查看</button>
                			<#else>
-               				<span style="color: blue;font-size: 16px">暂无营运证书</span>
+               				<div style="color: blue;font-size: 15px;margin-top: 6px">暂无营运证书</div>
                			</#if>
                         </div>
                     </div>

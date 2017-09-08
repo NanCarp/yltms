@@ -31,7 +31,7 @@
                         <div class="col-sm-1 col-xs-2 head_1">
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
                         </div>
-                        <div class="col-sm-1 col-xs-1 head_1">
+                        <div class="col-sm-1 col-xs-2 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/site/waterwayfreight')"><i class="fa fa-refresh"></i></button>
                         </div>                  
                     </div>              
@@ -58,13 +58,15 @@ $(function () {
     oButtonInit.Init(); 
 });
 
-var plan_no,ship_name;
+var plan_no,ship_name,start_date,end_date;
 function doQuery(){
     layui.use('layer',function(){
         var layer = layui.layer;
         
         plan_no = $.trim($('#plan_no').val());
         ship_name = $.trim($('#ship_name').val());
+        start_date = $('#start_date').val();
+        end_date = $('#end_date').val();
         
         if($.trim($('#plan_no').val())!=''){
             var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
@@ -134,10 +136,10 @@ var TableInit = function () {
                 field: 'delivery_dock',
                 title: '发货港'
             }, {
-                field: 'ship_owner_name',
+                field: 'ship_name',
                 title: '实际承运人'
             }, {
-                field: 'ship_name',
+                field: 'ship_owner_name',
                 title: '姓名'
             }, {
                 field: 'ship_owner_phone',
@@ -146,10 +148,10 @@ var TableInit = function () {
                 field: 'consignee',
                 title: '收货人'
             }, {
-                field: 'consignee_dock',
+                field: 'destination_port',
                 title: '码头名称'
             }, {
-                field: 'consignee_phone',
+                field: 'phone',
                 title: '联系电话'
             }, {
                 field:'opt',
@@ -171,6 +173,8 @@ var TableInit = function () {
             search: params.search,
             plan_no: plan_no,
             ship_name: ship_name,
+            start_date: start_date,
+            end_date: end_date
         };
         return temp;
     };

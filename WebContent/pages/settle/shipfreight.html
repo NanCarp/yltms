@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>船舶运费结算清单</title>
+	<#include "../include/header.html">   	
+</head>
+
+<body>
+<div id="wrapper">
+	<div class="panel-body" style="padding-bottom:0px;">
+		<div class="panel panel-default">		
+			<div class="panel-heading">					
+				<div class="container container-fluid" style="padding-right: 0px">				
+					<div class="row" >                        	    		                                            		
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no">
+						</div>
+						<div class="col-sm-1 col-xs-2 head_1">
+							<button class="btn btn-primary" onclick="doQuery()">查询</button>
+						</div>   
+						<div class="col-sm-1 col-xs-2 head_1">
+							<button class="btn btn-3" onclick="_edit()">编辑</button>
+						</div>
+						<div class="col-sm-1 col-xs-2 head_1" >
+                             <button class="btn btn-4" onclick=" _export()">导出</button>
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1" >
+                             <button class="btn btn-5" onclick=" _export()">打印</button>
+                        </div> 	 	                 			                									               
+					</div>				
+				</div>
+			</div>		
+			<table id="tb_departments"></table>
+		</div>             
+	</div>
+</div>
+
+<script>
+$(".form_datetime").datetimepicker({
+	format: "yyyy-mm-dd",
+	autoclose: true,
+	todayBtn: false,
+	todayHighlight: true,
+	showMeridian: true,
+	pickerPosition: "bottom-right",
+	language: 'zh-CN',//中文，需要引用zh-CN.js包
+	startView: 2,// // 日视图
+	minView: 2,
+});
+
+var plan_no="";
+
+$(function () {	 
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+    //2.初始化Button的点击事件
+     var oButtonInit = new ButtonInit();
+    oButtonInit.Init(); 
+});
+
+function doQuery(){
+	layui.use('layer',function(){
+		var layer = layui.layer;
+		plan_no = $.trim($('#plan_no').val());
+		if($.trim($('#plan_no').val())!=''){
+			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
+			if(!reg.test($('#plan_no').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
+			}					
+		}
+		 $('#tb_departments').bootstrapTable('refresh');    //刷新表格
+	})
+}
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/settle/customerfreight/getJson',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            showExport: true,                     //是否显示导出
+            buttonsAlign:"right",  				//按钮位置  
+            exportDataType: "basic",              //basic', 'all', 'selected'.
+            exportTypes:['excel'],
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 12,                       //每页的记录行数（*）
+            pageList: [3, 6, 12, 100],        //可供选择的每页的行数（*）
+            strictSearch: true,
+            clickToSelect: true,                //是否启用点击选中行
+            showColumns: true,					//列选择按钮
+            height: 640,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            cardView: false,                    //是否显示详细视图
+            detailView: false,
+            showRefresh:true,  
+            locale: "zh-CN",					//中文支持,
+            //是否显示父子表
+            columns: [{
+            	field:"checked",
+            	checkbox: true,
+            },{
+            	field:"SerialNumber",
+            	title:'序号',
+            	formatter:function(value,row,index){
+            		return index+1;
+            	}
+            },{
+                field: 'plan_no',
+                title: '计划号'
+            },{
+                field: 'goods_name',
+                title: '发货日期'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '发货港'
+            },{
+                field: 'consignor',
+                title: '目的港'
+            }, {
+                field: 'delivery_dock',
+                title: '船名'
+            },{
+                field: 'destination_port',
+                title: '发货数量'
+            },{
+                field: 'destination_port',
+                title: '收货数量'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '损耗'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '定耗'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '超耗'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '扣款'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '单价'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '运费'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '港建费'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '滞期天数'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '超期'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '滞港费'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '其他'
+            },{
+                field: 'seagoing_vessel_name',
+                title: '应收费用'
+            }]
+        });
+    };
+    
+   //得到查询的参数
+  oTableInit.queryParams = function (params) {
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            maxrows: params.limit,
+            search: params.search,
+            plan_no: plan_no,
+            goods_name: goods_name,
+            consignor: consignor,
+            plan_begintime: plan_begintime,
+            plan_endtime: plan_endtime,
+        };
+        return temp;
+    };
+    return oTableInit;  
+};
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+    oInit.Init = function () {
+        //初始化页面上面的按钮事件
+    };
+    return oInit;
+};
+
+function _edit(){
+	parent.open_window('结算清单编辑','/settle/ship/getEdit',1340, 400);
+}
+
+//获取被选中数据的id
+function getIdSelections() {
+    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        return row.id;
+    });
+}
+</script>
+</body>
+</html>

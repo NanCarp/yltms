@@ -27,10 +27,15 @@ public class WaterwayFreightService {
     */
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, String plan_no, String ship_name,
             String start_date, String end_date) {
-        String select = " SELECT * ";
+        String select = " SELECT c.*,a.*,b.* ";
         String sqlExceptSelect = " FROM `t_dispatch` AS a "
                 + " RIGHT JOIN t_dispatch_ship AS b "
-                + " ON a.id = b.dispatch_id WHERE 1=1 ";
+                + " ON a.id = b.dispatch_id "
+                + " LEFT JOIN t_dispatch_detail AS c "
+                + " ON b.dispatch_detail_id = c.id "
+                + " WHERE examine_state = 1 "
+                + " AND dispatch_review =1 "
+                + " AND dispatch_issue =1 ";
         
         if (plan_no != null && !"".equals(plan_no)) {
             sqlExceptSelect += " AND plan_no like '%"+ plan_no +"'";
@@ -40,13 +45,13 @@ public class WaterwayFreightService {
             sqlExceptSelect += " AND ship_name like '%"+ ship_name +"%'";
         }
         
-        /*if (start_date != null && !"".equals(start_date)) {
-            sqlExceptSelect += " AND entry_time > " + start_date ;
+        if (start_date != null && !"".equals(start_date)) {
+            sqlExceptSelect += " AND estimated_arrvial_date > '" + start_date + "'";
         }
         
         if (end_date != null && !"".equals(end_date)) {
-            sqlExceptSelect += " AND entry_time < " + end_date ;
-        }*/
+            sqlExceptSelect += " AND estimated_arrvial_date < '" + end_date + "'";
+        }
         
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }
@@ -58,10 +63,12 @@ public class WaterwayFreightService {
     * @author liyu
     */
     public static Record getRecordById(Integer id) {
-        String sql = "SELECT b.*,a.* "
+        String sql = "SELECT b.*,c.*,a.* "
                 + " FROM `t_dispatch_ship` AS a "
                 + " LEFT JOIN t_dispatch AS b "
                 + " ON a.dispatch_id = b.id "
+                + " LEFT JOIN t_dispatch_detail AS c "
+                + " ON a.dispatch_detail_id = c.id "
                 + " WHERE a.id = ? ";
         return Db.findFirst(sql, id);
     }

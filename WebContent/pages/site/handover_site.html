@@ -194,9 +194,9 @@ function _detail(){
     var ids = getIdSelections();    
     // 如果没有选择，提示勾选至少一条数据
     if (ids.length == 0) {
-        layer.msg('请选择需要审核的记录', {time: 2000});
+        layer.msg('请选择一条记录', {time: 2000});
     }else if(ids.length >1){
-        layer.msg('最多选择一条审核记录', {time: 2000});
+        layer.msg('最多选择一条记录', {time: 2000});
     }else{
         parent.open_window('查看','/site/handoversite/getRecord/' + ids, 1200, 450);
     }

@@ -29,14 +29,14 @@ public class CustomerService {
 	 * @author xuhui
 	 */
 	public static Page<Record>  getJson(Integer pageNumber,Integer pageSize,String customer_name,String customer_type,String company_information){
-		String sql = " from t_base_customer where 1=1";
+		String sql = " from t_base_customer where 1=1 ";
 		if(customer_name!=null&&customer_name!=""){
 			sql +=" and customer_name like '%"+customer_name+"%'";
 		}
-		if(customer_type!=null&&customer_name!=""){
-			sql +=" and customer_type like '%"+customer_type+"%'";
+		if(customer_type!=null&&customer_type!=""){
+			sql +=" and customer_type = '"+customer_type+"'";
 		}
-		if(company_information!=null&&customer_name!=""){
+		if(company_information!=null&&company_information!=""){
 			sql +=" and company_information like '%"+company_information+"%'";
 		}
 		sql +=" order by id desc";
