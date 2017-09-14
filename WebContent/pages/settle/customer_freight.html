@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>调度交接</title>
+    <title>客户运费结算单</title>
     <#include "../include/header.html">
     <script src="${ctx}/resource/jquery-print/printThis.js"></script>
     <style>
@@ -111,7 +111,7 @@ var TableInit = function () {
                 field: 'plan_no',
                 title: '计划号'
             }, {
-                field: 'delivery_date',
+                field: 'estimated_arrvial_date',
                 title: '发货日期'
             }, {
                 field: 'delivery_dock',
@@ -129,16 +129,19 @@ var TableInit = function () {
                 field: 'received_quantity',
                 title: '收货数量'
             }, {
-                field: '',
+                field: 'loss',
                 title: '损耗'
             }, {
-                field: '',
+                field: 'fixed_loss',
                 title: '定耗'
             }, {
-                field: '',
+                field: 'exceed_loss',
                 title: '超耗'
             }, {
-                field: '',
+                field: 'deduct_price',
+                title: '扣价'
+            }, {
+                field: 'deduct_money',
                 title: '扣款'
             }, {
                 field: 'freight_price',
@@ -150,8 +153,8 @@ var TableInit = function () {
                 field: 'port_construction_fee',
                 title: '港建费'
             }, {
-                field: 'demurrage_days',
-                title: '滞期天数'
+                field: 'rainy_days',
+                title: '雨天'
             }, {
                 field: 'extended_days',
                 title: '超期'
@@ -192,7 +195,7 @@ function _edit(){
     }else if(ids.length >1){
         layer.msg('最多选择一条记录', {time: 2000});
     }else{
-        parent.open_window('结算清单编辑','/settle/customerfreight/getRecord/' + ids, 1150, 400);
+        parent.open_window('结算清单编辑','/settle/customerfreight/getRecord/' + ids, 1150, 450);
     }
 }
 
@@ -215,7 +218,7 @@ function _print() {
 	$('input[type="checkbox"]').hide();
 	$('#tb_departments').printThis({
 		importCSS: true,
-		loadCSS: "",
+		loadCSS: "../../css/insidejob/insidejob_print.css",
 		header: "<p></p>"
 	});
 	$('input[type="checkbox"]').show();
@@ -283,6 +286,8 @@ var ButtonInit = function () {
 
     return oInit;
 };
+
+
 </script>
 
 </body>

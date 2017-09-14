@@ -86,3 +86,14 @@ select {
     cursor: inherit;
     display: block;
 }
+
+.tipnum{
+	text-align:center;
+	width: 16px;
+	height: 16px;
+	background: blue;
+	color: white;
+	position: relative;
+	top:-40px;
+	left:42px
+}

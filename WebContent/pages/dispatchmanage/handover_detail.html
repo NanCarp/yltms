@@ -19,7 +19,7 @@
 <div class="container">
     <form id="f1">
         <input type="hidden" id="id" name="id" value="${(record.id)!}">
-        <div class="row" style="line-height: 34px;vertical-align: middle;width:1200px;">
+        <div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
             <div class="form-group"></div>
             <div class="form-group">
                 <label class="col-xs-1 control-label text-right" for="storage_number">计划号：</label>
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="line-height: 34px;vertical-align: middle;width:1200px;">
+        <div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
             <div class="form-group"></div>
             <div class="form-group">
                 <label class="col-xs-1 control-label text-right" for="total_quantity">总吨数：</label>
@@ -82,11 +82,9 @@
                     <div class="col-sm-2 col-xs-2 head_1">
                         <button id="submit" class="btn btn-11" >保存</button>
                     </div>
-                    <!-- <div class="col-sm-2 col-xs-2 head_1">
-                        <button id="submit" class="btn btn-11">分配小船</button>
-                    </div> -->
                 </div>
             </div>
+            <div>
             <table width="100%" class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
@@ -96,13 +94,14 @@
                         <th>船名</th>
                         <th>姓名</th>
                         <th width="120px">手机号</th>
-                        <th width="180px">身份证号</th>
+                        <th width="160px">身份证号</th>
                         <th>配载吨位</th>
                         <th>可载吨位</th>
-                        <th width="120px">到港日期</th>
+                        <th width="100px">到港日期</th>
                         <th>运价</th>
                         <th>总价</th>
                         <th>预付款</th>
+                        <th>加油方式</th>
                         <th>预加油</th>
                         <th>剩余费用</th>
                     </tr>
@@ -113,16 +112,18 @@
                     <tr>
                         <td><input type="checkbox" name="sub"></td>
                         <td>${record_index+1}</td>
-                        <td class="ship_name">${record.ship_name!}</td>
-                        <td class="ship_owner_name">${record.ship_owner_name!}</td>
-                        <td class="ship_owner_phone">${record.ship_owner_phone!}</td>
-                        <td class="id_card_no">${record.id_card_no!}</td>
+                        <td class="dispatch_detail_id" value="${record.dispatch_detail_id!}">${record.consignee!}</td>
+                        <td>${record.ship_name!}</td>
+                        <td>${record.ship_owner_name!}</td>
+                        <td>${record.ship_owner_phone!}</td>
+                        <td>${record.id_card_no!}</td>
                         <td class="loading_tonnage">${record.loading_tonnage!}</td>
                         <td>${record.available_tonnage!}</td>
                         <td>${record.arrival_date!}</td>
-                        <td class="freight_price">${record.freight_price!}</td>
+                        <td>${record.freight_price!}</td>
                         <td>${record.total_freight!}</td>
                         <td>${record.prepay!}</td>
+                        <td>${record.refuel_type!}</td>
                         <td>${record.pre_refuel!}</td>
                         <td>${record.left_amount!}</td>
                     </tr>
@@ -130,6 +131,7 @@
                     </#if>
                 </tbody>
             </table>
+            </div>
         </div>
     </form>
 </div>
@@ -137,7 +139,7 @@
 
 <script>
 var item = {
-	consignee:null,	
+	dispatch_detail_id:"select",	
     ship_name:null,
     ship_owner_name:null,
     ship_owner_phone:null,
@@ -148,9 +150,13 @@ var item = {
     freight_price:null,
     total_freight:null,
     prepay:null,
+    refuel_type:null,
     pre_refuel:null,
     left_amount:null
 }
+
+//收货单位列表
+var consigneeList = ${consigneeList};
 
 //提交
 $('#submit').on('click', function () {
@@ -163,11 +169,6 @@ $('#submit').on('click', function () {
     } else {
         return;
     }
-    
-    /* var id = $('#id').val();
-    var left_quantity = $('#left_quantity').val();
-    var site_dispatch = $.trim($('#site_dispatch').val());
-    var recordList = getRecordList(); // 列表 */
     
     var left_quantity = $('#left_quantity').val();
     if (left_quantity < 0) {
@@ -208,6 +209,13 @@ function bindValidator(obj){
             validating: 'glyphicon glyphicon-refresh'
         }, */
         fields: {
+        	dispatch_detail_id: {
+                validators: {
+                	notEmpty:{
+                        message: '不能为空!'
+                    },
+                }
+            },
         	site_dispatch: {
                 validators: {
                     regexp: {
@@ -350,6 +358,19 @@ function bindValidator(obj){
                     }
                 }
             },
+            refuel_type: {
+                validators: {
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
             prepay: {
                 validators: {
                     regexp: {
@@ -412,6 +433,13 @@ function _newRow() {
     }
     row += '</tr>';  
     $tbody.append(row);
+    
+    // 特殊处理
+    var $obj = $tbody.find('input[name="dispatch_detail_id"]');
+    addSelect($obj, consigneeList);
+    $tbody.find('input[name="arrival_date"]').addClass("form_date");
+    setDateTimePicker();
+    
     count++;
 }
 // 删除行
@@ -441,7 +469,6 @@ function _deleteRow() {
     }
     // 清除勾选
     $("#checkAll").prop("checked" , false);
-    //calculateLeftQuantity();
 }
 // 编辑行
 function _editRow() {
@@ -478,26 +505,35 @@ function _editRow() {
         	$inputList.eq(i+1).val(valueArray[i]);
         }
         $tr.attr('class','edit'); // 编辑状态
+        
+        var $a = $tr.find('input[name="dispatch_detail_id"]');
+        addSelect($a, consigneeList, $a.val());
     });
     // 清除勾选
     $("input[name='sub']").prop("checked", false);
     $("#checkAll").prop("checked" , false);
+    
+    $('tbody').find('input[name="arrival_date"]').addClass("form_date");
+    setDateTimePicker();
 }
 
-// 获取产品列表
+// 获取数据列表
 function getRecordList() {
-    var recordList = []; 
+    
+    var recordList = [];
+    
     // 
     $('#tbody tr').each(function() {
+    	var record = {}; // 数据对象
         var $tr = $(this);
         var type = $tr.attr("class");
-        var valueArray = new Array();
+        //var valueArray = new Array();
         if ("edit" === type) {
-            var $inputList = $tr.find('input');
+            var $inputList = $tr.find('div.form-group');
             var i = 0;
             for (var p in item) {
-                var v = $.trim($inputList.eq(i+1).val());
-            	valueArray.push(v == '' ? null : v);
+                var v = $.trim($inputList.eq(i).children().val());
+                record[p] = v == '' ? null : v;
                 i = i + 1;
             }
         } else {
@@ -506,22 +542,15 @@ function getRecordList() {
             for (var p in item) {
                 //valueArray.push($.trim($tdList.eq(i+2).html()));
                 var v = $.trim($tdList.eq(i+2).html());
-                valueArray.push(v == '' ? null : v);
+                if (item[p] === "select") {
+                	//console.log($tdList.eq(i+2));
+                    v = $tdList.eq(i+2).attr("value");
+                }
+                record[p] = v == '' ? null : v;
                 i = i + 1;
             }
         }
-        // 去除空记录
-        var arr = $.grep(valueArray, function () { return this != ''; });
-        if (!(arr.length>0)) {
-            return true;
-        }
-        // 联系人对象
-        var record = {};
-        var i = 0;
-        for (var p in item) {
-        	record[p] = valueArray[i];
-        	i++;
-        }
+        
         recordList.push(record);
     });
     
@@ -586,16 +615,51 @@ $('form').on('change', 'input[name="ship_name"]', function () {
         
     });
 });
-// 收货单位列表
-/* var consigneeList = $('#consigneeList').val();
-console.log(typeof consigneeList);
-console.log(consigneeList); */
-var consigneeList = ${consigneeList}[0];
-console.log(typeof consigneeList);
-console.log(consigneeList);
-$(consigneeList).each(function () {
-    
+// 给指定对象添加
+function addSelect(obj, list, selectedId) {
+	var name = $(obj).attr('name');
+	var $p = $(obj).parent();
+
+	$p.empty().append('<select class="form-control" name="'+ name +'"></select>');
+	$s = $p.find('select');
+	$s.append('<option value="">请选择</option>')
+	$(list).each(function () {
+		$s.append('<option value="'+ this.id +'">' + this.consignee +'</option>')
+	});
+	if (selectedId) {
+		$s.find('option[value="'+ selectedId +'"]').prop("selected", true);
+	}
+	if (selectedId) {
+        $s.find('option').each( function () {
+        	if ($(this).html() == selectedId) {
+        		$(this).prop("selected", true);
+        	}
+        });
+    }
+}
+// 设置日期选择
+function setDateTimePicker() {
+	$(".form_date").datetimepicker({
+	    format: "yyyy-mm-dd",
+	    autoclose: true,
+	    todayBtn: false,
+	    todayHighlight: true,
+	    showMeridian: true,
+	    pickerPosition: "bottom-right",
+	    language: 'zh-CN',//中文，需要引用zh-CN.js包
+	    startView: 2,// // 日视图
+	    minView: 2,
+	});
+}
+// 总价 = 配载吨位 * 运价
+$('form').on('change', 'input[name=loading_tonnage], input[name=freight_price]', function () {
+	var $tr = $(this).parents('tr');
+	var loading_tonnage = parseFloat($tr.find('input[name=loading_tonnage]').val()).toFixed(3) * 1000;
+	var freight_price = parseFloat($tr.find('input[name=freight_price]').val()).toFixed(3) * 1000;
+	var total_freight = (loading_tonnage * freight_price / 1000000).toFixed(2);
+	$tr.find('input[name=total_freight]').val(isNaN(total_freight) ? '' : total_freight);
 });
+
 
 </script>
 </body>

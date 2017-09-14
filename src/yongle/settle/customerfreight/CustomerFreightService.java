@@ -34,6 +34,8 @@ public class CustomerFreightService {
             sqlExceptSelect += " AND plan_no like '%"+ plan_no +"'";
         }
         
+        sqlExceptSelect += " ORDER BY plan_no DESC ";
+        
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }
 

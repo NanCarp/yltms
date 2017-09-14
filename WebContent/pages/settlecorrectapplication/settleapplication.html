@@ -21,23 +21,29 @@
 				<div class="container container-fluid" style="padding-right: 0px">				
 					<div class="row" >                        	    		                                            		
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control" placeholder="计划号" name="shipowname" id="shipowname">
+							<input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no">
 						</div>
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control form_datetime" placeholder="起始申请日期" name="ship_name" id="ship_name">
+							<input type="search" class="form-control form_datetime" placeholder="起始申请日期" name="apply_begin" id="apply_begin">
 						</div>
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control form_datetime" placeholder="截止申请日期" name="ship_name" id="ship_name">
+							<input type="search" class="form-control form_datetime" placeholder="截止申请日期" name="apply_end" id="apply_end">
 						</div>
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control" placeholder="调度员" name="ship_name" id="ship_name">
+							<input type="search" class="form-control" placeholder="调度员" name="dispatcher" id="dispatcher">
 						</div>
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
-						</div>                    			
+						</div>
+						<div class="col-sm-1 col-xs-2 head_1" >
+                             <button class="btn btn-12" onclick="_review()">审核</button>
+                        </div>
 						<div class="col-sm-1 col-xs-2 head_1">
 		                    <button class="btn btn-success" onclick="_add()">新增</button>
-		                </div>	                      									                 
+		                </div>
+		                <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/settlecorrect/app')"><i class="fa fa-refresh"></i></button>
+                        </div>
 					</div>				
 				</div>
 			</div>		
@@ -60,8 +66,7 @@ $(".form_datetime").datetimepicker({
 	minView: 2,
 });
 
-var shipowname="";
-var ship_name="";
+var plan_no,apply_begin,apply_end,dispatcher;
 
 $(function () {	 
     //1.初始化Table
@@ -75,18 +80,21 @@ $(function () {
 function doQuery(){
 	layui.use('layer',function(){
 		var layer = layui.layer;
-		shipowname = $.trim($('#shipowname').val());
-		ship_name = $.trim($('#ship_name').val());
-		if($.trim($('#shipowname').val())!=''){
+		plan_no = $.trim($('#plan_no').val());
+		dispatcher = $.trim($('#dispatcher').val());
+		apply_begin = $('#apply_begin').val();
+		apply_end = $('#apply_end').val();
+		
+		if($.trim($('#plan_no').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#shipowname').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#shipowname', {tips: [1, '#34495E']});return;
+			if(!reg.test($('#plan_no').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
 			}					
 		}
-		if($.trim($('#ship_name').val())!=''){
+		if($.trim($('#dispatcher').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#ship_name').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#ship_name', {tips: [1, '#34495E']});return;
+			if(!reg.test($('#dispatcher').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#dispatcher', {tips: [1, '#34495E']});return;
 			}					
 		}
 		 $('#tb_departments').bootstrapTable('refresh');    //刷新表格
@@ -98,7 +106,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '',         //请求后台的URL（*）
+            url: '/settlecorrect/app/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -135,56 +143,65 @@ var TableInit = function () {
             		return index+1;
             	}
             },{
-                field: 'shipowname',
+                field: 'apply_date',
                 title: '申请日期'
             },{
-                field: 'ship_name',
+                field: 'dispatcher',
                 title: '调度员'
             },{
-                field: 'phone_num',
+                field: 'plan_no',
                 title: '计划号'
             },{
-                field: 'ID_number',
+                field: 'consignor',
                 title: '托运人'
             },{
-                field: 'ship_ton',
+                field: 'ship_name',
                 title: '船名'
             },{
-                field: 'grade_sail',
+                field: 'ship_owner_name',
                 title: '姓名'
             },{
-                field: 'business_route',
+                field: 'ship_owner_phone',
                 title: '手机号码'
             },{
-                field: 'business_route',
+                field: 'goods_name',
                 title: '货物名称'
             },{
-                field: 'business_route',
+                field: 'seagoing_vessel_name',
                 title: '海轮名'
             },{
-                field: 'business_route',
+                field: 'freight_begin_end',
                 title: '运输起讫'
             },{
-                field: 'business_route',
+                field: 'loading_tonnage',
                 title: '实装吨位'
             },{
-                field: 'business_route',
+                field: 'adjust_freight',
                 title: '调整运费'
             },{
-                field: 'business_route',
+                field: 'reason',
                 title: '申请调整事由'
             },{
-                field: 'business_route',
-                title: '经理审批'
+                field: 'manager_review',
+                title: '经理审批',
+                formatter:function(value,row,index){
+                    if(value == 1){
+                        return '已审核';
+                    }else if(value == 0){
+                        return '待审核';
+                    }else{
+                        return '取消审核';
+                    }
+                }
             },{
-                field: 'business_route',
+                field: 'remark',
                 title: '备注'
             },{
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_edit('+row.id+')">编辑</button>'
-            			  +'<button class="btn btn-xs btn-4 bt" style="margin-left:10px" onclick="_delete('+row.id+')">删除</button>' ]
+            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_edit('+row.id+','+row.manager_review +')">编辑</button>'
+            			  +'<button class="btn btn-xs btn-4 bt" style="margin-left:10px" onclick="_delete('+row.id+','+row.manager_review +')">删除</button>' ]
             	},
             }]
         });
@@ -197,8 +214,10 @@ var TableInit = function () {
             offset: params.offset,  //页码
             maxrows: params.limit,
             search: params.search,
-            shipowname: shipowname,
-            ship_name: ship_name,
+            plan_no: plan_no,
+            dispatcher: dispatcher,
+            apply_begin: apply_begin,
+            apply_end: apply_end
         };
         return temp;
     };
@@ -216,18 +235,26 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	parent.open_window('新增结算批改申请表','',800,360);
+	parent.open_window('新增结算批改申请表','/settlecorrect/app/edit',900,500);
 }
 
 //编辑
-function _edit(id){
-	parent.open_window('编辑结算批改申请表','',800,360);
+function _edit(id, manager_review){
+    if (manager_review == 1) {
+        layer.msg("已审核不能编辑", {time: 2000});
+        return;
+    }
+	parent.open_window('编辑结算批改申请表','/settlecorrect/app/edit/' + id,900,500);
 }
 
 //删除操作
-function _delete(id){
+function _delete(id, manager_review){
+	if (manager_review == 1) {
+        layer.msg("已审核不能删除", {time: 2000});
+        return;
+    }
 	layer.confirm("确认删除",{icon:3},function(){
-		$.post("/dataBase/ship/delete/"+id,function(data){
+		$.post("/settlecorrect/app/delete/"+id,function(data){
 			if(data){
 				layer.msg("删除成功",{time:2000},function(){
 					parent.refresh_iframe();
@@ -239,18 +266,38 @@ function _delete(id){
 	})
 }
 
-//查看详情
-function _seeDatil(){
-	// 获取选中记录 id
-	var ids = getIdSelections();	
-	// 如果没有选择，提示勾选至少一条数据
-	if (ids.length == 0) {
-        layer.msg('请选择需要查看详情的记录', {time: 2000});
-	}else if(ids.length >1){
-		layer.msg('最多选择一条记录', {time: 2000});
-	}else{
-		parent.open_window('查看明细','/dataBase/ship/getInfo?id='+ids,800,320);
-	}
+// 审核
+function _review() {
+    // 获取选中记录 id
+    var ids = getIdSelections();    
+    // 如果没有选择，提示勾选至少一条数据
+    if (ids.length == 0) {
+        layer.msg('请选择一条记录', {time: 2000});
+    }else if(ids.length >1){
+        layer.msg('最多选择一条记录', {time: 2000});
+    }else{
+        $.post("/settlecorrect/app/getExamineState/"+ids,function(data){
+            if(data){
+            	var a = "取消审核?";
+            }else{
+            	var a = "确认审核?";
+            }
+            layer.confirm(a, {icon: 1, title:'审核确认提示'}, function(index){
+                $.post("/settlecorrect/app/review/"+ids,function(result){
+                    if(result == 1){
+                        layer.msg(result.msg, {time: 2000}, function(){
+                            parent.refresh_iframe();
+                        });
+                    }else{
+                        layer.msg(result.msg, {time: 2000}, function(){
+                        	parent.refresh_iframe();
+                        });
+                    }
+                });
+                layer.close(index);
+            });
+        })
+    }
 }
 
 //获取被选中数据的id

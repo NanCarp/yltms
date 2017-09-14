@@ -237,7 +237,7 @@ function _review() {
                             });
                         }else{
                             layer.msg(result.msg, {time: 2000}, function(){
-                                
+                                parent.refresh_iframe();
                             });
                         }
                     })    
@@ -252,7 +252,7 @@ function _review() {
                             });
                         }else{
                             layer.msg(result.msg, {time: 2000}, function(){
-                                
+                                parent.refresh_iframe();
                             });
                         }
                     })    
@@ -276,12 +276,17 @@ function _issue() {
 	        $.post("/planManage/handover/issue/"+ids,function(result){
 	        	if (result.code == 1) {
 	                layer.msg(result.msg, {time: 2000}, function(){
-	                    layer_close();
-	                    parent.parent.refresh_iframe();
+	                    //layer_close();
+	                    alert("ss");
+	                    parent.refresh_iframe();
 	                });
 
 	            } else {
-	                layer.msg(result.msg, {time: 2000});
+	                layer.msg(result.msg, {time: 2000}, function () {
+	                	alert("ss");
+	                	parent.refresh_iframe();
+	                });
+	                
 	            }
 	        })    
 	        layer.close(index);
@@ -300,7 +305,7 @@ function _export() {
         layer.msg('最多选择一条记录', {time: 2000});
     }else{
         layer.confirm('确认导出?', {icon: 1, title:'导出提示'}, function(index){
-            $.post("/planManage/handover/export/"+ids,function(result){
+            /* $.post("/planManage/handover/export/"+ids,function(result){
                 if (result.code == 1) {
                     layer.msg(result.msg, {time: 2000}, function(){
                         layer_close();
@@ -311,7 +316,8 @@ function _export() {
                     layer.msg(result.msg, {time: 2000});
                 }
             })    
-            layer.close(index);
+            layer.close(index); */
+        	window.open('/planManage/handover/export/' +ids, '_blank');
         });
     }
 }

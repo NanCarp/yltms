@@ -79,7 +79,7 @@ public class HandoverController extends Controller {
         // setAttr("consigneeList", consigneeList);
         setAttr("consigneeList", JsonKit.toJson(consigneeList));
         
-        render("handover_detail2.html");
+        render("handover_detail.html");
     }
     
     /** 
@@ -203,12 +203,22 @@ public class HandoverController extends Controller {
         renderJson(res);
     }
     
+    /** 
+    * @Title: export 
+    * @Description: 导出 excel
+    * @author liyu
+    */
     public void export() {
+        ResponseObj res = new ResponseObj(); // 返回信息
         Integer id = getParaToInt();
-        Record record = Db.findById("t_dispatch", id);
-        setAttr("record", record);
-        List<Record> recordList = Db.find("SELECT *,a.id FROM `t_dispatch_ship` AS a LEFT JOIN t_dispatch_detail AS b ON a.dispatch_detail_id = b.id WHERE dispatch_id = ? ", id);
-        setAttr("recordList", recordList);
+        
+        boolean result = HandoverService.export(getResponse(), id);
+        
+        if (result) {
+            renderNull();
+        } else {
+            renderText("导出失败");
+        }
     }
     
 }

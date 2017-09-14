@@ -7,6 +7,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+import yongle.model.CustomerSettle;
 import yongle.model.DispatchShip;
 import yongle.utils.ResponseObj;
 
@@ -73,11 +74,10 @@ public class CustomerFreightController extends Controller {
     */
     public void save() {
         ResponseObj res = new ResponseObj();
-        DispatchShip record = getModel(DispatchShip.class, "");
+        CustomerSettle record = getModel(CustomerSettle.class, "");
         boolean b = record.update();
         res.setCode(b ? ResponseObj.OK : ResponseObj.FAILED);
-        res.setMsg(b ? ResponseObj.SAVE_SUCCESS : ResponseObj.SAVE_FAILED);
-        
+        res.setMsg(b ? ResponseObj.SAVE_SUCCESS : ResponseObj.SAVE_FAILED);  
         renderJson(res);
     }
     

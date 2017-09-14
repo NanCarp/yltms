@@ -58,11 +58,11 @@ public class PlanController extends Controller {
         // 计划号 id
         Integer dispatch_id = getParaToInt("dispatch_id");
         // 公司发货现场负责人
-        String site_delivery = getPara("site_delivery");
+        String site_dispatch = getPara("site_dispatch");
         
         Dispatch record = new Dispatch();
         record.set("id", dispatch_id);
-        record.set("site_delivery", site_delivery);
+        record.set("site_dispatch", site_dispatch);
         boolean result = record.update();
         
         res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);

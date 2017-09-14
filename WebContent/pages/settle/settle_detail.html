@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>结算审核表(现场)-审核</title>
+    <title>结算审核-结算审核表</title>
 	<#include "../include/header.html">   	
 </head>
 
@@ -26,30 +26,34 @@
 					<th>损耗</th>
 					<th>卸货期限</th>
 					<th>运价</th>
-					<th>加油方式</th>
-					<th>金额</th>
 					<th>装船日期</th>
 					<th>实装吨位</th>
 					<th>预付款</th>
 					<th>加油方式</th>
 					<th>金额</th>
 				</tr>
+				<#if list?? && list?size gt 0>
+				<#list list as im>
 				<tr>
-					<td>1</td>
-					<td>2017-02-11</td>
-					<td>马达号</td>
-					<td>2000</td>
-					<td>2.3</td>
-					<td>2017-08-21</td>
-					<td>60</td>
-					<td>2000</td>
-					<td>2017-03-22</td>
-					<td>1980</td>
-					<td>60000</td>
-					<td>陆地加油</td>
-					<td>2000</td>
-					
+					<td>${im_index+1}</td>
+					<td>${im.entry_time!}</td>
+					<td>${im.ship_name!}</td>
+					<td>${im.loading_tonnage!}</td>
+					<td>${im.loading_tonnage-im.received_quantity}</td>
+					<td>${im.unloaded_date!}</td>
+					<td>${im.freight_price!}</td>
+					<td>${im.estimated_arrvial_date!}</td>
+					<td>${im.loading_tonnage!}</td>
+					<td>${im.prepay!}</td>
+					<td>${im.refuel_type!}</td>
+					<td>${im.pre_refuel!}</td>
 				</tr>
+				</#list>
+				<#else>
+				<tr>
+					<td colspan="14"></td>
+				</tr>
+				</#if>
 			</table>
 		</div>             
 	</div>

@@ -4,11 +4,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+import yongle.interceptor.ManageInterceptor;
 import yongle.model.BasePort;
 import yongle.utils.ResponseObj;
 
@@ -19,6 +21,7 @@ import yongle.utils.ResponseObj;
  * @date: 2017年8月29日下午4:51:54
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class PortController extends Controller {
     private ResponseObj msg = new ResponseObj();
     

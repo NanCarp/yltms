@@ -2,14 +2,13 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>结算审核表(现场)</title>
+    <title>结算审核表(经理)</title>
 	<#include "../include/header.html">   	
 </head>
 
@@ -21,19 +20,39 @@
 				<div class="container container-fluid" style="padding-right: 0px">				
 					<div class="row" >                        	    		                                            		
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control" placeholder="计划号" name="plan_endtime" id="plan_endtime">
+							<input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no">
 						</div>
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control" placeholder="托运人" name="plan_endtime" id="plan_endtime">
+							<input type="search" class="form-control" placeholder="托运人" name="consignor" id="consignor">
+						</div>
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<select class="form-control" name="bursar_settle_state" id="bursar_settle_state">
+								<option value="">-复核状态-</option>
+								<option value="0">待复核</option>
+								<option value="1">已复核</option>
+								<option value="2">取消复核</option>
+							</select>
+						</div>
+						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+							<select class="form-control" name="manager_settle_state" id="manager_settle_state">
+								<option value="">-单据状态-</option>
+								<option value="0">审核中</option>
+								<option value="1">通过</option>
+								<option value="2">取消审核</option>
+								<option value="3">驳回</option>
+							</select>
 						</div>
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>   	                 			  
 		                <div class="col-sm-1 col-xs-2 head_1" >
-		                     <button class="btn btn-12" onclick="examine()">审核</button>
+		                     <button class="btn btn-12" onclick="_toreview()">复核</button>
+		                </div> 
+		                 <div class="col-sm-1 col-xs-2 head_1" >
+		                     <button class="btn btn-12" onclick="managerCheckOut()">审核</button>
 		                </div> 
 		                <div class="col-sm-1 col-xs-2 head_1">
-							<button class="btn btn-13" onclick="doQuery()">驳回</button>
+							<button class="btn btn-13" onclick="reject()">驳回</button>
 						</div>              									               
 					</div>				
 				</div>
@@ -58,10 +77,9 @@ $(".form_datetime").datetimepicker({
 });
 
 var plan_no="";
-var goods_name="";
 var consignor="";
-var plan_begintime="";
-var plan_endtime="";
+var bursar_settle_state="";
+var manager_settle_state="";
 
 $(function () {	 
     //1.初始化Table
@@ -76,17 +94,16 @@ function doQuery(){
 	layui.use('layer',function(){
 		var layer = layui.layer;
 		plan_no = $.trim($('#plan_no').val());
-		goods_name = $.trim($('#goods_name').val());
 		consignor = $.trim($('#consignor').val());
-		plan_begintime = $.trim($('#plan_begintime').val());
-		plan_endtime = $.trim($('#plan_endtime').val());
+		bursar_settle_state = $.trim($('#bursar_settle_state').val());
+		manager_settle_state = $.trim($('#manager_settle_state').val());
 		if($.trim($('#plan_no').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
 			if(!reg.test($('#plan_no').val())){
 				layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
 			}					
 		}
-		if($.trim($('#goods_name').val())!=''){
+		if($.trim($('#consignor').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
 			if(!reg.test($('#goods_name').val())){
 				layer.tips('不允许有特殊字符，最多20个字符', '#goods_name', {tips: [1, '#34495E']});return;
@@ -101,7 +118,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '',         //请求后台的URL（*）
+            url: '/settle/managesettle/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -114,7 +131,8 @@ var TableInit = function () {
             sortable: false,                     //是否启用排序
             sortOrder: "asc",                   //排序方式
             queryParams: oTableInit.queryParams,//传递参数（*）
-            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            sidePagination: "server",           //分页方式：
+            //client客户端分页，server服务端分页（*）
             pageNumber:1,                       //初始化加载第一页，默认第一页
             pageSize: 12,                       //每页的记录行数（*）
             pageList: [3, 6, 12, 100],        //可供选择的每页的行数（*）
@@ -127,8 +145,8 @@ var TableInit = function () {
             detailView: false,
             showRefresh:true,  
             locale: "zh-CN",					//中文支持,
-            //是否显示父子表
-            columns: [{
+          //是否显示父子表
+           columns:[{
             	field:"checked",
             	checkbox: true,
             },{
@@ -141,37 +159,56 @@ var TableInit = function () {
                 field: 'plan_no',
                 title: '计划号'
             },{
-                field: 'goods_name',
+                field: 'consignor',
                 title: '托运人'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'goods_name',
                 title: '货物名称'
             },{
-                field: 'consignor',
+                field: 'seagoing_vessel_name',
                 title: '海轮名称'
             }, {
                 field: 'delivery_dock',
                 title: '发货港'
             },{
-                field: 'destination_port',
+                field: 'bursar_settle_state',
+                title: '复核状态',
+                formatter:function(value,row,index){
+                	if(value==0){
+                		return '待复核'
+                	}
+                	if(value==1){
+                		return '已复核'
+                	}
+                	if(value==2){
+                		return '取消复核'
+                	}
+                }
+            },{
+                field: 'manager_settle_state',
+                title: '单据状态',
+                formatter:function(value,row,index){
+                	if(value==0){
+                		return '审核中'
+                	}
+                	if(value==1){
+                		return '通过'
+                	}
+                	if(value==2){
+                		return '取消审核'
+                	}
+                	if(value==3){
+                		return '驳回'
+                	}
+                }
+            },{
+                field: 'dispatcher',
                 title: '调度员'
-            },{
-                field: 'seagoing_vessel_name',
-                title: '监装员'
-            },{
-                field: 'seagoing_vessel_name',
-                title: '审核状态'
-            },{
-                field: 'seagoing_vessel_name',
-                title: '备注'
-            },{
-                field: 'seagoing_vessel_name',
-                title: '审核人'
             },{
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_edit('+row.id+')>查看明细</button>' ]
+            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_seedetail('+row.id+')">查看明细</button>' ]
             	},
             }]
         });
@@ -185,10 +222,9 @@ var TableInit = function () {
             maxrows: params.limit,
             search: params.search,
             plan_no: plan_no,
-            goods_name: goods_name,
             consignor: consignor,
-            plan_begintime: plan_begintime,
-            plan_endtime: plan_endtime,
+            bursar_settle_state: bursar_settle_state,
+            manager_settle_state: manager_settle_state,
         };
         return temp;
     };
@@ -204,17 +240,9 @@ var ButtonInit = function () {
     return oInit;
 };
 
-function _edit(id){
-	open_window('结算审核明细','/settle/managesettle/getDetail',1000,420);
-}
 
-
-function examine(){
-	open_window('审核明细','/site/settle/examDetail',1000, 420);
-}
-
-//查看详情
-function _seeDatil(){
+//复核操作
+function _toreview(){
 	// 获取选中记录 id
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
@@ -223,15 +251,119 @@ function _seeDatil(){
 	}else if(ids.length >1){
 		layer.msg('最多选择一条记录', {time: 2000});
 	}else{
-		parent.open_window('计划明细','/settle/managesettle/getDetail',1000, 420);
+		$.post("/settle/managesettle/iscancel/"+ids,function(result){
+			//flag结果为true则表示可以删除
+			if(result.flag){
+				if(result.state==1){
+					layer.confirm('取消复核？', {icon: 7, title:'复核取消提示'}, function(index){
+						  //改变审核状态
+						  checkOut(ids);
+						  layer.close(index);
+						});
+				}else{
+					layer.confirm('确认复核?', {icon: 1, title:'复核确认提示'}, function(index){
+						//改变审核状态
+						  checkOut(ids);
+						  layer.close(index);
+						});
+					
+				}
+			}else{
+				layer.msg("已产生后续业务，取消失败",{time:2000});
+			}
+		})
 	}
 }
-
 //获取被选中数据的id
 function getIdSelections() {
     return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
         return row.id;
     });
+}
+
+//查看详情
+function _seedetail(id){	
+	parent.open_window('计划明细','/settle/managesettle/getDetail/'+id,1000, 420);
+}
+
+
+//改变复核状态
+function checkOut(id){
+	$.post("/settle/managesettle/bursarCheckOut/"+id,function(data){
+		if(data.flag){
+			layer.msg(data.tips,{time:2000},function(){
+				 parent.parent.refresh_iframe();
+			})
+		}else{
+			layer.msg("操作失败，请重试",{time:2000})
+		}
+	})
+}
+
+//改变经理审核状态
+function managecheckOut(id){
+	$.post("/settle/managesettle/manageCheck/"+id,function(data){
+		if(data.flag){
+			layer.msg(data.tips,{time:2000},function(){
+				 parent.parent.refresh_iframe();
+			})
+		}else{
+			layer.msg(data.tips,{time:2000})
+		}
+	})
+}
+
+//修改经理审核状态
+function managerCheckOut(){
+	// 获取选中记录 id
+	var ids = getIdSelections();	
+	// 如果没有选择，提示勾选至少一条数据
+	if (ids.length == 0) {
+        layer.msg('请选择需要查看详情的记录', {time: 2000});
+	}else if(ids.length >1){
+		layer.msg('最多选择一条记录', {time: 2000});
+	}else{
+		$.post("/settle/managesettle/ischange/"+ids,function(result){
+			console.log(result);
+			if(result.flag){
+				if(result.num==0||result.num==2){
+					layer.confirm('确认审核?', {icon: 1, title:'确认审核提示'}, function(index){
+						  managecheckOut(ids)
+						  layer.close(index);
+						});
+				}else{
+					managecheckOut(ids);	
+				}
+			}else{
+				layer.msg(result.tips,{time:2000})
+			}
+		})
+	}
+}
+
+//驳回操作
+function reject(){
+	// 获取选中记录 id
+	var ids = getIdSelections();	
+	// 如果没有选择，提示勾选至少一条数据
+	if (ids.length == 0) {
+        layer.msg('请选择需要查看详情的记录', {time: 2000});
+	}else if(ids.length >1){
+		layer.msg('最多选择一条记录', {time: 2000});
+	}else{
+		layer.confirm('确认驳回?', {icon: 3, title:'驳回提示'}, function(index){
+			$.post("/settle/managesettle/reject/"+ids,function(result){
+				if(result.flag){
+					layer.msg(result.tips,{time:2000},function(){
+						parent.parent.refresh_iframe();
+					})
+				}else{
+					layer.msg(result.tips,{time:2000});
+				}
+			})
+			layer.close(index);
+			});	
+	}
 }
 
 </script>

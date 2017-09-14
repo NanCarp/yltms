@@ -126,6 +126,15 @@ public abstract class BaseDispatchShip<M extends BaseDispatchShip<M>> extends Mo
 		return get("prepay");
 	}
 
+	public M setRefuelType(java.lang.String refuelType) {
+		set("refuel_type", refuelType);
+		return (M)this;
+	}
+
+	public java.lang.String getRefuelType() {
+		return get("refuel_type");
+	}
+
 	public M setPreRefuel(java.math.BigDecimal preRefuel) {
 		set("pre_refuel", preRefuel);
 		return (M)this;

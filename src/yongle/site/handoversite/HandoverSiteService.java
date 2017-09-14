@@ -57,6 +57,8 @@ public class HandoverSiteService {
             sqlExceptSelect += " AND plan_no like '%" + entry_man + "'";
         }
         
+        sqlExceptSelect += " ORDER BY plan_no DESC ";
+        
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }
 

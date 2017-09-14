@@ -403,7 +403,7 @@
                         <label class="col-xs-2 control-label" for="commit_btn"></label>
                         <div class="col-xs-10 text-left">
                             <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
-                            <button id="commit_btn2" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn2" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -457,7 +457,7 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label" for="commit_btn"></label>
                         <div class="col-xs-10 text-left">
-                            <button id="commit_btn3" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn3" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -493,7 +493,7 @@
                     <div class="form-group">
                         <label class="col-xs-2 control-label" for="commit_btn"></label>
                         <div class="col-xs-10 text-left">
-                            <button id="commit_btn4" class="btn btn-11">　保存　</button>
+                            <button id="commit_btn4" type="button" class="btn btn-11">　保存　</button>
                         </div>
                     </div>
                 </div>
@@ -1027,7 +1027,8 @@ function del2(_obj){
 }
 function del3(_obj){
 	$(_obj).parent('p').remove();
-	$("#id3").removeAttr("hidden");
+	$("#id3").removeAttr
+	("hidden");
 	initFileInput("organization_commerce");
 }
 

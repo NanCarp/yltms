@@ -111,12 +111,23 @@
 }
 .btn-12 {
 	color: #fff;
-    background-color: #8000ff;
-    border-color: #8080ff;
+    background-color: #5533cc;
+    border-color: #5533cc;
 }
 .btn-12:hover, .btn-12:focus {
 	color: #fff;
-    background-color: #8080ff;
-    border-color: #8000ff;
+    background-color:#8000ff;
+    border-color:#5533cc;
 }
+.btn-13{
+	color: #fff;
+    background-color: #d13a2e;
+    border-color: #d13a2e;
+}
+.btn-13:hover, .btn-13:focus{
+	color: #fff;
+    background-color:#ff0000;
+    border-color:#d13a2e;
+}
+
 /********** 按钮颜色 E **********/

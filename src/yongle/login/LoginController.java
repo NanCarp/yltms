@@ -1,6 +1,10 @@
 package yongle.login;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,12 +15,14 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.core.JFinal;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.weixin.sdk.utils.IOUtils;
 
 import yongle.interceptor.ManageInterceptor;
 import yongle.utils.MD5Util;
@@ -186,13 +192,33 @@ public class LoginController extends Controller{
 	 */
 	public int compareDate(Date d1,Date d2){
         if (d1.getTime() > d2.getTime()) {
-            System.out.println("dt1 在dt2前");
             return 1;
         } else if (d1.getTime() < d2.getTime()) {
-            System.out.println("dt1在dt2后");
             return -1;
         } else {//相等
             return 0;
         }
+	}
+	
+	/**
+	 * @desc 调用天气接口
+	 * @author xuhui
+	 * @throws UnsupportedEncodingException 
+	 */
+	@Clear
+	public void getWeather() throws Exception{
+		//参数url化
+		String city = java.net.URLEncoder.encode("泰州","utf-8");
+		
+		//拼接地址
+		String apiUrl = String.format("http://www.sojson.com/open/api/weather/json.shtml?city=%s", city);
+		//开始请求
+		URL url = new URL(apiUrl);
+		URLConnection open = url.openConnection();
+		InputStream input = open.getInputStream();
+		String result = IOUtils.toString(input, Charset.forName("utf-8"));
+		JSONObject jsonObj = JSONObject.parseObject(result);
+		renderJson(jsonObj);
+		
 	}
 }

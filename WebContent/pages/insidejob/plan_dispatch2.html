@@ -103,7 +103,7 @@
                             <td id="total"></td>
                         </tr>
                         <tr>
-                            <td colspan="9" class="text-left" id="site_dispatch">公司发货现场负责人：<input type="text" id="site_delivery" value="${(dispatch.site_dispatch)!}"></td>
+                            <td colspan="9" class="text-left" id="site_dispatch1">公司发货现场负责人：<input type="text" id="site_dispatch" value="${(dispatch.site_dispatch)!}"></td>
                         </tr>
                         <#else>
                         <tr>
@@ -168,16 +168,16 @@
  		if (dispatch_id) {
  			layui.use('layer',function(){
  	            var layer = layui.layer;
-	 			var site_delivery = $.trim($('#site_delivery').val());
-	 			console.log("site_delivery " + site_delivery);
-	            if($.trim($('#site_delivery').val())!=''){
+	 			var site_dispatch = $.trim($('#site_dispatch').val());
+	 			console.log("site_dispatch " + site_dispatch);
+	            if($.trim($('#site_dispatch').val())!=''){
 	                var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
-	                if(!reg.test($('#site_delivery').val())){
-	                    layer.tips('不允许有特殊字符，最多20个字符', '#site_delivery', {tips: [1, '#34495E']});return;
+	                if(!reg.test($('#site_dispatch').val())){
+	                    layer.tips('不允许有特殊字符，最多20个字符', '#site_dispatch', {tips: [1, '#34495E']});return;
 	                }                   
 	            }
 	            //return;
-	            $.post('/insidejob/plan/save',{"dispatch_id": dispatch_id, "site_delivery": site_delivery}, function (result) {
+	            $.post('/insidejob/plan/save',{"dispatch_id": dispatch_id, "site_dispatch": site_dispatch}, function (result) {
 	            	if (result.code == 1) {
 	                    layer.msg(result.msg, {time: 2000});
 	
@@ -193,8 +193,8 @@
  	}
  	
  	function _print() {
- 		var $td = $('#site_dispatch');
- 		var $input = $('#site_dispatch').find('input');
+ 		var $td = $('#site_dispatch1');
+ 		var $input = $('#site_dispatch1').find('input');
  		$td.find('input').remove();
  		$td.append($input.val());
  		

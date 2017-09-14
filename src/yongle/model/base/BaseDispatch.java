@@ -207,6 +207,15 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("left_quantity");
 	}
 
+	public M setDispatcher(java.lang.String dispatcher) {
+		set("dispatcher", dispatcher);
+		return (M)this;
+	}
+
+	public java.lang.String getDispatcher() {
+		return get("dispatcher");
+	}
+
 	public M setSiteDispatch(java.lang.String siteDispatch) {
 		set("site_dispatch", siteDispatch);
 		return (M)this;
@@ -234,13 +243,40 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("dispatch_issue");
 	}
 
-	public M setSiteDelivery(java.lang.String siteDelivery) {
-		set("site_delivery", siteDelivery);
+	public M setDispatchSettleState(java.lang.Integer dispatchSettleState) {
+		set("dispatch_settle_state", dispatchSettleState);
 		return (M)this;
 	}
 
-	public java.lang.String getSiteDelivery() {
-		return get("site_delivery");
+	public java.lang.Integer getDispatchSettleState() {
+		return get("dispatch_settle_state");
+	}
+
+	public M setSiteSettleState(java.lang.Integer siteSettleState) {
+		set("site_settle_state", siteSettleState);
+		return (M)this;
+	}
+
+	public java.lang.Integer getSiteSettleState() {
+		return get("site_settle_state");
+	}
+
+	public M setBursarSettleState(java.lang.Integer bursarSettleState) {
+		set("bursar_settle_state", bursarSettleState);
+		return (M)this;
+	}
+
+	public java.lang.Integer getBursarSettleState() {
+		return get("bursar_settle_state");
+	}
+
+	public M setManagerSettleState(java.lang.Integer managerSettleState) {
+		set("manager_settle_state", managerSettleState);
+		return (M)this;
+	}
+
+	public java.lang.Integer getManagerSettleState() {
+		return get("manager_settle_state");
 	}
 
 }

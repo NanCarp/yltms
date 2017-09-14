@@ -29,11 +29,12 @@ public class _MappingKit {
 		arp.addMapping("t_dispatch_detail", "id", DispatchDetail.class);
 		arp.addMapping("t_dispatch_ship", "id", DispatchShip.class);
 		arp.addMapping("t_insidejob_contract", "id", InsidejobContract.class);
-		arp.addMapping("t_insidejob_contract_copy", "id", InsidejobContractCopy.class);
 		arp.addMapping("t_menu", "id", Menu.class);
 		arp.addMapping("t_role", "id", Role.class);
 		arp.addMapping("t_role_button", "id", RoleButton.class);
 		arp.addMapping("t_role_menu", "id", RoleMenu.class);
+		arp.addMapping("t_settle_apply", "id", SettleApply.class);
+		arp.addMapping("t_ship_settle", "id", ShipSettle.class);
 		arp.addMapping("t_statement", "id", Statement.class);
 		arp.addMapping("t_user", "id", User.class);
 	}

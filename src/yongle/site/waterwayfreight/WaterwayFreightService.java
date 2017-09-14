@@ -53,6 +53,8 @@ public class WaterwayFreightService {
             sqlExceptSelect += " AND estimated_arrvial_date < '" + end_date + "'";
         }
         
+        sqlExceptSelect += " ORDER BY plan_no DESC ";
+        
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }
 

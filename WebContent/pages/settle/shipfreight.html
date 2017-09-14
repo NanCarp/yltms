@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>船舶运费结算清单</title>
-	<#include "../include/header.html">   	
+	<#include "../include/header.html">
+	<script src="${ctx}/resource/jquery-print/printThis.js"></script>   	
 </head>
 
 <body>
@@ -27,13 +27,13 @@
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>   
 						<div class="col-sm-1 col-xs-2 head_1">
-							<button class="btn btn-3" onclick="_edit()">编辑</button>
+							<button class="btn btn-3" onclick="_detail()">编辑</button>
 						</div>
 						<div class="col-sm-1 col-xs-2 head_1" >
                              <button class="btn btn-4" onclick=" _export()">导出</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-5" onclick=" _export()">打印</button>
+                             <button class="btn btn-5" onclick="_print()">打印</button>
                         </div> 	 	                 			                									               
 					</div>				
 				</div>
@@ -86,7 +86,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '/settle/customerfreight/getJson',         //请求后台的URL（*）
+            url: '/settle/ship/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -126,58 +126,58 @@ var TableInit = function () {
                 field: 'plan_no',
                 title: '计划号'
             },{
-                field: 'goods_name',
+                field: 'estimated_arrvial_date',
                 title: '发货日期'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'delivery_dock',
                 title: '发货港'
             },{
-                field: 'consignor',
+                field: 'destination_port',
                 title: '目的港'
             }, {
-                field: 'delivery_dock',
+                field: 'ship_name',
                 title: '船名'
             },{
-                field: 'destination_port',
+                field: 'loading_tonnage',
                 title: '发货数量'
             },{
-                field: 'destination_port',
+                field: 'received_quantity',
                 title: '收货数量'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'loss',
                 title: '损耗'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'fixed_loss',
                 title: '定耗'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'exceed_loss',
                 title: '超耗'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'deduct_money',
                 title: '扣款'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'freight_price',
                 title: '单价'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'total_freight',
                 title: '运费'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'port_construction_fee',
                 title: '港建费'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'demurrage_days',
                 title: '滞期天数'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'extended_days',
                 title: '超期'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'demurrage_charges',
                 title: '滞港费'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'other_charges',
                 title: '其他'
             },{
-                field: 'seagoing_vessel_name',
+                field: 'payable_amount',
                 title: '应收费用'
             }]
         });
@@ -191,10 +191,6 @@ var TableInit = function () {
             maxrows: params.limit,
             search: params.search,
             plan_no: plan_no,
-            goods_name: goods_name,
-            consignor: consignor,
-            plan_begintime: plan_begintime,
-            plan_endtime: plan_endtime,
         };
         return temp;
     };
@@ -210,8 +206,18 @@ var ButtonInit = function () {
     return oInit;
 };
 
-function _edit(){
-	parent.open_window('结算清单编辑','/settle/ship/getEdit',1340, 400);
+//查看
+function _detail(){
+	// 获取选中记录 id
+    var ids = getIdSelections();    
+    // 如果没有选择，提示勾选至少一条数据
+    if (ids.length == 0) {
+        layer.msg('请选择需要编辑的记录', {time: 2000});
+    }else if(ids.length >1){
+        layer.msg('最多选择一条编辑记录', {time: 2000});
+    }else{
+        parent.open_window('查看','/settle/ship/getEdit/' + ids, 1200, 380);
+    }
 }
 
 //获取被选中数据的id
@@ -219,6 +225,17 @@ function getIdSelections() {
     return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
         return row.id;
     });
+}
+
+//打印
+function _print() {
+	$('input[type="checkbox"]').hide();
+	$('#tb_departments').printThis({
+		importCSS: true,
+		loadCSS: "../../css/insidejob/insidejob_print.css",
+		header: "<p></p>"
+	});
+	$('input[type="checkbox"]').show();
 }
 </script>
 </body>

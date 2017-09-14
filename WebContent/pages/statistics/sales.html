@@ -2,14 +2,7 @@
 <html lang="en">
 
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>结算审核表(现场)</title>
+    <title>销售统计</title>
 	<#include "../include/header.html">   	
 </head>
 
@@ -17,29 +10,21 @@
 <div id="wrapper">
 	<div class="panel-body" style="padding-bottom:0px;">
 		<div class="panel panel-default">		
-			<div class="panel-heading" style="max-height: 59px">					
+			<div class="panel-heading">					
 				<div class="container container-fluid" style="padding-right: 0px">				
 					<div class="row" >                        	    		                                            		
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
 							<input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no">
 						</div>
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<input type="search" class="form-control" placeholder="托运人" name="consignor" id="consignor">
-						</div>
-						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<select class="form-control" name="dispatch_settle_state" id="dispatch_settle_state">
-								<option value="">-审核状态-</option>
-								<option value="0">待审核</option>
-								<option value="1">已审核</option>
-								<option value="2">取消审核</option>
-							</select>
-						</div>
+                            <input type="search" class="form-control" placeholder="客户名称" name="consignor" id="consignor">
+                        </div>
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
-						</div>   	                 			  
-		                <div class="col-sm-1 col-xs-2 head_1" >
-		                     <button class="btn btn-12" onclick="examine()">审核</button>
-		                </div>         									               
+						</div>
+		                <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/statistics/sales')"><i class="fa fa-refresh"></i></button>
+                        </div>
 					</div>				
 				</div>
 			</div>		
@@ -48,22 +33,9 @@
 	</div>
 </div>
 
-<script>
-$(".form_datetime").datetimepicker({
-	format: "yyyy-mm-dd",
-	autoclose: true,
-	todayBtn: false,
-	todayHighlight: true,
-	showMeridian: true,
-	pickerPosition: "bottom-right",
-	language: 'zh-CN',//中文，需要引用zh-CN.js包
-	startView: 2,// // 日视图
-	minView: 2,
-});
 
-var plan_no="";
-var consignor="";
-var dispatch_settle_state="";
+<script>
+var plan_no,consignor;
 
 $(function () {	 
     //1.初始化Table
@@ -79,7 +51,7 @@ function doQuery(){
 		var layer = layui.layer;
 		plan_no = $.trim($('#plan_no').val());
 		consignor = $.trim($('#consignor').val());
-		dispatch_settle_state = $.trim($('#dispatch_settle_state').val());
+		
 		if($.trim($('#plan_no').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
 			if(!reg.test($('#plan_no').val())){
@@ -101,7 +73,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '/site/settle/getJson',         //请求后台的URL（*）
+            url: '/statistics/sales/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -127,9 +99,10 @@ var TableInit = function () {
             detailView: false,
             showRefresh:true,  
             locale: "zh-CN",					//中文支持,
-          //是否显示父子表
+            //是否显示父子表
             columns: [{
             	field:"checked",
+            	title:'checkbox',
             	checkbox: true,
             },{
             	field:"SerialNumber",
@@ -142,62 +115,28 @@ var TableInit = function () {
                 title: '计划号'
             },{
                 field: 'consignor',
-                title: '托运人'
+                title: '客户名称'
             },{
-                field: 'goods_name',
-                title: '货物名称'
+                field: 'customer_total_payable_amount',
+                title: '客户运费结算'
             },{
-                field: 'seagoing_vessel_name',
-                title: '海轮名称'
-            }, {
-                field: 'delivery_dock',
-                title: '发货港'
+                field: 'ship_total_payable_amount',
+                title: '船舶运费结算'
             },{
-                field: 'site_settle_state',
-                title: '审核状态',
-                formatter:function(value,row,index){
-                	if(value==0){
-                		return '待审核'
-                	}
-                	if(value==1){
-                		return '已审核'
-                	}
-                	if(value==2){
-                		return '取消审核'
-                	}
-                }
-            },{
-                field: 'manager_settle_state',
-                title: '单据状态',
-                formatter:function(value,row,index){
-                	if(value==0){
-                		return '审核中'
-                	}
-                	if(value==1){
-                		return '通过'
-                	}
-                	if(value==2){
-                		return '取消审核'
-                	}
-                	if(value==3){
-                		return '驳回'
-                	}
-                }
-            },{
-                field: 'site_dispatch',
-                title: '监装员'
+                field: 'total_profit',
+                title: '利润'
             },{
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_seeDatil('+row.id+')">查看明细</button>' ]
+            	    return['<button class="btn btn-xs btn-3 bt"  onclick="_detail('+row.id+')">查看</button>'];
             	},
             }]
         });
     };
     
-   //得到查询的参数
-  oTableInit.queryParams = function (params) {
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
             limit: params.limit,   //页面大小
             offset: params.offset,  //页码
@@ -205,7 +144,6 @@ var TableInit = function () {
             search: params.search,
             plan_no: plan_no,
             consignor: consignor,
-            dispatch_settle_state:dispatch_settle_state,
         };
         return temp;
     };
@@ -221,63 +159,11 @@ var ButtonInit = function () {
     return oInit;
 };
 
-function examine(){
-	// 获取选中记录 id
-	var ids = getIdSelections();	
-	// 如果没有选择，提示勾选至少一条数据
-	if (ids.length == 0) {
-        layer.msg('请选择需要查看详情的记录', {time: 2000});
-	}else if(ids.length >1){
-		layer.msg('最多选择一条记录', {time: 2000});
-	}else{
-		$.post("/site/settle/isCancelCheck/"+ids,function(result){
-			//result结果为true则表示可以删除
-			if(result.state){
-				if(result.siteState==1){
-					layer.confirm('取消审核？', {icon: 7, title:'审核取消提示'}, function(index){
-						  //改变审核状态
-						  checkOut(ids);
-						  layer.close(index);
-						});
-				}else{
-					layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
-						//改变审核状态
-						  checkOut(ids);
-						  layer.close(index);
-						});
-					
-				}
-			}else{
-				layer.msg("已产生后续单据，取消失败",{time:2000});
-			}
-		})
-	}
+// 查看
+function _detail(id){
+	parent.open_window('查看','/statistics/sales/detail/' + id,900,500);
 }
 
-//查看详情
-function _seeDatil(id){
-	parent.open_window('计划明细','/site/settle/seeDetail/'+id,1000, 420);
-}
-
-//获取被选中数据的id
-function getIdSelections() {
-    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
-        return row.id;
-    });
-}
-
-//改变审核状态
-function checkOut(id){
-	$.post("/site/settle/checkOut/"+id,function(data){
-		if(data.flag){
-			layer.msg(data.tips,{time:2000},function(){
-				 parent.parent.refresh_iframe();
-			})
-		}else{
-			layer.msg("操作失败，请重试",{time:2000})
-		}
-	})
-}
 
 </script>
 </body>

@@ -48,7 +48,6 @@ public class PlanManageService{
 			}
 		}
 		sql +=" order by id desc";
-		System.out.println("select *" + sql);
 		return Db.paginate(pageNumber, pageSize, "select *",sql);
 	}
 	

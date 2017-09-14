@@ -7,11 +7,9 @@ import yongle.dataBase.customer.CustomerController;
 import yongle.dataBase.ship.ShipController;
 import yongle.dispatchmanage.handover.HandoverController;
 import yongle.dispatchmanage.planmanage.PlanManageController;
-import yongle.dispatchmanage.settle.SettleController;
 import yongle.dispatchmanage.waitsettle.WaitSettleController;
 import yongle.insidejob.contract.ContractController;
 import yongle.insidejob.plandispatch.PlanController;
-import yongle.insidejob.plandispatch.PlanDispatchController;
 import yongle.login.HomeController;
 import yongle.login.LoginController;
 import yongle.settle.customerfreight.CustomerFreightController;
@@ -19,7 +17,10 @@ import yongle.settle.managesettle.ManageSettleController;
 import yongle.settle.shipfreight.ShipFreightController;
 import yongle.settlecorrectapplication.settleapplication.SettleApplicationController;
 import yongle.site.handoversite.HandoverSiteController;
+import yongle.site.settle.SettleController;
 import yongle.site.waterwayfreight.WaterwayFreightController;
+import yongle.statistics.sales.SalesController;
+import yongle.site.settle.SettleController;
 import yongle.system.authority.AuthorityController;
 import yongle.system.button.ButtonController;
 import yongle.system.dictionary.DictionaryController;
@@ -58,8 +59,6 @@ public class AdminRoutes extends Routes{
 		add("/planManage/waitsettle",WaitSettleController.class,"/dispatchmanage");
 		
 		// 内勤管理-计划调度
-		add("/insidejob/plandispatch", PlanDispatchController.class, "/insidejob");
-
 		add("/insidejob/plan", PlanController.class, "/insidejob");
 		// 内勤管理-合同管理
         add("/insidejob/contract", ContractController.class, "/insidejob");
@@ -99,10 +98,12 @@ public class AdminRoutes extends Routes{
         //结算批改申请-结算批改申请表
         add("/settlecorrect/app",SettleApplicationController.class,"/settlecorrectapplication");
         
+        // 统计管理
+        add("/statistics/sales", SalesController.class, "/statistics");
+        
         //结算审核-结算审核表(经理)
         add("/settle/managesettle",ManageSettleController.class,"/settle");
         //结算审核-船舶运费结算清单
         add("/settle/ship",ShipFreightController.class,"/settle");
-		
 	}
 }

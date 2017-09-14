@@ -1,31 +1,30 @@
-package yongle.insidejob.plandispatch;
+package yongle.statistics.sales;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
-import yongle.site.handoversite.HandoverSiteService;
+import yongle.model.SettleApply;
+import yongle.utils.ResponseObj;
 
 /**
- * @ClassName: PlanDispatchController.java
- * @Description: 内勤管理-计划调度
+ * @ClassName: SalesController.java
+ * @Description:
  * @author: LiYu
- * @date: 2017年8月31日上午8:36:41
+ * @date: 2017年9月13日下午3:16:56
  * @version: 1.0 版本初成
  */
-public class PlanDispatchController extends Controller {
-    /** 
-    * @Title: index 
-    * @Description: 页面
-    * @author liyu
-    */
-    public void index() {
-        render("plan_dispatch.html");
-    }
-    
+public class SalesController extends Controller {
+
+	public void index(){
+		render("sales.html");
+	}
+
     /** 
     * @Title: getJson 
     * @Description: 数据
@@ -43,7 +42,7 @@ public class PlanDispatchController extends Controller {
         }
         pageindex += 1;
         
-        Page<Record> page = PlanDispatchService.getDataPages(pageindex, pagelimit, 
+        Page<Record> page = SalesService.getDataPages(pageindex, pagelimit, 
                 plan_no, consignor);
         
         Map<String, Object> map = new HashMap<String,Object>();
@@ -53,4 +52,16 @@ public class PlanDispatchController extends Controller {
         
         renderJson(map);
     }
+    
+    /** 
+    * @Title: detail 
+    * @Description: 查看
+    * @author liyu
+    */
+    public void detail() {
+        Integer id = getParaToInt();
+        
+        render("sales_detail.html");
+    }
+    
 }
