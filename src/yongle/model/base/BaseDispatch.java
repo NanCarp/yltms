@@ -81,6 +81,15 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("seagoing_vessel_name");
 	}
 
+	public M setGuidePrice(java.math.BigDecimal guidePrice) {
+		set("guide_price", guidePrice);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getGuidePrice() {
+		return get("guide_price");
+	}
+
 	public M setSettlePrice(java.lang.String settlePrice) {
 		set("settle_price", settlePrice);
 		return (M)this;
@@ -88,6 +97,15 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 
 	public java.lang.String getSettlePrice() {
 		return get("settle_price");
+	}
+
+	public M setPlanState(java.lang.Integer planState) {
+		set("plan_state", planState);
+		return (M)this;
+	}
+
+	public java.lang.Integer getPlanState() {
+		return get("plan_state");
 	}
 
 	public M setEstimatedArrvialDate(java.util.Date estimatedArrvialDate) {
@@ -142,6 +160,15 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 
 	public java.math.BigDecimal getTotalQuantity() {
 		return get("total_quantity");
+	}
+
+	public M setRealQuantity(java.math.BigDecimal realQuantity) {
+		set("real_quantity", realQuantity);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getRealQuantity() {
+		return get("real_quantity");
 	}
 
 	public M setRemark(java.lang.String remark) {
@@ -207,15 +234,6 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("left_quantity");
 	}
 
-	public M setDispatcher(java.lang.String dispatcher) {
-		set("dispatcher", dispatcher);
-		return (M)this;
-	}
-
-	public java.lang.String getDispatcher() {
-		return get("dispatcher");
-	}
-
 	public M setSiteDispatch(java.lang.String siteDispatch) {
 		set("site_dispatch", siteDispatch);
 		return (M)this;
@@ -277,6 +295,15 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 
 	public java.lang.Integer getManagerSettleState() {
 		return get("manager_settle_state");
+	}
+
+	public M setDocumentStatus(java.lang.Integer documentStatus) {
+		set("document_status", documentStatus);
+		return (M)this;
+	}
+
+	public java.lang.Integer getDocumentStatus() {
+		return get("document_status");
 	}
 
 }

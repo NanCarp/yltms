@@ -18,7 +18,16 @@
         <div class="form-group">
             <label class="col-xs-5 control-label text-right" for="customer">客户名称：</label>
             <div class="col-xs-6">
-                <input class="form-control" id="customer" type="text" placeholder="客户名称"  name="customer" value="${record.customer!}"/>
+                <select class="form-control selectpicker" id="customer" type="text" placeholder="客户名称"  name="customer" style="padding-right: 2px;padding-left: 2px" data-live-search="true">
+                	<option value="">--选择客户--</option>
+                	<#if customerList?? &&customerList?size gt 0>
+                		<#list customerList as customer>
+                			<option value="${customer.customer_name}" <#if customer.customer_name==record.customer>selected</#if>>${customer.customer_name}</option>
+                		</#list>
+                	<#else>
+                	<option value="">--请先录入客户信息--</option>
+                	</#if>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -54,11 +63,11 @@
             </div>
         </div>
         </div>
-        <div class="form-group">
-            <label class="col-xs-2 control-label text-right" for="file" style="padding-top:0;width: 148.53px">附件：</label>
+        <div class="form-group" >
+            <label class="col-xs-2 control-label text-right" for="file" style="padding-top:0;width: 142.7px">附件：</label>
             <div class="col-xs-6">
             	<div hidden="" id="fileflag">
-                	<input type="file" class="file" id="file" name="file" value="">
+                	<input type="file" class="file" id="file" name="file" value="" disabled="disabled">
                 </div>
                 <#if record.attachment??>
                 <div id="url"><p><span style="color:#009100;font-size:16px;width: 90%;float: left;">${record.attachment!}</span><a href="javascript:;" onclick="del(this)" style="width: 10%;float: left;"><i class="fa fa-times" title="删除"></i></a></br></p></div>
@@ -70,7 +79,16 @@
         <div class="form-group">
             <label class="col-xs-5 control-label text-right" for="customer">客户名称：</label>
             <div class="col-xs-6">
-                <input class="form-control" id="customer" type="text" placeholder="客户名称"  name="customer"/>
+                <select class="form-control selectpicker" id="customer" type="text" placeholder="客户名称"  name="customer" style="padding-right: 2px;padding-left: 2px" data-live-search="true">
+                	<option value="">--选择客户--</option>
+                	<#if customerList?? &&customerList?size gt 0>
+                		<#list customerList as customer>
+                			<option value="${customer.customer_name}">${customer.customer_name}</option>
+                		</#list>
+                	<#else>
+                	<option value="">--请先录入客户信息--</option>
+                	</#if>
+                </select>
             </div>
         </div>
         <div class="form-group">
@@ -107,7 +125,7 @@
         </div>
         </div>
         <div class="form-group">
-            <label class="col-xs-2 control-label text-right" for="file" style="padding-top:0;width: 148.53px">附件：</label>
+            <label class="col-xs-2 control-label text-right" for="file" style="padding-top:0;width: 142.7px">附件：</label>
             <div class="col-xs-6">
                 <input type="file" class="file" id="file" name="file" value="">
                 <div id="url"></div>
@@ -115,7 +133,7 @@
         </div>
         </#if>
         <div class="form-group">
-            <label class="col-xs-2 control-label" for="v5" style="width: 148.53px"></label>
+            <label class="col-xs-2 control-label" for="v5" style="width: 142.7px"></label>
             <div class="col-xs-6 ">
                 <button type="submit" class="btn btn-11" id="save">　保存　</button>
             </div>
@@ -123,6 +141,12 @@
     </form>
     
 <script type="text/javascript">
+$(window).on('load',function(){
+	$('.selectpicker').selectpicker({
+		'selectedText':'cat'
+	})
+})
+
 function initFileInput(ctrlName){
     var control = $('#'+ctrlName);
     control.fileinput({
@@ -142,6 +166,11 @@ initFileInput("file");
 function del(_obj){
 	$(_obj).parent('p').remove();
 	$("#fileflag").removeAttr("hidden");
+	$("#file").removeAttr("disabled");
+	//清除disbaled后遗留在属性中的css样式
+	$(".form-control").removeClass("file-caption-disabled");
+	$(".btn-file").removeAttr("disabled");
+	$(".fileinput-remove-button").removeAttr("disabled");
 	initFileInput("file");
 }
 // 回显文件
@@ -160,6 +189,7 @@ $(function () {
 // 表单校验
 $('#defaultForm').bootstrapValidator({
     message: 'This value is not valid',
+    excluded : [':disabled'],
     feedbackIcons: {
         valid: 'glyphicon glyphicon-ok',
         invalid: 'glyphicon glyphicon-remove',
@@ -271,8 +301,8 @@ $('#defaultForm').bootstrapValidator({
         }
     },
 })
-.on('success.form.bv', function(e) {
-    e.preventDefault();
+.on('success.form.bv', function(e) {	
+    e.preventDefault();   
     var formData = new FormData();
 	formData.append("file",$("#file")[0].files[0]);
     if($("#id").val()!=null&&$("#id").val()!=""){

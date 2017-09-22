@@ -34,8 +34,12 @@ public class HandoverSiteService {
     */
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, 
             String plan_no, String goods_name, String entry_start, String entry_end, String entry_man) {
-        String select = " SELECT * ";
-        String sqlExceptSelect = " FROM `t_dispatch` WHERE examine_state = 1 AND dispatch_review = 1 AND dispatch_issue = 1 ";
+        String select = " SELECT *,a.id AS dispatch_detail_id,a.id ";
+        String sqlExceptSelect = " FROM `t_dispatch_detail` AS a "
+                + " LEFT JOIN t_dispatch AS b "
+                + " ON a.plan_no_id = b.id "
+                + " WHERE a.flow_state = 1 "
+                + " AND b.document_status = 1 ";
         
         if (plan_no != null && !"".equals(plan_no)) {
             sqlExceptSelect += " AND plan_no like '%"+ plan_no +"'";
@@ -46,15 +50,15 @@ public class HandoverSiteService {
         }
         
         if (entry_start != null && !"".equals(entry_start)) {
-            sqlExceptSelect += " AND entry_time > '" + entry_start + "'";
+            sqlExceptSelect += " AND dispatcher_entry_time >= '" + entry_start + "'";
         }
         
         if (entry_end != null && !"".equals(entry_end)) {
-            sqlExceptSelect += " AND entry_time < '" + entry_end + "'";
+            sqlExceptSelect += " AND dispatcher_entry_time <= '" + entry_end + "'";
         }
         
         if (entry_man != null && !"".equals(entry_man)) {
-            sqlExceptSelect += " AND plan_no like '%" + entry_man + "'";
+            sqlExceptSelect += " AND dispatcher like '%" + entry_man + "'";
         }
         
         sqlExceptSelect += " ORDER BY plan_no DESC ";
@@ -70,7 +74,7 @@ public class HandoverSiteService {
     * @return ResponseObject
     * @author liyu
     */
-    public static ResponseObj save(Integer dispatch_id, String recordList) {
+    public static ResponseObj save(Integer dispatch_detail_id, String recordList) {
         ResponseObj msg = new ResponseObj();
         
         boolean result = Db.tx(new IAtom() {
@@ -79,7 +83,7 @@ public class HandoverSiteService {
             public boolean run() throws SQLException {
                 // 新增驳船信息
                 for (Record r : list) {
-                    r.set("dispatch_id", dispatch_id);
+                    r.set("dispatch_detail_id", dispatch_detail_id);
                     Db.update("t_dispatch_ship", r);
                 }
                 
@@ -110,6 +114,22 @@ public class HandoverSiteService {
             recordList.add(record);
         }
         return recordList;
+    }
+
+    /** 
+    * @Title: getRecordById 
+    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @param id
+    * @return Record
+    * @author 
+    */
+    public static Record getRecordById(Integer id) {
+        String sql = " SELECT *,a.id "
+                + " FROM `t_dispatch_detail` AS a "
+                + " LEFT JOIN t_dispatch AS b "
+                + " ON a.plan_no_id = b.id "
+                + " WHERE a.id = ? ";
+        return Db.findFirst(sql, id);
     }
 
 }

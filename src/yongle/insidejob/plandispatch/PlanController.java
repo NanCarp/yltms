@@ -19,7 +19,7 @@ import yongle.utils.ResponseObj;
 //@Before(ManageInterceptor.class)
 public class PlanController extends Controller {
     public void index() {
-        render("plan_dispatch2.html");
+        render("plan_dispatch.html");
     }
 
     /** 
@@ -42,9 +42,9 @@ public class PlanController extends Controller {
     	    
     	}
     	
-        List<Record> recordList =  PlanService.getRoleList(plan_no, consignor);
+        List<Record> recordList =  PlanService.getRecordList(plan_no, consignor);
         setAttr("recordList", recordList);
-        render("plan_dispatch2.html");
+        render("plan_dispatch.html");
     }
     
     /** 

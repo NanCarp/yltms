@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>更改痕迹</title>
+	<#include "../include/header.html">   	
+</head>
+<body>
+<div id="wrapper">
+	<div class="panel-body" style="padding-bottom:0px;">
+		<div class="panel panel-default">			
+			<table width="100%" class="table table-striped table-bordered table-hover">
+				<tr>
+					<th>序号</th>
+					<th>计划号</th>
+					<th>托运人</th>
+					<th>船名</th>
+					<th>姓名</th>
+					<th>货物名称</th>
+					<th>操作</th>
+				</tr>
+				<#if list?? && list?size gt 0>
+				<#list list as im>
+				<tr>
+					<td>${im_index+1}</td>
+					<td>${im.plan_no!}</td>
+					<td>${im.consignor!}</td>
+					<td>${im.ship_name!}</td>
+					<td>${im.ship_owner_name!}</td>
+					<td>${im.goods_name}</td>
+					<td><button class="btn btn-xs btn-3 bt" onclick="_reviseDetail('${im.plan_no!}','${im.ship_name!}')">更改明细</button></td>
+				</tr>
+				</#list>
+				<#else>
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+					<td><button class="btn btn-xs btn-3 bt" onclick="_reviseDetail()">更改明细</button></td>
+				</tr>
+				</#if>
+			</table>
+		</div>             
+	</div>
+</div>
+<script>
+//查看该条船信息更改明细数据
+function _reviseDetail(planNo,shipName){
+	window.top.open_window_noshadow('更改明细','/planManage/waitsettle/reviseDetail?planNo='+planNo+"&shipName="+shipName,980, 480);
+}
+</script>
+</body>
+</html>

@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+import yongle.interceptor.ManageInterceptor;
 import yongle.settle.customerfreight.CustomerFreightService;
 /**
  * @ClassName: ShipFreightController.java
@@ -17,6 +19,7 @@ import yongle.settle.customerfreight.CustomerFreightService;
  * @date: 2017年9月5日上午10:55:00
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class ShipFreightController extends Controller {
 
 	/**
@@ -53,6 +56,7 @@ public class ShipFreightController extends Controller {
 	 */
 	public void getEdit(){
 		Integer id = getParaToInt();
+		System.out.println("id:"+id);
 	    Record r = ShipFreightService.getRecordById(id);
 	    setAttr("record", r);
 		render("shipfreight_detail.html");
@@ -66,6 +70,7 @@ public class ShipFreightController extends Controller {
 		//判断是否保存成功
 		boolean flag = false;
 		Integer id = getParaToInt("id");
+		System.out.println(id);
 		Integer dispatch_ship_id = getParaToInt("dispatch_ship_id");
 		Long port_construction_fee = getParaToLong("port_construction_fee");//港建费
 		String demurrage_days = getPara("demurrage_days");//滞期天数

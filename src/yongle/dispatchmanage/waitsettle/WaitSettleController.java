@@ -4,19 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
-import com.sun.corba.se.impl.protocol.InfoOnlyServantCacheLocalCRDImpl;
 
-import yongle.dispatchmanage.planmanage.PlanManageService;
+import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: WaitSettleController.java
- * @Description: 待结算审核表
+ * @Description: 结算审核管理-结算审核表
  * @author: xuhui
  * @date: 2017年8月29日上午11:01:26
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class WaitSettleController extends Controller {
 
 	/**
@@ -58,8 +59,8 @@ public class WaitSettleController extends Controller {
 	 */
 	public void examDetail(){
 		Integer id = getParaToInt(0);
-		String sql = "SELECT t.*,d.entry_time from t_dispatch_ship t LEFT "
-				+ "JOIN t_dispatch d ON t.dispatch_id = d.id where t.dispatch_id ="+id;
+		String sql = "SELECT t.*,d.*,p.* from t_dispatch_ship t LEFT JOIN t_dispatch_detail d "
+				+ " ON t.dispatch_detail_id = d.id LEFT JOIN t_dispatch p ON d.plan_no_id = p.id where p.id ="+id;
 		List<Record> list = Db.find(sql);
 		setAttr("list", list);
 		setAttr("id", id);
@@ -119,4 +120,31 @@ public class WaitSettleController extends Controller {
 		renderJson(map);
 	}
 	
+	/**
+	 * @desc 查看修改历史记录
+	 * @author xuhui
+	 */
+	public void revise(){
+		String planNo = getPara();
+		String sql = "select * from t_settle_apply where plan_no ='"+planNo+"'";
+		List<Record> list = Db.find(sql);
+		setAttr("list", list);		
+		render("revise_detail.html");
+	}
+	
+	
+	/**
+	 * @desc 历史记录明细
+	 * @author xuhui
+	 */
+	public void reviseDetail(){
+		String planNo = getPara("planNo");
+		String ship_name = getPara("shipName");
+		System.out.println(planNo + ship_name);
+		String sql = "select * from t_settle_apply where plan_no ='"+planNo+"' and ship_name ='"+ship_name+"'";
+		Record record = Db.findFirst(sql);
+		System.out.println(sql);
+		setAttr("record", record);	
+		render("revise_detail_see.html");
+	}
 }

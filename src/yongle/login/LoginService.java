@@ -37,13 +37,7 @@ public class LoginService {
 		return false;
 	}
 
-	// 根据用户名从 SAP 获取用户数据
-    public static Record getUserFromSAP(String username) {
-	    Record user = new Record();
-	    // TODO 从 SAP 获取数据
 
-        return null;
-    }
     
 	/**
 	 * @desc 保存用户登录信息
@@ -63,22 +57,21 @@ public class LoginService {
 	}
 	
 	/**
-	 * @desc 自用仓库库存查询
+	 * @desc 通知公告
 	 * @author xuhui
 	 */
-	public static Page<Record> getIframe(Integer pageNumber,Integer pageSize,String product_num,String trade_name){
-		String sql ="from (SELECT e.semimanufactures_number as pronum,e.trade_name,e.specifications,e.measurement_unit"
-				+ ",semimanufactures_stock_num,'半成品' as proflag from semimanufactures_stock s LEFT JOIN semimanufactures"
-				+ " e ON e.id = s.semimanufactures_id UNION SELECT p.finished_number as pronum,p.trade_name,p.specifications"
-				+ ",p.measurement_unit,f.finished_product_stock_num,'成品' as proflag from finished_product_stock f LEFT JOIN"
-				+ " finished_product p ON p.id = f.finished_product_id) t where 1=1";
-		if(product_num!=null&&product_num!=""){
-			sql +=" and pronum like '%"+product_num+"%'";
-		}
-		if(trade_name!=null&&trade_name!=""){
-			sql +=" and trade_name like'%"+trade_name+"%'";
-		}
-		return Db.paginate(pageNumber, pageSize, "select *",sql);
-		
+	public static List<Record> getNotices(){
+		String sql ="SELECT * from t_notice WHERE type='通知公告' ORDER BY id DESC  LIMIT 0,5";
+		return Db.find(sql);
 	}
+	
+	/**
+	 * @desc 提醒
+	 * @author xuhui
+	 */
+	public static List<Record> getTips(){
+		String sql ="SELECT * from t_notice WHERE type='提醒' AND review = 0 ORDER BY id DESC  LIMIT 0,5";
+		return Db.find(sql);
+	}
+	
 }

@@ -1,24 +1,24 @@
 package yongle.settle.managesettle;
-
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
-import yongle.site.settle.SettleService;
+import yongle.interceptor.ManageInterceptor;
 
 /**
  * @ClassName: SettleApplicationController.java
- * @Description: 结算审核表-结算审核表(经理)
+ * @Description: 结算审核管理-待结算审核表(经理)
  * @author: xuhui
  * @date: 2017年9月5日上午8:29:51
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class ManageSettleController extends Controller{
 
 	/**

@@ -28,30 +28,15 @@ public class ManageSettleService {
 										,String consignor,Integer bursar_settle_state,Integer manager_settle_state){
 		
 		//待审核计划号获取
-		String sqlparam = "SELECT"
-						+" d.id,d.plan_no,d.examine_state,d.consignor,d.goods_name,d.site_settle_state"
-						+ ",d.seagoing_vessel_name,d.delivery_dock,d.dispatch_settle_state"
-						+ ",d.bursar_settle_state,d.manager_settle_state,d.dispatcher,d.site_dispatch";
-		String sql = " from"
-					+" t_dispatch d"
-					+" where d.examine_state = 1"
-					+" AND d.dispatch_settle_state = 1"
-					+ " AND d.site_settle_state = 1"  
-					+" AND id IN"
-					+" (SELECT a.dispatch_id" 
-					+" FROM" 
-					+" (SELECT DISTINCT m.dispatch_id" 
-					+" FROM t_dispatch_ship m) a"
-					+" WHERE a.dispatch_id NOT IN"
-					+" (SELECT k.dispatch_id"
-					+" FROM"
-					+" (SELECT" 
-					+" s.id,s.dispatch_id,s.ship_name,s.declare_date,s.received_quantity,s.unloaded_date"
-					+" from" 
-					+" t_dispatch_ship s"
-					+" where" 
-					+" s.received_quantity IS NULL OR s.declare_date is NULL or s.unloaded_date is NULL"
-					+" )k))";
+		String sqlparam = "SELECT * ";
+		String sql = " from t_dispatch where document_status = 1 "
+				+ " AND manager_settle_state = 0"
+				+ " AND id NOT IN "
+				+" (SELECT DISTINCT(k.id)"
+				+" from t_dispatch_ship d" 
+				+" LEFT JOIN t_dispatch_detail p ON d.dispatch_detail_id = p.id" 
+				+" LEFT JOIN t_dispatch k ON p.plan_no_id = k.id" 
+				+" where d.received_quantity IS NULL OR d.declare_date is NULL or d.unloaded_date is NULL)";
 		if(plan_no!=null&&plan_no!=""){
 			sql +=" and plan_no like '%"+plan_no+"%'";
 		}
@@ -70,11 +55,14 @@ public class ManageSettleService {
 	
 	/**
 	 * @desc 获取计划单号下所有船信息
-	 * @author 许辉
+	 * @author xuhui
 	 */
 	public static List<Record> getDetail(Integer id){
-		String sql = "SELECT t.*,d.entry_time,d.estimated_arrvial_date from t_dispatch_ship t LEFT "
-				+ "JOIN t_dispatch d ON t.dispatch_id = d.id where t.dispatch_id ="+id;
+		String sql = " SELECT d.*,p.*,k.*"
+					+" from t_dispatch_ship d" 
+					+" LEFT JOIN t_dispatch_detail p ON d.dispatch_detail_id = p.id" 
+					+" LEFT JOIN t_dispatch k ON p.plan_no_id = k.id"
+					+" where p.plan_no_id = "+id;
 		return Db.find(sql);
 	}
 	
@@ -89,7 +77,8 @@ public class ManageSettleService {
 				boolean k1 = false,k2 = false;
 				if(flag){
 					//根据计划号id 获取相应的船只(t_dispatch_ship)中的id
-					String sqls = "select * from t_dispatch_ship where dispatch_id="+id;
+					String sqls = "SELECT s.* from t_dispatch t LEFT JOIN t_dispatch_detail d ON t.id = d.plan_no_id LEFT JOIN "
+							+ " t_dispatch_ship s ON d.id = s.dispatch_detail_id where t.id ="+id;
 					//根据计划号id获取该计划号全部信息
 					String sqld = "select goods_name from t_dispatch where id="+id;
 					List<Record> list = Db.find(sqls);
@@ -104,17 +93,17 @@ public class ManageSettleService {
 						String sql1 = "select * from t_dispatch_ship where id="+dispatch_ship_id;
 						Record r3 = Db.findFirst(sql1);
 						BigDecimal received_quantity = r3.getBigDecimal("received_quantity");//收货数量
-						BigDecimal loading_tonnage = r3.getBigDecimal("loading_tonnage");//配载数量
+						BigDecimal delivery_quantity = r3.getBigDecimal("delivery_quantity");//配载数量
 						//需要保存的数据
 						Record ship = new Record();
 						Record customer = new Record();
 						ship.set("dispatch_ship_id", dispatch_ship_id);
 						customer.set("dispatch_ship_id", dispatch_ship_id);
 						customer.set("deduct_price", deduct_price);
-		 				BigDecimal loss = loading_tonnage.subtract(received_quantity);//损耗
+		 				BigDecimal loss = delivery_quantity.subtract(received_quantity);//损耗
 		 				ship.set("loss", loss);
 		 				customer.set("loss", loss);
-						BigDecimal fixed_loss = loading_tonnage.multiply(fix_loss_rate).divide(new BigDecimal(100));//定耗
+						BigDecimal fixed_loss = delivery_quantity.multiply(fix_loss_rate).divide(new BigDecimal(100));//定耗
 						ship.set("fixed_loss", fixed_loss);
 						customer.set("fixed_loss", fixed_loss);
 						BigDecimal exceed_loss = loss.subtract(fixed_loss); //超耗
@@ -135,8 +124,4 @@ public class ManageSettleService {
 		return result;
 	}
 	
-	
-	/**
-	 * 
-	 */
 }

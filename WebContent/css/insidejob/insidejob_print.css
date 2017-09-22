@@ -1,6 +1,15 @@
-/* table {
+table {
     border-collapse:collapse;
-} */
+    width: 1000px !important;
+} 
 td,th {
-	border:1px solid #000 !important;
+	border:1px solid #000;
+	text-align: center;
+}
+#site_dispatch1 {
+	text-align: left;
+	border: 0;
+}
+.toggle {
+	display: inherit !important;
 }

@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>预报价管理-国内货物运价管理</title>
+    <title>主页面</title>
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
@@ -53,7 +53,6 @@ i{color: #999999}
 .c_right{float: right;}
 </style>
 </head>
-
 <body style="background: #FFFFFF;width:96%">
     <div class=".container-fluid ">
     	<div class="top row">
@@ -63,25 +62,25 @@ i{color: #999999}
     					<img src="../picture/user.png">
     				</div>
     				<div class="topleftthen">
-    					<p><span style="font-size: 17px;font-weight: bold;">admin</span><span style="margin-left: 10px">admin-1001</span></p>
+    					<p><span style="font-size: 17px;font-weight: bold;">现场管理</span></p>
     					<p style="margin-top: 10px"><span>创建日期</span></p>
-    					<p>2017-8-25 13:59:06</p>
+    					<p>2017-9-15 13:59:06</p>
     				</div>
     			</div>
     			<div  class="topfright">    			
 	    			<div class="panel-body" style="padding-left: 30px">
 	                    <span class="a_span">
 							<span class="span1">部门:</span>
-							<span class="a_right" style="margin-left: 50px">调度部门</span>
+							<span class="a_right" style="margin-left: 50px">现场部</span>
 						</span>
 						<span class="a_span">
 							<span class="span1">所属公司:</span>
-							<span class="a_right" style="text-align: left;margin-left: 20px">永乐</span>
+							<span class="a_right" style="text-align: left;margin-left: 20px">宜兴永乐运输有限公司</span>
 						</span>
 						<span class="a_span">
 							<span class="span1">备注:</span>
 							<div class="a_right topfrightremarks">
-								<p style="word-wrap:break-word; word-break:break-all;"></p>
+								<p style="word-wrap:break-word; word-break:break-all;">此帐号仅限本人使用，不得外借。</p>
 							</div>
 						</span>							                        
 	                </div>
@@ -98,21 +97,17 @@ i{color: #999999}
                         <div class="panel-body sroll" style="height:236px;margin-top: 14px">
                             <table width="100%" class="table table-bordered table-hover" id="dataTables-example" >                              
                                 <tbody>
+                                	<#if noticesList?? && noticesList?size gt 0>
+                                	<#list noticesList as notices>
+                                    <tr class="gradeX" title="点击查看详情">
+                                        <td><a style="float: left;" onclick="getNotice(${notices.id})">${notices.title!}</a><i style="float: right;">${notices.publish_time}</i></td>                                       
+                                    </tr>
+                                    </#list>
+                                    <#else>
                                     <tr class="gradeX">
-                                        <td><a style="float: left;">关于开展2017年度外向型经济“调结构、促转型”的通知</a><i style="float: right;">2017-8-25</i></td>                                       
+                                        <td><a style="float: left;">暂无通知公告</a></td>                                       
                                     </tr>
-                                    <tr class="even gradeC">
-                                        <td><a style="float: left;">关于申报2017年度苏州市商务发展专项资金的通知</a><i style="float: right;">2017-8-25</i></td>                                        
-                                    </tr>
-                                    <tr class="odd gradeA">                                     
-                                        <td><a style="float: left;">关于停车场收费通知</a><i style="float: right;">2017-8-25</i></td>                                       
-                                    </tr>
-                                    <tr class="even gradeA">
-                                       <td><a style="float: left;">世界睡眠日“特困生”：拿什么拯救睡眠</a><i style="float: right;">2017-8-25</i></td>    
-                                    </tr>
-                                    <tr class="even gradeA">
-                                       <td><a style="float: left;">世界睡眠日“特困生”：拿什么拯救睡眠</a><i style="float: right;">2017-8-25</i></td>    
-                                    </tr>                                                                                 
+                                    </#if>                                                                                                      
                                 </tbody>
                             </table>  
                         </div>
@@ -128,15 +123,20 @@ i{color: #999999}
 							</div>            
                         </div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body sroll" style="height: 240px">
-                        	<span class="c_span">
-								<span class="c_left">计划下达，请编辑相关内容。</span>
-								<span class="c_right"><i>2017-8-25</i></span>
+                        <div class="panel-body sroll" style="height: 240px" id="tipscontant">
+                        <#if tipsList?? &&tipsList?size gt 0>
+                        <#list tipsList as tips> 
+                        	<span class="c_span" title="点击查看详细">
+								<span class="c_left" onclick="getNotice('${(tips.url)!}')">${tips.title!}</span>
+								<span class="c_right"><i>${tips.publish_time?substring(0,10)}</i></span>
 							</span>
-							<span class="c_span">
-                                <span class="c_left">计划下达，请编辑相关内容。</span>
-                                <span class="c_right"><i>2017-8-25</i></span>
-                            </span>
+						</#list>
+						<#else>
+							<span class="c_span" title="点击查看详细" >
+								<span class="c_left">暂无提醒事项 </span>
+								<span class="c_right"></span>
+							</span>
+						</#if>					                         
                         </div>
                   </div>
     		</div>
@@ -173,21 +173,69 @@ i{color: #999999}
     <script>  
     $(document).ready(function(){
     	$('#calendar').eCalendar();
-    	getWeather();   	
+    	getWeather(); 
     	$(".sroll").niceScroll({
 			cursorcolor:"#333",
 			cursoropacitymin: 0.6,
 			cursoropacitymax:0.6
 		});    	
     })
-    function getWeather(){
+     function getWeather(){
 		var province,city;				
 		$.post("/pages/getWeather",function(weatherdata){
 			$('.weather_2').append("<span style='font-size:21px'>"+weatherdata.data.forecast[0].type+"</span>");
 			$('.weather_3').append("<span style='font-size:30px'>"+weatherdata.city+"</span>");
 			$('.weather_4').append("<span style='font-size:20px;color:white'>"+weatherdata.data.forecast[0].low+"</span>");
 			$('.weather_5').append("<span style='font-size:20px;color:white'>"+weatherdata.data.forecast[0].high+"</span>");
-		}) 			
-	}
+		}) 	
+	} 
+    function getNotice(url){
+    	parent.open_window("明细",url, 1350, 500);
+    }
+    
+    var websocket = null;
+  //判断当前浏览器是否支持WebSocket
+  if ('WebSocket' in window) {
+      websocket = new WebSocket("ws://localhost:8080/websocket");
+  }
+  else {
+      alert('当前浏览器 Not support websocket')
+  }
+
+  //连接发生错误的回调方法
+  websocket.onerror = function () {
+      
+  };
+
+  //连接成功建立的回调方法
+  websocket.onopen = function () {
+      //TODO用户登录系统检查属于自己的提醒消息
+  }
+
+  //接收到消息的回调方法
+  websocket.onmessage = function (event) {
+      updateNotice();
+  }
+
+  //连接关闭的回调方法
+  websocket.onclose = function () {
+      
+  }
+
+  //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+  window.onbeforeunload = function () {
+      closeWebSocket();
+  }
+
+  //关闭WebSocket连接
+  function closeWebSocket() {
+      websocket.close();
+  }
+  
+    // 更新提醒
+    function updateNotice() {
+    	window.location.href = window.location.href;
+    }
+    
     </script>
 </html>

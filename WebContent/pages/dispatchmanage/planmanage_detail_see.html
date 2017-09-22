@@ -40,11 +40,11 @@
                         <tr>
                             <th><input type="checkbox" id="checkAll"></th>
                             <th>序号</th>
-                            <th>收货单位</th>
-                            <th>联系人</th>
-                            <th>联系方式</th>
+                            <th>流向</th>
                             <th>计划数量</th>
-                            <th>运价</th>
+                            <th>目的港</th>
+                            <th>收货单位</th>
+                            <th>备注</th>
                         </tr>
                     </thead>
                     <tbody id="tbody">
@@ -53,11 +53,11 @@
                         <tr>
                             <td><input type="checkbox" name="sub" _id=""></td>
                             <td>${detail_index+1}</td>
-                            <td>${detail.consignee!}</td>
-                            <td>${detail.contants!}</td>
-                            <td>${detail.phone!}</td>
+                            <td>${detail.flow!}</td>
                             <td>${detail.planned_qty!}</td>
-                            <td>${detail.freight_rates!}</td>
+                            <td>${detail.destination_port!}</td>
+                            <td>${detail.consignee!}</td>
+                            <td>${detail.remark!}</td>
                         </tr>
                         </#list>
                         <#else>
@@ -87,7 +87,7 @@ $('#submit').on('click', function () {
     validator.data('bootstrapValidator').validate();
     var flag = validator.data('bootstrapValidator').isValid();
     if (flag) {
-        console.log('ok');
+        
     } else {
         return;
     }
@@ -95,7 +95,9 @@ $('#submit').on('click', function () {
     var id = $("#id").val();
     var productList = getRecordList(); // 产品列表
     var postData = {"id":id,"productList": JSON.stringify(productList)};
-    console.log(postData);    
+     if(!judge(postData)){
+    	 return;
+     }
     $.post("/planManage/dispatch/savePlanDetailSee", postData, function(result) {
         if (result) {
             parent.layer.msg("保存成功", {time: 2000}, function(){
@@ -128,7 +130,7 @@ function bindValidator(obj){
                         message: '不能为空!'
                     },
                     regexp: {
-                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
+                        regexp: /^[a-zA-Z0-9_\-\u0391-\uFFE5]+$/,
                         message: '不能包含特殊字符'
                     }, 
                     stringLength: {
@@ -144,8 +146,8 @@ function bindValidator(obj){
                         message: '不能为空!'
                     },
                     regexp: {
-                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
-                        message: '不能包含特殊字符'
+                        regexp: /^[0-9]+(\.[0-9]{1,4})?$/,
+                        message: '请输入正确的计划数量'
                     }, 
                     stringLength: {
                         min: 0,
@@ -163,6 +165,10 @@ function bindValidator(obj){
                         min: 0,
                         max: 20,
                         message: '不能超过 20 个字符',
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
                     }
                 }
             },
@@ -170,10 +176,6 @@ function bindValidator(obj){
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]+(\.[0-9]{1,4})?$/,
-                        message: '请输入正确的数量'
                     },
                     stringLength: {
                         min: 0,
@@ -186,10 +188,6 @@ function bindValidator(obj){
                 validators: {
                     notEmpty:{
                         message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]+(\.[0-9]{1,4})?$/,
-                        message: '请输入正确的数量'
                     },
                     stringLength: {
                         min: 0,
@@ -328,8 +326,7 @@ function getRecordList() {
         }
         recordList.push(record);
     });
-    
-    return recordList;
+	return recordList;
 }
 //全选、全不选
 $("#checkAll").click(function() {
@@ -340,6 +337,31 @@ $("input[name='sub']").click(function() {
     $("#checkAll").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);
 });
 
+//判断计划数量合计是否等于合计数量
+function judge(postdata){
+	var k = false;
+	$.ajax({
+		type:"post",
+		url:"/planManage/dispatch/isAll",
+		data:postdata,
+		async:false,
+		success:function(result){
+			if(result.flag==0){
+				k = true;
+			}else if(result.flag==-1){
+				//总数小于
+				layer.msg('保存失败，计划数量超过合计数量', {time: 2000});
+			}else{
+				//总数大于
+				k = true;
+			}
+		},
+		error:function(error){
+			console.log(error);
+		}
+	})
+	return k;
+}
 </script>
 </body>
 </html>

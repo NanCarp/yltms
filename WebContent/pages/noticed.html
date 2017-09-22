@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<#if record??>
+	<div style="text-align: center;font-size: 20px;font-weight: bold;margin-top: 16px;margin-bottom: 16px">
+		${record.title!}
+	</div>
+	<div style="text-indent: 2em;padding: 0 20px;min-height: 252px">
+		${record.content!}
+	</div>
+	<div style="text-align: right;padding: 0 40px">
+		<i>${record.publish_time!}</i>
+	</div>
+</#if>	
+</body>
+</html>

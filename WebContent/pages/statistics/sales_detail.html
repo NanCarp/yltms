@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+<#include "../include/header.html">
+<style type="text/css">
+    tbody .form-group {
+        margin-bottom: 0px;
+    }
+    .container{width:100% !important};
+    .form-group {
+        line-height: 34px !important;
+        vertical-align: middle !important;
+    }
+</style>
+</head>
+<body>
+<div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
+<div class="form-group"></div>
+    <div class="form-group">
+        <label class="col-xs-1 control-label text-right" for="storage_number">计划号：</label>
+        <div class="col-xs-2">
+            <input class="form-control text-left" id="storage_number" type="text" placeholder="计划号" name="plan_no" value="${(plan.plan_no)!}" readonly/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-1 control-label text-right" for="storage_number">发货日期：</label>
+        <div class="col-xs-2">
+            <input class="form-control text-left" id="storage_number" type="text" placeholder="发货日期" name="estimated_arrvial_date" value="${(plan.estimated_arrvial_date)!}" readonly/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-1 control-label text-right" for="storage_number">发货港：</label>
+        <div class="col-xs-2">
+            <input class="form-control text-left" id="storage_number" type="text" placeholder="发货港" name="delivery_dock" value="${(plan.delivery_dock)!}" readonly/>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-xs-2 control-label">　客户运费：</label>
+</div>
+<div class="container">
+    <form>
+        <div class="col-xs-12">
+            <table width="100%" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <!-- <th>计划号</th>
+                        <th>发货日期</th>
+                        <th>发货港</th>
+                        <th>目的港</th> -->
+                        <th>船名</th>
+                        <th>发货数量</th>
+                        <th>收货数量</th>
+                        <th>损耗</th>
+                        <th>定耗</th>
+                        <th>超耗</th>
+                        <th>扣价</th>
+                        <th>扣款</th>
+                        <th>单价</th>
+                        <th>运费</th>
+                        <th>港建费</th>
+                        <th>雨天</th>
+                        <th>超期</th>
+                        <th>滞港费</th>
+                        <th>其他</th>
+                        <th>应收费用</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <#if customerList?? && customerList?size gt 0>
+                    <#list customerList as customer>
+                    <tr>
+                        <td>${customer_index+1}</td>
+                        <!-- <td>${customer.plan_no!}</td>
+                        <td>${customer.estimated_arrvial_date!}</td>
+                        <td>${customer.delivery_dock!}</td>
+                        <td>${customer.destination_port!}</td> -->
+                        <td>${customer.ship_name!}</td>
+                        <td>${customer.loading_tonnage!}</td>
+                        <td>${customer.received_quantity!}</td>
+                        <td>${customer.loss!}</td>
+                        <td>${customer.fixed_loss!}</td>
+                        <td>${customer.exceed_loss!}</td>
+                        <td>${customer.deduct_price!}</td>
+                        <td>${customer.deduct_money!}</td>
+                        <td>${customer.freight_price!}</td>
+                        <td>${customer.total_freight!}</td>
+                        <td>${customer.port_construction_fee!}</td>
+                        <td>${customer.rainy_days!}</td>
+                        <td>${customer.extended_days!}</td>
+                        <td>${customer.demurrage_charges!}</td>
+                        <td>${customer.other_charges!}</td>
+                        <td>${customer.payable_amount!}</td>
+                    </tr>
+                    </#list>
+                    </#if>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+<div class="form-group">
+    <label class="col-xs-2 control-label">　船舶运费：</label>
+</div>
+<div class="container">
+    <form>
+        <div class="col-xs-12">
+            <table width="100%" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <!-- <th>计划号</th>
+                        <th>发货日期</th>
+                        <th>发货港</th>
+                        <th>目的港</th> -->
+                        <th>船名</th>
+                        <th>发货数量</th>
+                        <th>收货数量</th>
+                        <th>损耗</th>
+                        <th>定耗</th>
+                        <th>超耗</th>
+                        <!-- <th>扣价</th> -->
+                        <th>扣款</th>
+                        <th>单价</th>
+                        <th>运费</th>
+                        <th>港建费</th>
+                        <th>滞期天数</th>
+                        <th>超期</th>
+                        <th>滞港费</th>
+                        <th>其他</th>
+                        <th>应收费用</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <#if shipList?? && shipList?size gt 0>
+                    <#list shipList as ship>
+                    <tr>
+                        <td>${ship_index+1}</td>
+                        <!-- <td>${ship.plan_no!}</td>
+                        <td>${ship.estimated_arrvial_date!}</td>
+                        <td>${ship.delivery_dock!}</td>
+                        <td>${ship.destination_port!}</td> -->
+                        <td>${ship.ship_name!}</td>
+                        <td>${ship.loading_tonnage!}</td>
+                        <td>${ship.received_quantity!}</td>
+                        <td>${ship.loss!}</td>
+                        <td>${ship.fixed_loss!}</td>
+                        <td>${ship.exceed_loss!}</td>
+                        <!-- <td>${ship.deduct_price!}</td> -->
+                        <td>${ship.deduct_money!}</td>
+                        <td>${ship.freight_price!}</td>
+                        <td>${ship.total_freight!}</td>
+                        <td>${ship.port_construction_fee!}</td>
+                        <!-- <td>${ship.rainy_days!}</td> -->
+                        <td>${ship.demurrage_days!}</td>
+                        <td>${ship.extended_days!}</td>
+                        <td>${ship.demurrage_charges!}</td>
+                        <td>${ship.other_charges!}</td>
+                        <td>${ship.payable_amount!}</td>
+                    </tr>
+                    </#list>
+                    </#if>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+</script>
+</body>
+</html>

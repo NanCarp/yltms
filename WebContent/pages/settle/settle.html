@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>结算审核表(经理)</title>
+    <title>待结算审核表</title>
 	<#include "../include/header.html">   	
 </head>
 
@@ -33,27 +33,15 @@
 								<option value="2">取消复核</option>
 							</select>
 						</div>
-						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<select class="form-control" name="manager_settle_state" id="manager_settle_state">
-								<option value="">-单据状态-</option>
-								<option value="0">审核中</option>
-								<option value="1">通过</option>
-								<option value="2">取消审核</option>
-								<option value="3">驳回</option>
-							</select>
-						</div>
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>   	                 			  
 		                <div class="col-sm-1 col-xs-2 head_1" >
-		                     <button class="btn btn-12" onclick="_toreview()">复核</button>
+		                     <button class="btn btn-5" onclick="_toreview()">复核</button>
 		                </div> 
 		                 <div class="col-sm-1 col-xs-2 head_1" >
 		                     <button class="btn btn-12" onclick="managerCheckOut()">审核</button>
-		                </div> 
-		                <div class="col-sm-1 col-xs-2 head_1">
-							<button class="btn btn-13" onclick="reject()">驳回</button>
-						</div>              									               
+		                </div>            									               
 					</div>				
 				</div>
 			</div>		
@@ -185,30 +173,10 @@ var TableInit = function () {
                 	}
                 }
             },{
-                field: 'manager_settle_state',
-                title: '单据状态',
-                formatter:function(value,row,index){
-                	if(value==0){
-                		return '审核中'
-                	}
-                	if(value==1){
-                		return '通过'
-                	}
-                	if(value==2){
-                		return '取消审核'
-                	}
-                	if(value==3){
-                		return '驳回'
-                	}
-                }
-            },{
-                field: 'dispatcher',
-                title: '调度员'
-            },{
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_seedetail('+row.id+')">查看明细</button>' ]
+            			  return['<button class="btn btn-xs btn-3 bt" onclick="_seedetail('+row.id+')">查看明细</button>' ]
             	},
             }]
         });
@@ -247,9 +215,9 @@ function _toreview(){
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
 	if (ids.length == 0) {
-        layer.msg('请选择需要查看详情的记录', {time: 2000});
+        layer.msg('请选择一条复核数据', {time: 2000});
 	}else if(ids.length >1){
-		layer.msg('最多选择一条记录', {time: 2000});
+		layer.msg('最多选择一条复核数据', {time: 2000});
 	}else{
 		$.post("/settle/managesettle/iscancel/"+ids,function(result){
 			//flag结果为true则表示可以删除
@@ -319,7 +287,7 @@ function managerCheckOut(){
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
 	if (ids.length == 0) {
-        layer.msg('请选择需要查看详情的记录', {time: 2000});
+        layer.msg('请选择一条需要审核的记录', {time: 2000});
 	}else if(ids.length >1){
 		layer.msg('最多选择一条记录', {time: 2000});
 	}else{
@@ -335,7 +303,8 @@ function managerCheckOut(){
 					managecheckOut(ids);	
 				}
 			}else{
-				layer.msg(result.tips,{time:2000})
+				layer.msg(result.tips,{time:2000});
+				parent.parent.refresh_iframe();
 			}
 		})
 	}
@@ -347,9 +316,9 @@ function reject(){
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
 	if (ids.length == 0) {
-        layer.msg('请选择需要查看详情的记录', {time: 2000});
+        layer.msg('请选择一条需要驳回的数据', {time: 2000});
 	}else if(ids.length >1){
-		layer.msg('最多选择一条记录', {time: 2000});
+		layer.msg('最多选择一条数据', {time: 2000});
 	}else{
 		layer.confirm('确认驳回?', {icon: 3, title:'驳回提示'}, function(index){
 			$.post("/settle/managesettle/reject/"+ids,function(result){
@@ -365,7 +334,6 @@ function reject(){
 			});	
 	}
 }
-
 </script>
 </body>
 </html>

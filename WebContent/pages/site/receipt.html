@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>回单录入</title>
+    <#include "../include/header.html">
+    <style>
+    .container{width:100% !important};
+    </style> 
+</head>
+
+<body>
+<div id="wrapper">
+    <div class="panel-body" style="padding-bottom:0px;">
+        <div class="panel panel-default">       
+            <div class="panel-heading">                 
+                <div class="container container-fluid" >                
+                    <div class="row">
+                        <div class="col-sm-1 col-xs-2 head_2">
+                            <input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no" value="">
+                        </div>                                                                                       
+                        <div class="col-sm-1 col-xs-2 head_2">
+                            <input type="search" class="form-control" placeholder="船名" name="ship_name" id="ship_name" value="">
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_2">
+                            <input type="search" class="form-control form_datetime" placeholder="起始发货日期" name="start_date" id="start_date" value="">
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_2">
+                            <input type="search" class="form-control form_datetime" placeholder="截止发货日期" name="end_date" id="end_date" value="">
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1">
+                            <button class="btn btn-primary" onclick="doQuery()">查询</button>
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/site/receipt')"><i class="fa fa-refresh"></i></button>
+                        </div>                  
+                    </div>              
+                </div>
+            </div>      
+            <table id="tb_departments"></table>
+        </div>             
+    </div>
+</div>
+
+<script>
+// 阻止键盘点击按钮
+$('button').keydown(function () {
+    return false;
+});
+
+$(function () {  
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+    //2.初始化Button的点击事件
+     var oButtonInit = new ButtonInit();
+    oButtonInit.Init(); 
+});
+
+var plan_no,ship_name,start_date,end_date;
+function doQuery(){
+    layui.use('layer',function(){
+        var layer = layui.layer;
+        
+        plan_no = $.trim($('#plan_no').val());
+        ship_name = $.trim($('#ship_name').val());
+        start_date = $('#start_date').val();
+        end_date = $('#end_date').val();
+        
+        if($.trim($('#plan_no').val())!=''){
+            var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
+            if(!reg.test($('#plan_no').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
+            }                   
+        }
+        if($.trim($('#company_name').val())!=''){
+            var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
+            if(!reg.test($('#company_name').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#company_name', {tips: [1, '#34495E']});return;
+            }                   
+        }
+        $('#tb_departments').bootstrapTable('refresh');    //刷新表格
+    });
+}
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/site/receipt/getJson',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            showExport: true,                     //是否显示导出
+            buttonsAlign:"right",               //按钮位置  
+            exportDataType: "basic",              //basic', 'all', 'selected'.
+            exportTypes:['excel'],
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 12,                       //每页的记录行数（*）
+            pageList: [3, 6, 12, 100],        //可供选择的每页的行数（*）
+            strictSearch: true,
+            clickToSelect: true,                //是否启用点击选中行
+            showColumns: true,                  //列选择按钮
+            height: 640,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            cardView: false,                    //是否显示详细视图
+            detailView: false,
+            showRefresh:true,           
+            locale: "zh-CN",                    //中文支持,
+            //是否显示父子表
+            columns: [{
+                field:"checked",
+                checkbox: true,
+                formatter:stateFormatter            
+                
+            },{
+                field:"SerialNumber",
+                title:'序号',
+                formatter:function(value,row,index){
+                    return index+1;
+                }
+            }, {
+                field: 'plan_no',
+                title: '计划号'
+            }, {
+                field: 'flow',
+                title: '流向'
+            }, {
+                field: 'consignor',
+                title: '托运人'
+            }, {
+                field: 'delivery_dock',
+                title: '发货港'
+            }, {
+                field: 'ship_name',
+                title: '实际承运人'
+            }, {
+                field: 'ship_owner_name',
+                title: '姓名'
+            }, {
+                field: 'ship_owner_phone',
+                title: '电话'
+            }, {
+                field: 'consignee',
+                title: '收货人'
+            }, {
+                field: 'destination_port',
+                title: '码头名称'
+            }, {
+                field: 'phone_contant',
+                title: '联系电话'
+            }, {
+                field:'opt',
+                title:'操作',
+                formatter:function(value,row,index){
+                    return ['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">修改</button> '+
+                    	    '<button class="btn btn-xs btn-success"  onclick="_detail('+row.id+')">查看</button>'];
+                },
+            }]
+        });
+    };
+
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            maxrows: params.limit,
+            search: params.search,
+            plan_no: plan_no,
+            ship_name: ship_name,
+            start_date: start_date,
+            end_date: end_date
+        };
+        return temp;
+    };
+    return oTableInit;  
+};
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+
+    oInit.Init = function () {
+        //初始化页面上面的按钮事件
+    };
+
+    return oInit;
+};
+
+
+// 编辑
+function _edit(id){
+    parent.open_window('修改回单信息','/site/receipt/getRecord/' + id, 915, 500);
+}
+
+// 查看
+function _detail(id) {
+	parent.open_window('运单查看','/site/receipt/detail/' + id, 910, 620);
+}
+
+//全选按钮
+function stateFormatter(value, row, index) {
+    if (row.state == true){
+        return {
+            disabled : true,//设置是否可用
+            checked : true//设置选中
+        };
+    }        
+    return value;
+}
+
+//获取被选中数据的id
+function getIdSelections() {
+    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        return row.id;
+    });
+}
+
+//日期控件
+$(".form_datetime").datetimepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true,
+    todayBtn: false,
+    todayHighlight: true,
+    showMeridian: true,
+    pickerPosition: "bottom-right",
+    language: 'zh-CN',//中文，需要引用zh-CN.js包
+    startView: 2,// 日视图
+    minView: 2,
+});
+</script>
+
+</body>
+
+</html>

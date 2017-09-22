@@ -23,19 +23,14 @@ public class CustomerFreightService {
     * @author liyu
     */
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, String plan_no) {
-        String select = " SELECT *,a.id ";
-        String sqlExceptSelect = " FROM `t_customer_settle` AS a "
-                + " LEFT JOIN t_dispatch_ship AS b "
-                + " ON a.dispatch_ship_id = b.id "
-                + " LEFT JOIN t_dispatch AS c "
-                + " ON b.dispatch_id = c.id WHERE 1=1 ";
-        
+    	String select = " select s.*,k.*,e.*,d.*,s.id";
+        String sqlExceptSelect = " from t_customer_settle s LEFT JOIN t_dispatch_ship d ON s.dispatch_ship_id = d.id"
+        						+" LEFT JOIN t_dispatch_detail e ON e.id = d.dispatch_detail_id" 
+        						+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id where s.payable_amount is null";     
         if (plan_no != null && !"".equals(plan_no)) {
-            sqlExceptSelect += " AND plan_no like '%"+ plan_no +"'";
-        }
-        
-        sqlExceptSelect += " ORDER BY plan_no DESC ";
-        
+            sqlExceptSelect += " AND k.plan_no like '%"+ plan_no +"'";
+        }       
+        sqlExceptSelect += " ORDER BY s.id DESC";
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }
 
@@ -46,14 +41,11 @@ public class CustomerFreightService {
     * @author liyu
     */
     public static Record getRecordById(Integer id) {
-        String sql = " SELECT *,a.id "
-                + " FROM `t_customer_settle` AS a "
-                + " LEFT JOIN t_dispatch_ship AS b "
-                + " ON a.dispatch_ship_id = b.id "
-                + " LEFT JOIN t_dispatch AS c "
-                + " ON b.dispatch_id = c.id "
-                + " WHERE a.id = ? ";
-        return Db.findFirst(sql, id);
+        String sql = "select d.*,e.*,k.*,s.*,s.id"
+        		+" from t_customer_settle s LEFT JOIN t_dispatch_ship d ON s.dispatch_ship_id = d.id"
+				+" LEFT JOIN t_dispatch_detail e ON e.id = d.dispatch_detail_id" 
+				+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id  where s.id="+id;
+        return Db.findFirst(sql);
     }
 
 }

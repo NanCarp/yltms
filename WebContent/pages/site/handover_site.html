@@ -35,10 +35,10 @@
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-5" onclick=" _detail()">查看</button>
+                             <button class="btn btn-5" onclick="_detail()">查看</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-4" onclick=" _export()">导出</button>
+                             <button class="btn btn-4" onclick="_export()">导出</button>
                         </div>
                         <div class="col-sm-1 col-xs-1 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/site/handoversite')"><i class="fa fa-refresh"></i></button>
@@ -132,6 +132,9 @@ var TableInit = function () {
                 field: 'plan_no',
                 title: '计划号'
             }, {
+                field: 'flow',
+                title: '流向'
+            }, {
                 field: 'goods_name',
                 title: '货名'
             }, {
@@ -199,6 +202,22 @@ function _detail(){
         layer.msg('最多选择一条记录', {time: 2000});
     }else{
         parent.open_window('查看','/site/handoversite/getRecord/' + ids, 1200, 450);
+    }
+}
+
+//导出
+function _export() {
+    // 获取选中记录 id
+    var ids = getIdSelections();    
+    // 如果没有选择，提示勾选至少一条数据
+    if (ids.length == 0) {
+        layer.msg('请选择一条记录', {time: 2000});
+    }else if(ids.length >1){
+        layer.msg('最多选择一条记录', {time: 2000});
+    }else{
+        layer.confirm('确认导出?', {icon: 1, title:'导出提示'}, function(index){
+            window.open('/site/handoversite/export/' +ids, '_blank');
+        });
     }
 }
 

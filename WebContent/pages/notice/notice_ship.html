@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+<#include "../include/header.html">
+<style type="text/css">
+    tbody .form-group {
+        margin-bottom: 0px;
+    }
+    .container{width:100% !important};
+    .form-group {
+        line-height: 34px !important;
+        vertical-align: middle !important;
+    }
+</style>
+</head>
+<body>
+<input type="hidden" id="consigneeList" value="${consigneeList!}">
+<div class="container">
+    <form id="f1">
+        <input type="hidden" id="id" name="id" value="${(record.id)!}">
+        <input type="hidden" id="notice_id" name="notice_id" value="${notice_id!}">
+        <div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="storage_number">计划号：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="计划号" name="plan_no" value="${(record.plan_no)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="storage_number">海船名：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="海船名" name="seagoing_vessel_name" value="${(record.seagoing_vessel_name)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="storage_number">发货码头：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="发货码头" name="delivery_dock" value="${(record.delivery_dock)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="storage_number">目的港：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="目的港" name="destination_port" value="${(record.destination_port)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="planned_qty">流向数量：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="planned_qty" type="text" placeholder="总吨数" name="planned_qty" value="${(record.planned_qty)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="left_qty">剩余数量：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="left_qty" type="text" placeholder="剩余吨数" name="left_qty" value="${(record.left_qty)!}" readonly/>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="site_dispatch">现场调度：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="site_dispatch" type="text" placeholder="现场调度" name="site_dispatch" value="${(record.site_dispatch)!}"/>
+                </div>
+            </div> -->
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="flow">流向：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="flow" type="text" placeholder="流向" name="flow" value="${(record.flow)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="consignee">收货单位：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="consignee" type="text" placeholder="收货单位" name="consignee" value="${(record.consignee)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="guide_price">指导价：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="guide_price" type="text" placeholder="指导价" name="guide_price" value="${(record.guide_price)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="container container-fluid" style="margin-top:20px">
+                <div class="row">
+                    <div class="col-sm-2 col-xs-2 head_1">
+                        <button type="button" class="btn btn-success" onclick="confirm(${(record.id)!})">同意</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+            <table width="100%" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="checkAll"></th>
+                        <th>序号</th>
+                        <th>船名</th>
+                        <th>姓名</th>
+                        <th width="120px">手机号</th>
+                        <th width="160px">身份证号</th>
+                        <th>可载吨位</th>
+                        <th>配载吨位</th>
+                        <th width="100px">到港日期</th>
+                        <th>运价</th>
+                        <th>总价</th>
+                        <th>预付款</th>
+                        <th>加油方式</th>
+                        <th>预加油</th>
+                        <th>剩余费用</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <#if recordList?? && recordList?size gt 0>
+                    <#list recordList as record>
+                    <tr>
+                        <td><input type="checkbox" name="sub"></td>
+                        <td>${record_index+1}</td>
+                        <td>${record.ship_name!}</td>
+                        <td>${record.ship_owner_name!}</td>
+                        <td>${record.ship_owner_phone!}</td>
+                        <td>${record.id_card_no!}</td>
+                        <td>${record.available_tonnage!}</td>
+                        <td class="loading_tonnage">${record.loading_tonnage!}</td>
+                        <td>${record.arrival_date!}</td>
+                        <td>${record.freight_price!}</td>
+                        <td>${record.total_freight!}</td>
+                        <td>${record.prepay!}</td>
+                        <td>${record.refuel_type!}</td>
+                        <td>${record.pre_refuel!}</td>
+                        <td>${record.left_amount!}</td>
+                        <td>${record.dispatch_ship_remark!}</td>
+                    </tr>
+                    </#list>
+                    <#else>
+                    <tr class="null">
+                        <td colspan="16">暂无数据</td>
+                    </tr>
+                    </#if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+//同意
+function confirm(id) {
+    layer.confirm('确认同意?', {icon: 1, title:'提示'}, function(index){
+    	var postData = {
+    			dispatch_detail_id: $('#id').val(),
+    			notice_id: $('#notice_id').val()
+    	}
+        $.post("/notice/ship/confirm", postData, function (result) {
+            if (result.code == 1) {
+                parent.layer.msg(result.msg, {time: 2000}, function(){
+                    layer_close();
+                    parent.parent.refresh_iframe();
+                });
+
+            } else {
+                parent.layer.msg(result.msg, {time: 2000});
+            }
+        });    
+        layer.close(index);
+    });
+}
+// 提交
+function submit(recordList) {
+	var postData = {
+            "id": $('#id').val(),
+            "left_qty": $('#left_qty').val(),
+            "recordList": JSON.stringify(recordList)
+    };
+    //console.log(postData);return;
+    $.post("/planManage/handover/save", postData, function(result) {
+        if (result.code == 1) {
+            parent.layer.msg(result.msg, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.msg, {time: 2000});
+        }
+        
+    });
+}
+
+
+// 审核
+function _review(id) {
+	layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
+		$.post("/planManage/handover/review/" + id, function (result) {
+	        if (result.code == 1) {
+	            parent.layer.msg(result.msg, {time: 2000}, function(){
+	                layer_close();
+	                parent.parent.refresh_iframe();
+	            });
+
+	        } else {
+	            parent.layer.msg(result.msg, {time: 2000});
+	        }
+	    });    
+        layer.close(index);
+    });
+}
+
+
+
+//全选、全不选
+$("#checkAll").click(function() {
+    $("input[name='sub']").prop("checked", this.checked);
+});
+$("input[name='sub']").click(function() {
+    var $subs = $("input[name='sub']");
+    $("#checkAll").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);
+});
+
+
+
+
+
+</script>
+</body>
+</html>

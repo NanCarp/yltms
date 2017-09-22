@@ -27,6 +27,13 @@ import com.jfinal.plugin.activerecord.Record;
 import yongle.utils.EncodeUtil;
 import yongle.utils.ResponseObj;
 
+/**
+ * @ClassName: HandoverService.java
+ * @Description:
+ * @author: 
+ * @date: 2017年9月22日下午6:10:43
+ * @version: 1.0 版本初成
+ */
 public class HandoverService {
 
     /** 
@@ -40,9 +47,13 @@ public class HandoverService {
     * @author liyu
     */
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, 
-            String plan_no, String goods_name, String entry_start, String entry_end, String entry_man) {
-        String select = " SELECT * ";
-        String sqlExceptSelect = " FROM `t_dispatch` WHERE examine_state = 1 ";
+            String plan_no, String goods_name, String entry_start, String entry_end, String dispatcher) {
+        String select = " SELECT *,a.id AS dispatch_detail_id ";
+        String sqlExceptSelect = " FROM `t_dispatch_detail` AS a "
+                + " LEFT JOIN t_dispatch AS b "
+                + " ON a.plan_no_id = b.id "
+                + " WHERE a.flow_state = 0 "
+                + " AND b.examine_state = 1 ";
         
         if (plan_no != null && !"".equals(plan_no)) {
             sqlExceptSelect += " AND plan_no like '%"+ plan_no +"'";
@@ -53,15 +64,15 @@ public class HandoverService {
         }
         
         if (entry_start != null && !"".equals(entry_start)) {
-            sqlExceptSelect += " AND entry_time > '" + entry_start + "'";
+            sqlExceptSelect += " AND dispatcher_entry_time >= '" + entry_start + "'";
         }
         
         if (entry_end != null && !"".equals(entry_end)) {
-            sqlExceptSelect += " AND entry_time < '" + entry_end + "'";
+            sqlExceptSelect += " AND dispatcher_entry_time <= '" + entry_end + "'";
         }
         
-        if (entry_man != null && !"".equals(entry_man)) {
-            sqlExceptSelect += " AND plan_no like '%" + entry_man + "'";
+        if (dispatcher != null && !"".equals(dispatcher)) {
+            sqlExceptSelect += " AND dispatcher like '%" + dispatcher + "'";
         }
         
         sqlExceptSelect += " ORDER BY plan_no DESC ";
@@ -77,27 +88,52 @@ public class HandoverService {
     * @return ResponseObject
     * @author liyu
     */
-    public static ResponseObj save(Integer dispatch_id, String left_quantity, 
-            String site_dispatch, String recordList, String dispatcher) {
+    public static ResponseObj save(Integer dispatch_detail_id, String left_qty, 
+            String recordList, String dispatcher) {
         ResponseObj msg = new ResponseObj();
         
         boolean result = Db.tx(new IAtom() {
             List<Record> list = jsonToRecordList(recordList);
             @Override
             public boolean run() throws SQLException {
+                List<Record> overList = new ArrayList<Record>(); // 运价超出指导价列表
                 // 删除原驳船信息
-                Db.update("DELETE FROM `t_dispatch_ship` WHERE dispatch_id = ? ", dispatch_id);
+                Db.update("DELETE FROM `t_dispatch_ship` WHERE dispatch_detail_id = ? ", dispatch_detail_id);
                 // 新增驳船信息
                 for (Record r : list) {
-                    r.set("dispatch_id", dispatch_id);
+                    r.set("dispatch_detail_id", dispatch_detail_id);
                     Db.save("t_dispatch_ship", r);
+                    if (r.getInt("over_guide_price") == 1) { // 运价超过指导价
+                        overList.add(r);
+                    }
                 }
-                // 更新 dispatch 表
-                Record dispatch = Db.findById("t_dispatch", dispatch_id);
-                dispatch.set("left_quantity", left_quantity);
-                dispatch.set("site_dispatch", site_dispatch);
-                dispatch.set("dispatcher", dispatcher);                
-                Db.update("t_dispatch", dispatch);
+                // 运价超过指导价，提醒
+                //System.out.println(list);
+                if (overList.size() > 0) {
+                    Record notice = new Record(); // 提醒
+                    notice.set("title", "调度运价超出指导价，请确认。");
+                    notice.set("type", "提醒");
+                    notice.set("publish_time", new Date());
+                    Db.save("t_notice", notice);
+                    Long notice_id = notice.getLong("id");
+                    notice.set("url", "/notice/ship/getRecord/" + notice_id);
+                    Db.update("t_notice", notice);
+                    
+                    for (Record r : overList) {
+                        r.set("dispatch_ship_id", r.getLong("id"));
+                        r.remove("id");
+                        r.set("notice_id", notice_id);
+                        Db.save("t_notice_ship", r);
+                    }
+                }
+                
+                
+                // 更新 dispatch_detail 表
+                Record dispatch = Db.findById("t_dispatch_detail", dispatch_detail_id);
+                dispatch.set("left_qty", left_qty);
+                dispatch.set("dispatcher", dispatcher); 
+                dispatch.set("dispatcher_entry_time", new Date());
+                Db.update("t_dispatch_detail", dispatch);
                 
                 return true;
             }
@@ -141,9 +177,11 @@ public class HandoverService {
         Record record = Db.findById("t_dispatch", id);
         List<Record> recordList = Db.find("SELECT * "
                 + " FROM t_dispatch_ship AS a "
-                + " LEFT JOIN t_dispatch AS b "
-                + " ON b.id = a.dispatch_id "
-                + " WHERE a.dispatch_id = ? ", id);
+                + " LEFT JOIN t_dispatch_detail AS b "
+                + " ON b.id = a.dispatch_detail_id "
+                + " LEFT JOIN t_dispatch AS c "
+                + " ON b.plan_no_id = c.id"
+                + " WHERE c.id = ? ", id);
         
         HSSFWorkbook wbook = new HSSFWorkbook();
         HSSFSheet sheet = wbook.createSheet();
@@ -308,6 +346,54 @@ public class HandoverService {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public static Record getRecordById(Integer id) {
+        String sql = " SELECT *,a.id "
+                + " FROM `t_dispatch_detail` AS a "
+                + " LEFT JOIN t_dispatch AS b "
+                + " ON a.plan_no_id = b.id "
+                + " WHERE a.id = ? ";
+        return Db.findFirst(sql, id);
+    }
+
+    /** 
+    * @Title: review 
+    * @Description: 审核流向
+    * @param id
+    * @return boolean
+    * @author 
+    */
+    public static boolean review(Integer id) {
+        boolean result = Db.tx(new IAtom() {
+            
+            @Override
+            public boolean run() throws SQLException {
+                // 修改流向状态
+                Record r = Db.findById("t_dispatch_detail", id);
+                r.set("flow_state", 1);
+                Db.update("t_dispatch_detail", r);
+                
+                // 如果所有流向都已审核，修改计划状态、实装数量
+                Integer dispatch_id = r.getInt("plan_no_id");
+                // 计划号下流向数量
+                Long a = Db.queryLong("SELECT COUNT(1) FROM `t_dispatch_detail` WHERE plan_no_id = ?", dispatch_id);
+                // 已经配完的流向数量
+                Long b = Db.queryLong("SELECT COUNT(1) FROM `t_dispatch_detail` WHERE plan_no_id = ? AND flow_state = ?", dispatch_id, 1);
+                if (a.equals(b)) {
+                    Record dispatch = new Record();
+                    BigDecimal real_quantity = Db.queryBigDecimal("SELECT SUM(planned_qty) - SUM(left_qty) FROM `t_dispatch_detail` WHERE plan_no_id = ?", dispatch_id);
+                    dispatch.set("id", r.get("plan_no_id"));
+                    dispatch.set("real_quantity", real_quantity); // 实装数量
+                    dispatch.set("document_status", 1); // 修改计划状态
+                    Db.update("t_dispatch", dispatch); // 更新
+                }
+                
+                return true;
+            }
+            
+        });
+        return result;
     }
 
 }

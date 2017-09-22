@@ -42,7 +42,7 @@ public class RoleController extends Controller {
             setAttr("role", role);
         }
 
-		render("role-detail.html");
+		render("role_detail.html");
 	}
 
 	//

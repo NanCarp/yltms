@@ -18,16 +18,14 @@ public class ShipFreightService {
 	 * @author xuhui
 	 */
 	public static Page<Record> getDataPages(Integer pageNumber,Integer pageSize,String plan_no){
-	    String select = " SELECT *,a.id ";
-        String sqlExceptSelect = " FROM `t_ship_settle` AS a "
-                + " LEFT JOIN t_dispatch_ship AS b "
-                + " ON a.dispatch_ship_id = b.id "
-                + " LEFT JOIN t_dispatch AS c "
-                + " ON b.dispatch_id = c.id WHERE 1=1 ";
+	    String select = " select s.*,k.*,e.*,d.* ";
+        String sqlExceptSelect = " from t_ship_settle s LEFT JOIN t_dispatch_ship d ON s.dispatch_ship_id = d.id"
+        						+" LEFT JOIN t_dispatch_detail e ON e.id = d.dispatch_detail_id" 
+        						+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id where s.payable_amount is null";
         if(plan_no!=null&&plan_no!=""){
-        	sqlExceptSelect +=" and plan_no like '%"+plan_no+"%'";
+        	sqlExceptSelect +=" and k.plan_no like '%"+plan_no+"%'";
         } 
-        sqlExceptSelect +=" order by a.id desc";
+        sqlExceptSelect +=" order by s.id desc";
        return Db.paginate(pageNumber, pageSize, select,sqlExceptSelect);
 	} 
 		
@@ -38,14 +36,11 @@ public class ShipFreightService {
 	    * @author xuhui
 	    */
 	    public static Record getRecordById(Integer id) {
-	        String sql = " SELECT *,a.id "
-	                + " FROM `t_ship_settle` AS a "
-	                + " LEFT JOIN t_dispatch_ship AS b "
-	                + " ON a.dispatch_ship_id = b.id "
-	                + " LEFT JOIN t_dispatch AS c "
-	                + " ON b.dispatch_id = c.id "
-	                + " WHERE a.id = ? ";
-	        return Db.findFirst(sql, id);
+	        String sql = " select d.*,e.*,k.*,s.*,s.id"
+	        		+" from t_ship_settle s LEFT JOIN t_dispatch_ship d ON s.dispatch_ship_id = d.id"
+					+" LEFT JOIN t_dispatch_detail e ON e.id = d.dispatch_detail_id"  
+					+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id  where s.dispatch_ship_id="+id;
+	        return Db.findFirst(sql);
 	    }
     
 }

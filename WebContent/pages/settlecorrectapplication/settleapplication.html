@@ -51,8 +51,6 @@
 		</div>             
 	</div>
 </div>
-
-
 <script>
 $(".form_datetime").datetimepicker({
 	format: "yyyy-mm-dd",
@@ -187,10 +185,8 @@ var TableInit = function () {
                 formatter:function(value,row,index){
                     if(value == 1){
                         return '已审核';
-                    }else if(value == 0){
-                        return '待审核';
                     }else{
-                        return '取消审核';
+                        return '待审核';
                     }
                 }
             },{

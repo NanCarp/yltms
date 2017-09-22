@@ -26,6 +26,8 @@
 					<th>损耗</th>
 					<th>卸货期限</th>
 					<th>运价</th>
+					<th>加油方式</th>
+					<th>金额</th>
 					<th>装船日期</th>
 					<th>实装吨位</th>
 					<th>预付款</th>
@@ -39,14 +41,16 @@
 					<td>${im.entry_time!}</td>
 					<td>${im.ship_name!}</td>
 					<td>${im.loading_tonnage!}</td>
-					<td>${im.loading_tonnage-im.received_quantity}</td>
+					<td>${im.delivery_quantity-im.received_quantity}</td>
 					<td>${im.unloaded_date!}</td>
 					<td>${im.freight_price!}</td>
+					<td>${im.refuel_type!}</td>
+					<td>${im.pre_refuel!}</td>
 					<td>${im.estimated_arrvial_date!}</td>
 					<td>${im.loading_tonnage!}</td>
 					<td>${im.prepay!}</td>
 					<td>${im.refuel_type!}</td>
-					<td>${im.pre_refuel!}</td>
+					<td>${im.site_refuel!}</td>
 				</tr>
 				</#list>
 				<#else>

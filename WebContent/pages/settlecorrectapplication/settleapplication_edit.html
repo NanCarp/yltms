@@ -12,7 +12,13 @@
         line-height: 34px !important;
         vertical-align: middle !important;
     }
-    .row {vertical-align: middle;width:1150px;margin-left:0;margin-right:0;font-size:12px}
+    .row {line-height: 34px;vertical-align: middle;width:1000px;margin-left:0;margin-right:0;}
+    .form-group label {
+        max-width: 120px;
+    }
+    textarea {
+        width: 710px !important;
+    }
 </style>
 </head>
 <body>
@@ -21,20 +27,20 @@
         <input type="hidden" name="id" value="${(record.id)!}">
         <div class="row" >
             <div class="form-group"></div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="plan_no">计划号：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="plan_no">计划号：</label>
                 <div class="col-xs-2">
                     <input class="form-control text-left" id="plan_no" type="text" placeholder="" name="plan_no" value="${(record.plan_no)!}"/>
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="consignor">托运人：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="consignor">托运人：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="consignor" type="text" placeholder="" name="consignor" value="${(record.consignor)!}"/>
+                    <input class="form-control text-left" id="consignor" type="text" placeholder="" name="consignor" value="${(record.consignor)!}" readonly="readonly"/>
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="ship_name">船名：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="ship_name">船名：</label>
                 <div class="col-xs-2">
                     <input class="form-control text-left" id="ship_name" type="text" placeholder="" name="ship_name" value="${(record.ship_name)!}"/>
                 </div>
@@ -42,41 +48,41 @@
         </div>
         <div class="row">
             <div class="form-group"></div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="ship_owner_name">姓名：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="ship_owner_name">姓名：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="ship_owner_name" type="text" placeholder="" name="ship_owner_name" value="${(record.ship_owner_name)!}"/>
+                    <input class="form-control text-left" id="ship_owner_name" type="text" placeholder="" name="ship_owner_name" value="${(record.ship_owner_name)!}" readonly="readonly"/>
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="ship_owner_phone">手机号码：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="ship_owner_phone">手机号码：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="ship_owner_phone" type="text" placeholder="" name="ship_owner_phone" value="${(record.ship_owner_phone)!}"/>
+                    <input class="form-control text-left" id="ship_owner_phone" type="text" placeholder="" name="ship_owner_phone" value="${(record.ship_owner_phone)!}" readonly="readonly"/>
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="goods_name">货物名称：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="goods_name">货物名称：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="goods_name" type="text" placeholder="" name="goods_name" value="${(record.goods_name)!}"/>
+                    <input class="form-control text-left" id="goods_name" type="text" placeholder="" name="goods_name" value="${(record.goods_name)!}" readonly="readonly"/>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="form-group"></div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="seagoing_vessel_name">海轮名：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="seagoing_vessel_name">海轮名：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="seagoing_vessel_name" type="text" placeholder="" name="seagoing_vessel_name" value="${(record.seagoing_vessel_name)!}" />
+                    <input class="form-control text-left" id="seagoing_vessel_name" type="text" placeholder="" name="seagoing_vessel_name" value="${(record.seagoing_vessel_name)!}" readonly="readonly"/>
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="freight_begin_end">运输起讫：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="freight_begin_end">运输起讫：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="freight_begin_end" type="text" placeholder="" name="freight_begin_end" value="${(record.freight_begin_end)!}"/>
+                    <input class="form-control text-left" id="freight_begin_end" type="text" placeholder="" name="freight_begin_end" value="${(record.freight_begin_end)!}" />
                 </div>
             </div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="loading_tonnage">实装吨位：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="loading_tonnage">实装吨位：</label>
                 <div class="col-xs-2">
                     <input class="form-control text-left" id="loading_tonnage" type="text" placeholder="" name="loading_tonnage" value="${(record.loading_tonnage)!}"/>
                 </div>
@@ -84,8 +90,8 @@
         </div>
         <div class="row">
             <div class="form-group"></div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="adjust_freight">调整运费：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="adjust_freight">调整运费：</label>
                 <div class="col-xs-2">
                     <input class="form-control text-left" id="adjust_freight" type="text" placeholder="" name="adjust_freight" value="${(record.adjust_freight)!}" />
                 </div>
@@ -93,8 +99,8 @@
         </div>
         <div class="row">
             <div class="form-group"></div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="reason">申请事由：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="reason">申请事由：</label>
                 <div class="col-xs-8">
                     <textarea rows="3" class="form-control" name="reason" id="reason">${(record.reason)!}</textarea>
                 </div>
@@ -102,8 +108,8 @@
         </div>
         <div class="row">
             <div class="form-group"></div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="remark">备注：</label>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="remark">备注：</label>
                 <div class="col-xs-8">
                     <textarea rows="3" class="form-control" name="remark" id="remark">${(record.remark)!}</textarea>
                 </div>
@@ -112,7 +118,7 @@
         <div class="row">
             <div class="form-group"></div>
             <div class="form-group">
-                <label class="col-xs-1 control-label" for="v5"></label>
+                <label class="col-xs-2 control-label" for="v5"></label>
                 <div class="col-xs-2 ">
                     <button type="submit" class="btn btn-11" id="save">　保存　</button>
                 </div>
@@ -126,7 +132,7 @@
 //表单校验
 $('#defaultForm').bootstrapValidator({
     message: 'This value is not valid',
-    feedbackIcons: {
+    feedbackIcons: {   
         /* valid: 'glyphicon glyphicon-ok',
         invalid: 'glyphicon glyphicon-remove',
         validating: 'glyphicon glyphicon-refresh' */
@@ -192,10 +198,6 @@ $('#defaultForm').bootstrapValidator({
         },
         ship_owner_phone: {
             validators: {
-                regexp: {
-                    regexp: /^(0|86|17951)?(13[0-9]|15[012356789]|18[0-9]|14[57]|17[678])[0-9]{8}$/,
-                    message: '请输入正确的号码'
-                },
                 stringLength: {
                     min: 0,
                     max: 20,

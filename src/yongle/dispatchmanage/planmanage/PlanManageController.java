@@ -1,15 +1,19 @@
 package yongle.dispatchmanage.planmanage;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
+import yongle.interceptor.ManageInterceptor;
 import yongle.model.Dispatch;
 
 /**
@@ -19,6 +23,7 @@ import yongle.model.Dispatch;
  * @date: 2017年8月25日上午13:11:26
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class PlanManageController extends Controller {
 
 	/**
@@ -30,7 +35,7 @@ public class PlanManageController extends Controller {
 	}
 	
 	/**
-	 * @desc 展示清单页数据,同时加载成品和半成品
+	 * @desc 展示清单页数据
 	 * @author xuhui
 	 */
 	public void getJson(){
@@ -63,6 +68,10 @@ public class PlanManageController extends Controller {
 			Record record = Db.findById("t_dispatch", id);
 			setAttr("im", record);
 		}
+		//根据货物基础数据
+		String goodsql = "select * from t_base_goods";
+		List<Record> goodslist =  Db.find(goodsql);
+		setAttr("goodslist", goodslist);
 		render("planmanage_detail.html");
 	}
 	
@@ -74,7 +83,6 @@ public class PlanManageController extends Controller {
 		Integer id = getParaToInt(0);
 		String sql = "select * from t_dispatch_detail where plan_no_id ="+id;
 		List<Record> listDetail = Db.find(sql);
-		System.out.println(listDetail);
 		setAttr("planId", id);
 		setAttr("listDetail", listDetail);
 		render("planmanage_detail_see.html");
@@ -162,25 +170,20 @@ public class PlanManageController extends Controller {
 			String sql = "select Max(plan_no) from t_dispatch where plan_no like '"+dateStr+"%'";
 			if(Db.queryStr(sql)!=null){
 				Integer plan_no_pre =Integer.parseInt(Db.queryStr(sql).substring(9));
-				System.out.println("plan_no_str:"+plan_no_pre);
 				String plan_no_fix =String.valueOf(plan_no_pre + 1001).substring(1);
 				fixPlanNo = dateStr +plan_no_fix;
 			}else{
 				fixPlanNo = dateStr +"001";
 			}
-			System.out.println("fixPlanNo:"+fixPlanNo);
 			record.set("plan_no", fixPlanNo);
 			record.set("left_quantity", record.getNumber("total_quantity"));
 			//保存时间
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date now = new Date();
 			record.set("entry_time", sdf.format(now));
-			//保存录入人
-			/*
 			Record admin = (Record) getSession().getAttribute("admin");
-			String adminName = admin.getStr("account");
-			*/
-			record.set("entry_man", "admin");
+			String adminName = admin.getStr("account");		
+			record.set("entry_man",adminName);
 			result = record.save();
 		}
 		renderJson(result);
@@ -195,17 +198,85 @@ public class PlanManageController extends Controller {
 		Map<String,Object> stateMap = new HashMap<String,Object>();
 		//计划单号的审核状态
 		boolean Plan_no_state = false;
-		Integer value = Db.findById("t_dispatch", id).getInt("examine_state");
 		//判断审核状态 0、待审核，1、已审核，2、取消审核
-		if(value == 1){
-			Plan_no_state = true;
-		}
-		if(!Plan_no_state){
-			boolean delstate = Db.deleteById("t_dispatch", id);
-			stateMap.put("delstate", delstate);
-		}
+		boolean delstate = Db.deleteById("t_dispatch", id);
+		stateMap.put("delstate", delstate);
 		stateMap.put("Plan_no_state", Plan_no_state);
 		renderJson(stateMap);
+	}
+	
+	/**
+	 * @desc 根据产品名称得出运输定耗
+	 * @author xuhui
+	 */
+	public void getFixedLoss(){
+		String goods_name = getPara("goods_name");
+		String sql = "select * from t_base_goods where goods_name = '"+goods_name+"'";
+		BigDecimal fixed_loss = Db.findFirst(sql).getBigDecimal("fixed_loss");
+		renderJson(fixed_loss);
+	}
+	
+	
+	/**
+	 * @desc 判断用户是否可以下发
+	 * @author xuhui
+	 */
+	public void isIssued(){
+		//判断下发状态
+		boolean flag = false;
+		Integer id = getParaToInt();		
+		String sql ="select plan_state from t_dispatch where id="+id;
+		Integer state = Db.queryInt(sql);
+		System.out.println(state);
+		if(state==1){
+			flag = true;
+		}
+		renderJson(flag);
+	}
+	
+	/**
+	 * @desc 更改下发状态
+	 * @author xuhui
+	 */
+	public void thenIssued(){
+		boolean result = false;
+		Integer id = getParaToInt();
+		String sql = "update t_dispatch set examine_state =1 where id="+id;
+		Integer count = Db.update(sql);
+		if(count!=0){
+			result = true;
+		}
+		renderJson(result);
+	}
+	
+	/**
+	 * @desc 判断计划合计数量是否等于
+	 * @author xuhui
+	 */
+	public void isAll(){
+		BigDecimal bigde = new BigDecimal(0);
+		Map<String,Object> map = new HashMap<String,Object>();
+		Integer id = getParaToInt("id");
+		String data = getPara("productList");
+		List<JSONObject> jlist = (List<JSONObject>)JSONObject.parse(data);
+		for(JSONObject jobj:jlist){
+			BigDecimal num = jobj.getBigDecimal("b");
+			bigde = bigde.add(num);
+		}
+		String sql = "select total_quantity from t_dispatch where id="+id;
+		BigDecimal total_quantity = Db.queryBigDecimal(sql);
+		Integer flag = total_quantity.compareTo(bigde);
+		//flag结果是:-1 小于,0 等于,1 大于
+		if(flag==0){
+			//flag=0,合计数量已完全分配，可以更改总数量分配状态
+			String sqlparam = "update t_dispatch set plan_state = 1 where id = "+id;
+			Db.update(sqlparam);
+		}else if(flag==1){
+			String sqlparam = "update t_dispatch set plan_state = 0 where id = "+id;
+			Db.update(sqlparam);
+		}
+		map.put("flag", flag);
+		renderJson(map);
 	}
 }
 

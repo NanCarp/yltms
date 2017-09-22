@@ -49,7 +49,7 @@ public class SettleApplicationService {
             sqlExceptSelect += " AND dispatcher like '%" + dispatcher + "'";
         }
         
-        sqlExceptSelect += " ORDER BY plan_no DESC ";
+        sqlExceptSelect += " ORDER BY id desc";
         
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }

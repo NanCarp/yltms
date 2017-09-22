@@ -9,14 +9,18 @@ import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.ext.handler.ContextPathHandler;
+import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.ext.plugin.shiro.*;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 
+import yongle.handler.YoleHandler;
 import yongle.model._MappingKit;
+import yongle.utils.WebSocketHandler;
 
 /**
  * @ClassName: Config.java
@@ -63,7 +67,8 @@ public class Config extends JFinalConfig {
         // 所有映射在 MappingKit 中自动化搞定
         _MappingKit.mapping(arp);
         me.add(arp);
-        
+        //缓存插件
+        me.add(new EhCachePlugin());
 	}
 
 	@Override
@@ -75,7 +80,9 @@ public class Config extends JFinalConfig {
 	@Override
 	public void configHandler(Handlers me) {
 		me.add(new ContextPathHandler("ctx"));
-
+		me.add(new YoleHandler());
+		//ws 处理跳转
+		me.add(new WebSocketHandler("^/websocket"));
 	}
 	
 	@Override

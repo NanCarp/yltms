@@ -89,6 +89,16 @@ public class SettleApplicationController extends Controller {
         boolean result = false;
         if (id == null) { // 新增
             result = r.save();
+            
+            //新增首页提示
+            Record tips = new Record();
+            tips.set("title","您有一条批改申请需要审核");	
+            tips.set("type", "提醒");
+            tips.set("publish_time", new Date());
+            tips.set("url", "");
+            tips.set("review", 0);
+            Db.save("t_notice", tips);
+            
         } else { // 编辑
             result = r.update();
         }
@@ -131,6 +141,9 @@ public class SettleApplicationController extends Controller {
             boolean result = Db.update("t_settle_apply", record);
             res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
             res.setMsg(result ? "完成审核" : "审核失败");
+            if(result){
+            	
+            }
         }else{
             record.set("manager_review", 2);
             boolean result = Db.update("t_settle_apply", record);
@@ -181,15 +194,13 @@ public class SettleApplicationController extends Controller {
         ResponseObj res = new ResponseObj(); // 返回信息
         String plan_no = getPara("plan_no");
         String ship_name = getPara("ship_name");
-        Record r = Db.findFirst("SELECT *  "
-                + " FROM `t_dispatch_ship` AS a "
-                + " LEFT JOIN t_dispatch AS b "
-                + " ON a.dispatch_id = b.id "
-                + " WHERE plan_no = ? "
-                + " AND ship_name = ? ", plan_no, ship_name);
+        Record r = Db.findFirst("select k.*,e.*,d.* "
+        					+" from t_dispatch_ship d" 
+        					+" LEFT JOIN t_dispatch_detail e ON e.id = d.dispatch_detail_id"
+        					+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id"
+        					+" where k.plan_no = ? and d.ship_name = ?", plan_no, ship_name);
         res.setCode(r != null ? ResponseObj.OK : ResponseObj.FAILED);
         res.setData(r);
-        
         renderJson(res);
     }
 }

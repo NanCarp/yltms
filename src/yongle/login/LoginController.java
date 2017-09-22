@@ -1,10 +1,5 @@
 package yongle.login;
-
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,10 +17,10 @@ import com.jfinal.core.Controller;
 import com.jfinal.core.JFinal;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.weixin.sdk.utils.IOUtils;
 
 import yongle.interceptor.ManageInterceptor;
 import yongle.utils.MD5Util;
+import yongle.utils.WeatherUtil;
 
 
 /**
@@ -72,6 +67,7 @@ public class LoginController extends Controller{
 	public void login() {
 		
 		render("login.html");
+		
 	}
 	
 	/**
@@ -90,7 +86,6 @@ public class LoginController extends Controller{
 		try {
 			 cutoffTime = sdf.parse(dateStr);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -160,29 +155,18 @@ public class LoginController extends Controller{
 	 * @author xuhui
 	 */
 	public void iframe(){
+		//通知公告
+		List<Record> noticesList = LoginService.getNotices();
+		
+		//提醒
+		List<Record> tipsList = LoginService.getTips();
+		
+		setAttr("noticesList", noticesList);
+		setAttr("tipsList", tipsList);
+		
 		render("indexframe.html");	
 	}
-	
-	/**
-	 * @desc 自用仓库库存信息查询
-	 * @author xuhui
-	 */
-	public void getJson(){
-		String product_num = getPara("product_num");
-		String trade_name = getPara("trade_name");
-    	Integer	pageindex = 0;
-    	Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit");
-    	Integer offset = getParaToInt("offset")==null?0:getParaToInt("offset");
-    	if(offset!=0){
-    		pageindex = offset/pagelimit;
-    	}
-    	pageindex += 1;
-    	Map<String, Object> map = new HashMap<String,Object>(); 	
-    	List<Record> dictionaryList = LoginService.getIframe(pageindex, pagelimit,product_num,trade_name).getList();
-    	map.put("rows", dictionaryList);
-    	map.put("total",LoginService.getIframe(pageindex, pagelimit,product_num,trade_name).getTotalRow());
-    	renderJson(map);
-	}
+
 	
 	/**
 	 * @desc 比较时间大小，判断是否可以登录
@@ -207,18 +191,28 @@ public class LoginController extends Controller{
 	 */
 	@Clear
 	public void getWeather() throws Exception{
-		//参数url化
-		String city = java.net.URLEncoder.encode("泰州","utf-8");
-		
-		//拼接地址
-		String apiUrl = String.format("http://www.sojson.com/open/api/weather/json.shtml?city=%s", city);
-		//开始请求
-		URL url = new URL(apiUrl);
-		URLConnection open = url.openConnection();
-		InputStream input = open.getInputStream();
-		String result = IOUtils.toString(input, Charset.forName("utf-8"));
-		JSONObject jsonObj = JSONObject.parseObject(result);
-		renderJson(jsonObj);
-		
+		renderJson(WeatherUtil.queryWeatherByCity("泰州"));	
+	}
+	
+	/**
+	 * @desc 查看明细细心
+	 * @author xuhui
+	 */
+	@Clear
+	public void getNotice(){
+		Integer id = getParaToInt();
+		Record record = Db.findById("t_notice", id);
+		setAttr("record", record);
+		render("noticed.html");
+	}
+	
+	/**
+	 * @desc 更新提示数据
+	 * @author xuhui
+	 */
+	public void getTips(){
+		String sql = "select * from t_notice where type='提醒' and review = 0";
+		List<Record> list = Db.find(sql);
+		renderJson(list);	
 	}
 }

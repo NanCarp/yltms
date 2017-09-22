@@ -26,20 +26,9 @@
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
 							<input type="search" class="form-control" placeholder="托运人" name="consignor" id="consignor">
 						</div>
-						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<select class="form-control" name="dispatch_settle_state" id="dispatch_settle_state">
-								<option value="">-审核状态-</option>
-								<option value="0">待审核</option>
-								<option value="1">已审核</option>
-								<option value="2">取消审核</option>
-							</select>
-						</div>
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
-						</div>   	                 			  
-		                <div class="col-sm-1 col-xs-2 head_1" >
-		                    <button class="btn btn-12" onclick="examine()">审核</button>   
-		                </div>           									               
+						</div>   	                 			          									               
 					</div>				
 				</div>
 			</div>		
@@ -154,20 +143,6 @@ var TableInit = function () {
                 field: 'delivery_dock',
                 title: '发货港'
             },{
-                field: 'dispatch_settle_state',
-                title: '审核状态',
-                formatter:function(value,row,index){
-                	if(value==0){
-                		return '待审核'
-                	}
-                	if(value==1){
-                		return '已审核'
-                	}
-                	if(value==2){
-                		return '取消审核'
-                	}
-                }
-            },{
                 field: 'manager_settle_state',
                 title: '单据状态',
                 formatter:function(value,row,index){
@@ -185,13 +160,11 @@ var TableInit = function () {
                 	}
                 }
             },{
-                field: 'dispatcher',
-                title: '调度员'
-            },{
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_seedetail('+row.id+')">查看明细</button>' ]
+            			  return['<button class="btn btn-xs btn-3 bt"  onclick="_seedetail('+row.id+')">查看明细</button>' 
+            			         +'  <button class="btn btn-xs btn-5 bt"  onclick="revise('+row.plan_no+')">更改痕迹</button>']
             	},
             }]
         });
@@ -222,51 +195,6 @@ var ButtonInit = function () {
     return oInit;
 };
 
-function examine(){
-	// 获取选中记录 id
-	var ids = getIdSelections();	
-	// 如果没有选择，提示勾选至少一条数据
-	if (ids.length == 0) {
-        layer.msg('请选择需要审核的记录', {time: 2000});
-	}else if(ids.length >1){
-		layer.msg('最多选择一条审核记录', {time: 2000});
-	}else{
-		$.post("/planManage/waitsettle/isCancelCheck/"+ids,function(data){
-			if(!data.flag){
-				layer.msg("已产生后续业务不可取消审核",{time:2000})
-			}else{
-				if(data.flag_dispatch==1){
-					layer.confirm('取消审核?', {icon:7, title:'审核取消提示'}, function(index){
-						$.post("/planManage/waitsettle/checkOut/"+ids,function(result){
-							if(result.flag){
-								layer.msg(result.tips,{time:2000},function(){
-									parent.refresh_iframe();
-								})
-							}else{
-								layer.msg(result.tips,{time:2000});
-							}		
-						})
-						layer.close(index);
-					})
-				}else{
-					layer.confirm('确认审核?', {icon:1, title:'审核确认提示'}, function(index){
-						$.post("/planManage/waitsettle/checkOut/"+ids,function(result){
-							if(result.flag){
-								layer.msg(result.tips,{time:2000},function(){
-									parent.refresh_iframe();
-								})
-							}else{
-								layer.msg(result.tips,{time:2000});
-							}		
-						})
-						layer.close(index);
-					})
-				}
-			}
-		})	
-	}
-}
-
 //查看明细
 function _seedetail(id){
 	 parent.open_window("查看明细","/planManage/waitsettle/examDetail/"+id,1000,400);
@@ -277,6 +205,11 @@ function getIdSelections() {
     return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
         return row.id;
     });
+}
+
+//查看更改记录
+function revise(planno){
+	parent.open_window("更改痕迹","/planManage/waitsettle/revise/"+planno,1000,400);
 }
 
 </script>

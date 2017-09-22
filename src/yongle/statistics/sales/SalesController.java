@@ -1,16 +1,16 @@
 package yongle.statistics.sales;
 
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
-import yongle.model.SettleApply;
-import yongle.utils.ResponseObj;
+import yongle.interceptor.ManageInterceptor;
 
 /**
  * @ClassName: SalesController.java
@@ -19,6 +19,7 @@ import yongle.utils.ResponseObj;
  * @date: 2017年9月13日下午3:16:56
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class SalesController extends Controller {
 
 	public void index(){
@@ -60,6 +61,13 @@ public class SalesController extends Controller {
     */
     public void detail() {
         Integer id = getParaToInt();
+        
+        Record plan = Db.findById("t_dispatch", id);
+        setAttr("plan", plan);
+        List<Record> shipList = SalesService.getShipSettleList(id);
+        setAttr("shipList", shipList);
+        List<Record> customerList = SalesService.getCustomerSettleList(id);
+        setAttr("customerList", customerList);
         
         render("sales_detail.html");
     }

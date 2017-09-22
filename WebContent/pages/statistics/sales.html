@@ -129,7 +129,7 @@ var TableInit = function () {
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            	    return['<button class="btn btn-xs btn-3 bt"  onclick="_detail('+row.id+')">查看</button>'];
+            	    return['<button class="btn btn-xs btn-3 bt"  onclick="_detail('+row.plan_no_id+')">查看</button>'];
             	},
             }]
         });
@@ -161,7 +161,7 @@ var ButtonInit = function () {
 
 // 查看
 function _detail(id){
-	parent.open_window('查看','/statistics/sales/detail/' + id,900,500);
+	parent.open_window('查看','/statistics/sales/detail/' + id,1300,450);
 }
 
 

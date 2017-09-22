@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>合同管理</title>
+    <title>运单录入</title>
     <#include "../include/header.html">
     <style>
     .container{width:100% !important};
@@ -130,6 +130,9 @@ var TableInit = function () {
                 field: 'plan_no',
                 title: '计划号'
             }, {
+                field: 'flow',
+                title: '流向'
+            }, {
                 field: 'consignor',
                 title: '托运人'
             }, {
@@ -151,7 +154,7 @@ var TableInit = function () {
                 field: 'destination_port',
                 title: '码头名称'
             }, {
-                field: 'phone',
+                field: 'phone_contant',
                 title: '联系电话'
             }, {
                 field:'opt',
@@ -195,12 +198,12 @@ var ButtonInit = function () {
 
 // 编辑
 function _edit(id){
-    parent.open_window('修改水路货运单信息','/site/waterwayfreight/getRecord/' + id, 1350, 420);
+    parent.open_window('修改运单信息','/site/waterwayfreight/getRecord/' + id, 915, 500);
 }
 
 // 查看
 function _detail(id) {
-	parent.open_window('水路货运单查看','/site/waterwayfreight/detail/' + id, 950, 600);
+	parent.open_window('运单查看','/site/waterwayfreight/detail/' + id, 910, 620);
 }
 
 //全选按钮

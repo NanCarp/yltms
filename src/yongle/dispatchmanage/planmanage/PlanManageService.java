@@ -23,7 +23,7 @@ public class PlanManageService{
 	 */
 	public static Page<Record> getJson(Integer pageNumber,Integer pageSize,String plan_no
 			,String goods_name,String consignor,String plan_begintime,String plan_endtime){
-		String sql = " from t_dispatch where 1=1";
+		String sql = " from t_dispatch where examine_state=0";
 		if(plan_no!=null&&plan_no!=""){
 			sql +=" and plan_no like '%"+plan_no+"%'";
 		}
@@ -73,11 +73,11 @@ public class PlanManageService{
 				for(JSONObject plandetail:planDetailList){
 					Record planDetailRecord = new Record();
 					planDetailRecord.set("plan_no_id", id);//计划号
-					planDetailRecord.set("consignee", plandetail.get("a"));//收货单位
-					planDetailRecord.set("contants", plandetail.get("b"));//联系人
-					planDetailRecord.set("phone", plandetail.get("c"));//联系方式
-					planDetailRecord.set("planned_qty", plandetail.get("d"));//计划数量
-					planDetailRecord.set("freight_rates", plandetail.get("e"));//运价
+					planDetailRecord.set("flow", plandetail.get("a"));//流向
+					planDetailRecord.set("planned_qty", plandetail.get("b"));//计划数量
+					planDetailRecord.set("destination_port", plandetail.get("c"));//目的港
+					planDetailRecord.set("consignee", plandetail.get("d"));//收货单位
+					planDetailRecord.set("remark", plandetail.get("e"));//备注
 					if(!Db.save("t_dispatch_detail", planDetailRecord)){
 						flagData = false;
 						break;
@@ -88,7 +88,5 @@ public class PlanManageService{
 		});
 		return flag;
 	}
-	
-	
 }
 

@@ -49,21 +49,42 @@
         <div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
             <div class="form-group"></div>
             <div class="form-group">
-                <label class="col-xs-1 control-label text-right" for="total_quantity">总吨数：</label>
+                <label class="col-xs-1 control-label text-right" for="planned_qty">流向数量：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="total_quantity" type="text" placeholder="总吨数" name="total_quantity" value="${(record.total_quantity)!}" readonly/>
+                    <input class="form-control text-left" id="planned_qty" type="text" placeholder="总吨数" name="planned_qty" value="${(record.planned_qty)!}" readonly/>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-xs-1 control-label text-right" for="left_quantity">剩余吨数：</label>
+                <label class="col-xs-1 control-label text-right" for="left_qty">剩余数量：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="left_quantity" type="text" placeholder="剩余吨数" name="left_quantity" value="${(record.left_quantity)!}" readonly/>
+                    <input class="form-control text-left" id="left_qty" type="text" placeholder="剩余吨数" name="left_qty" value="${(record.left_qty)!}" readonly/>
                 </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label class="col-xs-1 control-label text-right" for="site_dispatch">现场调度：</label>
                 <div class="col-xs-2">
                     <input class="form-control text-left" id="site_dispatch" type="text" placeholder="现场调度" name="site_dispatch" value="${(record.site_dispatch)!}"/>
+                </div>
+            </div> -->
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="flow">流向：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="flow" type="text" placeholder="流向" name="flow" value="${(record.flow)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="consignee">收货单位：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="consignee" type="text" placeholder="收货单位" name="consignee" value="${(record.consignee)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="line-height: 34px;vertical-align: middle;width:1300px;">
+            <div class="form-group"></div>
+            <div class="form-group">
+                <label class="col-xs-1 control-label text-right" for="guide_price">指导价：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="guide_price" type="text" placeholder="指导价" name="guide_price" value="${(record.guide_price)!}" readonly/>
                 </div>
             </div>
         </div>
@@ -77,10 +98,13 @@
                         <button type="button" class="btn btn-4" onclick="_deleteRow()" id="delBtn">删行</button>
                     </div>
                     <div class="col-sm-2 col-xs-2 head_1">
-                        <button  type="button" class="btn btn-3" onclick="_editRow()">修改</button>
+                        <button type="button" class="btn btn-3" onclick="_editRow()">修改</button>
                     </div>
                     <div class="col-sm-2 col-xs-2 head_1">
                         <button id="submit" class="btn btn-11" >保存</button>
+                    </div>
+                    <div class="col-sm-2 col-xs-2 head_1">
+                        <button type="button" class="btn btn-12" onclick="_review(${(record.id)!})">审核</button>
                     </div>
                 </div>
             </div>
@@ -90,13 +114,12 @@
                     <tr>
                         <th><input type="checkbox" id="checkAll"></th>
                         <th>序号</th>
-                        <th>收货单位</th>
                         <th>船名</th>
                         <th>姓名</th>
                         <th width="120px">手机号</th>
                         <th width="160px">身份证号</th>
-                        <th>配载吨位</th>
                         <th>可载吨位</th>
+                        <th>配载吨位</th>
                         <th width="100px">到港日期</th>
                         <th>运价</th>
                         <th>总价</th>
@@ -104,6 +127,7 @@
                         <th>加油方式</th>
                         <th>预加油</th>
                         <th>剩余费用</th>
+                        <th>备注</th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
@@ -112,13 +136,12 @@
                     <tr>
                         <td><input type="checkbox" name="sub"></td>
                         <td>${record_index+1}</td>
-                        <td class="dispatch_detail_id" value="${record.dispatch_detail_id!}">${record.consignee!}</td>
                         <td>${record.ship_name!}</td>
                         <td>${record.ship_owner_name!}</td>
                         <td>${record.ship_owner_phone!}</td>
                         <td>${record.id_card_no!}</td>
-                        <td class="loading_tonnage">${record.loading_tonnage!}</td>
                         <td>${record.available_tonnage!}</td>
+                        <td class="loading_tonnage">${record.loading_tonnage!}</td>
                         <td>${record.arrival_date!}</td>
                         <td>${record.freight_price!}</td>
                         <td>${record.total_freight!}</td>
@@ -126,8 +149,13 @@
                         <td>${record.refuel_type!}</td>
                         <td>${record.pre_refuel!}</td>
                         <td>${record.left_amount!}</td>
+                        <td>${record.dispatch_ship_remark!}</td>
                     </tr>
                     </#list>
+                    <#else>
+                    <tr class="null">
+                        <td colspan="16">暂无数据</td>
+                    </tr>
                     </#if>
                 </tbody>
             </table>
@@ -138,25 +166,23 @@
 
 
 <script>
+var guide_price = ${(record.guide_price)!}; // 指导价
 var item = {
-	dispatch_detail_id:"select",	
     ship_name:null,
     ship_owner_name:null,
     ship_owner_phone:null,
     id_card_no:null,
-    loading_tonnage:null,
     available_tonnage:null,
+    loading_tonnage:null,
     arrival_date:null,
     freight_price:null,
     total_freight:null,
     prepay:null,
     refuel_type:null,
     pre_refuel:null,
-    left_amount:null
+    left_amount:null,
+    dispatch_ship_remark:null
 }
-
-//收货单位列表
-var consigneeList = ${consigneeList};
 
 //提交
 $('#submit').on('click', function () {
@@ -170,18 +196,43 @@ $('#submit').on('click', function () {
         return;
     }
     
-    var left_quantity = $('#left_quantity').val();
-    if (left_quantity < 0) {
+    /* var left_qty = $('#left_qty').val();
+    if (left_qty < 0) {
     	layer.msg("剩余吨数不能为负，请重新分配", {time: 2000});
     	return;
+    } */
+    // 运价不超过指导价
+    var recordList = getRecordList();
+    var isOver = false;
+    $(recordList).each(function() {
+    	if (this.freight_price > guide_price) {
+    		this.over_guide_price = 1;
+    		isOver = true;
+    	} else {
+    		this.over_guide_price = 0;
+    	}
+    });
+    //console.log(recordList);
+    if (isOver) {
+    	layer.confirm('运价超过指导价，确认保存吗?', {icon: 3, title:'提示'}, function(index){
+            // 提交
+            send(); // 更新提醒
+            submit(recordList);
+            layer.close(index);
+        });
+    } else {
+    	// 提交
+        submit(recordList);
     }
-    var postData = {
-    		"id": $('#id').val(),
-    		"left_quantity": $('#left_quantity').val(),
-    		"site_dispatch": $.trim($('#site_dispatch').val()),
-    		"recordList": JSON.stringify(getRecordList())
+});
+// 提交
+function submit(recordList) {
+	var postData = {
+            "id": $('#id').val(),
+            "left_qty": $('#left_qty').val(),
+            "recordList": JSON.stringify(recordList)
     };
-    console.log(postData);
+    //console.log(postData);return;
     $.post("/planManage/handover/save", postData, function(result) {
         if (result.code == 1) {
             parent.layer.msg(result.msg, {time: 2000}, function(){
@@ -194,7 +245,26 @@ $('#submit').on('click', function () {
         }
         
     });
-});
+}
+
+
+// 审核
+function _review(id) {
+	layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
+		$.post("/planManage/handover/review/" + id, function (result) {
+	        if (result.code == 1) {
+	            parent.layer.msg(result.msg, {time: 2000}, function(){
+	                layer_close();
+	                parent.parent.refresh_iframe();
+	            });
+
+	        } else {
+	            parent.layer.msg(result.msg, {time: 2000});
+	        }
+	    });    
+        layer.close(index);
+    });
+}
 
 function bindValidator(obj){
     if ($(obj).data('bootstrapValidator')) {
@@ -342,7 +412,12 @@ function bindValidator(obj){
                         min: 0,
                         max: 20,
                         message: '不能超过 20 个字符',
-                    }
+                    },
+                    /* between: {
+                    	max: guide_price,
+                    	min: 0,
+                    	message: '不能超过指导价'
+                    } */
                 }
             },
             total_freight: {
@@ -409,6 +484,15 @@ function bindValidator(obj){
                         message: '不能超过 20 个字符',
                     }
                 }
+            },
+            dispatch_ship_remark: {
+                validators: {
+                    stringLength: {
+                        min: 0,
+                        max: 50,
+                        message: '不能超过 50 个字符',
+                    }
+                }
             }
 
         }
@@ -418,13 +502,19 @@ function bindValidator(obj){
 
 //表操作
 var count = $('#tbody tr').length; // 当前记录条数
-// 记录为零时，新增一行
-if (count === 0) {
-    _newRow();
+//没有数据，返回空
+if ($('#tbody').find('tr[class="null"]').length === 1) {
+	count = 0;
 }
+// 记录为零时，新增一行
+/* if (count === 0) {
+    _newRow();
+} */
+
 // 新增行
 function _newRow() {
     var $tbody = $('#tbody');
+    $tbody.find('tr[class="null"]').remove();
     var row = '<tr class="edit">'+
                   '<td><input type="checkbox" name="sub"></td>'+
                   '<td name="count">'+ (count+1) +'</td>';
@@ -435,8 +525,6 @@ function _newRow() {
     $tbody.append(row);
     
     // 特殊处理
-    var $obj = $tbody.find('input[name="dispatch_detail_id"]');
-    addSelect($obj, consigneeList);
     $tbody.find('input[name="arrival_date"]').addClass("form_date");
     setDateTimePicker();
     
@@ -465,7 +553,8 @@ function _deleteRow() {
     count = i;
     // 记录为零时，新增一行
     if (count === 0) {
-        _newRow();
+        //_newRow();
+        $('#tbody').append('<tr class="null"><td colspan="16">暂无数据</td></tr>');
     }
     // 清除勾选
     $("#checkAll").prop("checked" , false);
@@ -506,8 +595,6 @@ function _editRow() {
         }
         $tr.attr('class','edit'); // 编辑状态
         
-        var $a = $tr.find('input[name="dispatch_detail_id"]');
-        addSelect($a, consigneeList, $a.val());
     });
     // 清除勾选
     $("input[name='sub']").prop("checked", false);
@@ -521,6 +608,13 @@ function _editRow() {
 function getRecordList() {
     
     var recordList = [];
+    var a = $('#tbody').find('tr[class="null"]');
+    console.log(a);
+    console.log(a.length);
+    // 没有数据，返回空
+    if ($('#tbody').find('tr[class="null"]').length === 1) {
+    	return recordList;
+    }
     
     // 
     $('#tbody tr').each(function() {
@@ -573,8 +667,8 @@ $('#delBtn').on('click', function () {
 	calculateLeftQuantity();
 })
 function calculateLeftQuantity() {
-	var total_quantity = parseFloat($('#total_quantity').val());
-	console.log(total_quantity);
+	var planned_qty = parseFloat($('#planned_qty').val());
+	console.log(planned_qty);
 	var amount = 0.0;
 	//console.log(this);
     $('input[name=loading_tonnage]').each(function () {
@@ -588,8 +682,8 @@ function calculateLeftQuantity() {
         amount = amount + parseFloat(v == '' ? 0 : v);
     });
     console.log("amount: " + amount.toFixed(3));
-    var left_quantity = (total_quantity - amount).toFixed(3);
-    $('#left_quantity').val(left_quantity);
+    var left_qty = (planned_qty - amount).toFixed(3);
+    $('#left_qty').val(left_qty);
 }
 //根据船名带出相关信息
 $('form').on('change', 'input[name="ship_name"]', function () {
@@ -615,28 +709,7 @@ $('form').on('change', 'input[name="ship_name"]', function () {
         
     });
 });
-// 给指定对象添加
-function addSelect(obj, list, selectedId) {
-	var name = $(obj).attr('name');
-	var $p = $(obj).parent();
 
-	$p.empty().append('<select class="form-control" name="'+ name +'"></select>');
-	$s = $p.find('select');
-	$s.append('<option value="">请选择</option>')
-	$(list).each(function () {
-		$s.append('<option value="'+ this.id +'">' + this.consignee +'</option>')
-	});
-	if (selectedId) {
-		$s.find('option[value="'+ selectedId +'"]').prop("selected", true);
-	}
-	if (selectedId) {
-        $s.find('option').each( function () {
-        	if ($(this).html() == selectedId) {
-        		$(this).prop("selected", true);
-        	}
-        });
-    }
-}
 // 设置日期选择
 function setDateTimePicker() {
 	$(".form_date").datetimepicker({
@@ -645,7 +718,7 @@ function setDateTimePicker() {
 	    todayBtn: false,
 	    todayHighlight: true,
 	    showMeridian: true,
-	    pickerPosition: "bottom-right",
+	    pickerPosition: "top-right",
 	    language: 'zh-CN',//中文，需要引用zh-CN.js包
 	    startView: 2,// // 日视图
 	    minView: 2,
@@ -660,6 +733,47 @@ $('form').on('change', 'input[name=loading_tonnage], input[name=freight_price]',
 	$tr.find('input[name=total_freight]').val(isNaN(total_freight) ? '' : total_freight);
 });
 
+
+var websocket = null;
+//判断当前浏览器是否支持WebSocket
+if ('WebSocket' in window) {
+    websocket = new WebSocket("ws://localhost:8080/websocket");
+}
+else {
+    alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+    //TODO用户登录系统检查属于自己的提醒消息
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {
+}
+
+//连接关闭的回调方法
+websocket.onclose = function () {
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+    closeWebSocket();
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    websocket.close();
+}
+
+//发送消息
+function send() {
+    websocket.send("notice");
+}
 
 </script>
 </body>

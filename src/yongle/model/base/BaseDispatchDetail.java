@@ -18,13 +18,31 @@ public abstract class BaseDispatchDetail<M extends BaseDispatchDetail<M>> extend
 		return get("id");
 	}
 
-	public M setPlanNoId(java.lang.String planNoId) {
+	public M setPlanNoId(java.lang.Integer planNoId) {
 		set("plan_no_id", planNoId);
 		return (M)this;
 	}
 
-	public java.lang.String getPlanNoId() {
+	public java.lang.Integer getPlanNoId() {
 		return get("plan_no_id");
+	}
+
+	public M setFlow(java.lang.String flow) {
+		set("flow", flow);
+		return (M)this;
+	}
+
+	public java.lang.String getFlow() {
+		return get("flow");
+	}
+
+	public M setDestinationPort(java.lang.String destinationPort) {
+		set("destination_port", destinationPort);
+		return (M)this;
+	}
+
+	public java.lang.String getDestinationPort() {
+		return get("destination_port");
 	}
 
 	public M setConsignee(java.lang.String consignee) {
@@ -63,6 +81,15 @@ public abstract class BaseDispatchDetail<M extends BaseDispatchDetail<M>> extend
 		return get("planned_qty");
 	}
 
+	public M setLeftQty(java.math.BigDecimal leftQty) {
+		set("left_qty", leftQty);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getLeftQty() {
+		return get("left_qty");
+	}
+
 	public M setFreightRates(java.math.BigDecimal freightRates) {
 		set("freight_rates", freightRates);
 		return (M)this;
@@ -70,6 +97,42 @@ public abstract class BaseDispatchDetail<M extends BaseDispatchDetail<M>> extend
 
 	public java.math.BigDecimal getFreightRates() {
 		return get("freight_rates");
+	}
+
+	public M setDispatcherEntryTime(java.util.Date dispatcherEntryTime) {
+		set("dispatcher_entry_time", dispatcherEntryTime);
+		return (M)this;
+	}
+
+	public java.util.Date getDispatcherEntryTime() {
+		return get("dispatcher_entry_time");
+	}
+
+	public M setDispatcher(java.lang.String dispatcher) {
+		set("dispatcher", dispatcher);
+		return (M)this;
+	}
+
+	public java.lang.String getDispatcher() {
+		return get("dispatcher");
+	}
+
+	public M setFlowState(java.lang.Integer flowState) {
+		set("flow_state", flowState);
+		return (M)this;
+	}
+
+	public java.lang.Integer getFlowState() {
+		return get("flow_state");
+	}
+
+	public M setRemark(java.lang.String remark) {
+		set("remark", remark);
+		return (M)this;
+	}
+
+	public java.lang.String getRemark() {
+		return get("remark");
 	}
 
 }

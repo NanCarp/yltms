@@ -62,8 +62,8 @@
                         <td>${record.arrival_date!}</td>
                         <td>${record.freight_price!}</td>
                         <td>${record.refuel_type!}</td>
-                        <td class="prepay">${record.prepay!}</td>
-                        <td class="pre_refuel">${record.pre_refuel!}</td>
+                        <td class="site_pay">${record.site_pay!}</td>
+                        <td class="site_refuel">${record.site_refuel!}</td>
                     </tr>
                     </#list>
                     </#if>
@@ -84,8 +84,8 @@
     available_tonnage:null,
     arrival_date:null,
     freight_price:null,
-    prepay:null,
-    pre_refuel:null,
+    site_pay:null,
+    site_refuel:null,
 } */
 
 //提交
@@ -133,7 +133,7 @@ function bindValidator(obj){
             validating: 'glyphicon glyphicon-refresh'
         }, */
         fields: {
-            prepay: {
+            site_pay: {
                 validators: {
                     regexp: {
                         regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
@@ -146,7 +146,7 @@ function bindValidator(obj){
                     }
                 }
             },
-            pre_refuel: {
+            site_refuel: {
                 validators: {
                     regexp: {
                         regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
@@ -169,7 +169,7 @@ function bindValidator(obj){
 var count = $('#tbody tr').length; // 当前记录条数
 // 记录为零时，新增一行
 if (count === 0) {
-    _newRow();
+    //_newRow();
 }
 
 // 编辑行
@@ -230,13 +230,13 @@ function _editRow() {
             return true; // 跳过编辑状态的记录
         }
         
-        var $td1 = $tr.find('td[class="prepay"]');
-        var prepay = $td1.html();
-        $td1.empty().append('<div class="form-group"><input class="form-control" type="text" name="prepay" value="'+ prepay +'"/></div>');
+        var $td1 = $tr.find('td[class="site_pay"]');
+        var site_pay = $td1.html();
+        $td1.empty().append('<div class="form-group"><input class="form-control" type="text" name="site_pay" value="'+ site_pay +'"/></div>');
         
-        var $td2 = $tr.find('td[class="pre_refuel"]');
-        var pre_refuel = $td2.html();
-        $td2.empty().append('<div class="form-group"><input class="form-control" type="text" name="pre_refuel" value="'+ pre_refuel +'"/></div>');
+        var $td2 = $tr.find('td[class="site_refuel"]');
+        var site_refuel = $td2.html();
+        $td2.empty().append('<div class="form-group"><input class="form-control" type="text" name="site_refuel" value="'+ site_refuel +'"/></div>');
         
         $tr.attr('class','edit'); // 编辑状态
         
@@ -256,11 +256,11 @@ function getRecordList() {
         var record = {}; // 单条记录对象
         if ("edit" === type) {
             var id = $tr.attr('_id');        	
-            var prepay = $.trim($tr.find('input[name="prepay"]').val());
-            var pre_refuel = $.trim($tr.find('input[name="pre_refuel"]').val());
+            var site_pay = $.trim($tr.find('input[name="site_pay"]').val());
+            var site_refuel = $.trim($tr.find('input[name="site_refuel"]').val());
             record.id = id;
-            record.prepay = prepay;
-            record.pre_refuel = pre_refuel;
+            record.site_pay = site_pay;
+            record.site_refuel = site_refuel;
         } else {
             return true; // 未修改的不保存
         }

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>回单录入</title>
+<#include "../include/header.html">
+<style type="text/css">
+    tbody .form-group {
+        margin-bottom: 0px;
+    }
+    .container{width:100% !important};
+    .form-group {
+        line-height: 34px !important;
+        vertical-align: middle !important;
+    }
+    .row {line-height: 34px;vertical-align: middle;width:1000px;margin-left:0;margin-right:0;}
+    .form-group label {
+        max-width: 120px;
+    }
+    textarea {
+        width: 710px !important;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <form id="defaultForm">
+        <input type="hidden" name="id" value="${(record.id)!}">
+        <div class="row" >
+            <div class="form-group"></div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="plan_no">计划号：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="plan_no" type="text" placeholder="" value="${(record.plan_no)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="seagoing_vessel_name">海轮名/仓位：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="consignor" type="text" placeholder=""  value="${(record.seagoing_vessel_name)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="flow">流向：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="flow" type="text" placeholder="" value="${(record.flow)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="estimated_arrvial_date">发货日期：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="estimated_arrvial_date" type="text" placeholder="" value="${(record.estimated_arrvial_date)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="arrival_limit">运到期限：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="arrival_limit" type="text" placeholder="" value="${(record.arrival_limit)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="specifications">规格：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="specifications" type="text" placeholder="" value="${(record.specifications)!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="unit">单位：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="unit" type="text" placeholder="" value="${(record.unit)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="delivery_quantity">发货数量：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="delivery_quantity" type="text" placeholder="" value="${(record.delivery_quantity)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="declare_date">报港日期：</label>
+                <div class="col-xs-2">
+                    <input class="form_date form-control text-left" id="declare_date" type="text" placeholder="" name="declare_date" value="${(record.declare_date)!}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="received_quantity">收货数量：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="received_quantity" type="text" placeholder="" name="received_quantity" value="${(record.received_quantity)!}"/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="unloaded_date">卸空日期：</label>
+                <div class="col-xs-2">
+                    <input class="form_date form-control text-left" id="unloaded_date" type="text" placeholder="" name="unloaded_date" value="${(record.unloaded_date)!}"/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="rainy_days">卸货雨天数：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="rainy_days" type="text" placeholder="" name="rainy_days" value="${(record.rainy_days)!}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="waterway_remark">备注：</label>
+                <div class="col-xs-10">
+                    <textarea rows="7" class="form-control" name="waterway_remark" id="waterway_remark">${(record.waterway_remark)!}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group">
+	            <label class="col-xs-2 control-label" for="v5"></label>
+	            <div class="col-xs-2 ">
+	                <button type="submit" class="btn btn-11" id="save">　保存　</button>
+	            </div>
+	        </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+//表单校验
+$('#defaultForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        /* valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh' */
+    },
+    fields: {
+    	declare_date: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                }
+            }
+        },
+        unloaded_date: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                }
+            }
+        },
+        received_quantity: {
+            validators: {
+            	notEmpty:{
+                    message: '不能为空!'
+                },
+            	regexp: {
+                    regexp: /^[0-9]+(\.[0-9]{1,3})?$/,
+                    message: '请输入正确的数量'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
+        rainy_days: {
+            validators: {
+            	notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[0-9]+$/,
+                    message: '请输入正确的数量'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 5,
+                    message: '不能超过 5 个字符',
+                }
+            }
+        },
+        waterway_remark: {
+            validators: {
+                stringLength: {
+                    min: 0,
+                    max: 100,
+                    message: '不能超过 100 个字符',
+                }
+            }
+        },
+    },
+})
+.on('success.form.bv', function(e) {
+    e.preventDefault();
+    var postData = $('form').serialize();
+    $.post("/site/waterwayfreight/save", postData, function(result) {
+        if (result.code == 1) {
+            parent.layer.msg(result.msg, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.msg, {time: 2000});
+        }
+    });
+
+});
+
+//日期控件
+$(".form_date").datetimepicker({
+    format: "yyyy-mm-dd",
+    autoclose: true,
+    todayBtn: false,
+    todayHighlight: true,
+    showMeridian: true,
+    pickerPosition: "bottom-right",
+    language: 'zh-CN',//中文，需要引用zh-CN.js包
+    startView: 2,// 日视图
+    minView: 2,
+});
+
+</script>
+</body>
+</html>

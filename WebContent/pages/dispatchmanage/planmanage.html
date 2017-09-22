@@ -42,10 +42,10 @@
 		                    <button class="btn btn-success" onclick="_add()">新增</button>
 		                </div>	          
                         <div class="col-sm-1 col-xs-2 head_1" >
-		                     <button class="btn btn-12" onclick="examine()">审核</button>
+		                     <button class="btn btn-12" onclick="_issued()">下发</button>
 		                </div>   
 		                <div class="col-sm-1 col-xs-2 head_4" >
-		                     <button class="btn btn-5" onclick=" _seeDatil()">查看详情</button>
+		                     <button class="btn btn-5" onclick="_seeDatil()">流向明细</button>
 		                </div>             									                 
 					</div>				
 				</div>
@@ -170,18 +170,6 @@ var TableInit = function () {
                 field: 'plan_no',
                 title: '计划号'
             },{
-                field: 'examine_state',
-                title: '审核状态',
-                formatter:function(value,row,index){
-                	if(value == 1){
-                		return '已审核';
-                	}else if(value == 0){
-                		return '待审核';
-                	}else{
-                		return '取消审核';
-                	}
-                }
-            },{
                 field: 'goods_name',
                 title: '货物名称'
             },{
@@ -190,9 +178,6 @@ var TableInit = function () {
             }, {
                 field: 'delivery_dock',
                 title: '发货港'
-            },{
-                field: 'destination_port',
-                title: '目的港'
             },{
                 field: 'seagoing_vessel_name',
                 title: '海轮名称'
@@ -212,8 +197,31 @@ var TableInit = function () {
                 field: 'Excess_deduction_price',
                 title: '超耗扣价'
             },{
-                field: 'berthing_tonnage',
-                title: '靠泊吨位'
+                field: 'guide_price',
+                title: '指导价'
+            },{
+                field: 'plan_state',
+                title: '总数量分配状态',
+                formatter:function(value,row,index){
+                	if(value == 1){
+                		return '完成';
+                	}else{
+                		return '未完成';
+                	}
+                }
+            },{
+                field: 'document_status',
+                title: '单据状态',
+                formatter:function(value,row,index){
+                	if(value == 1){
+                		return '已配完';
+                	}else{
+                		return '未配完';
+                	}
+                }
+            },{
+                field: 'real_quantity',
+                title: '实装数量'
             },{
                 field: 'total_quantity',
                 title: '合计数量'
@@ -266,7 +274,7 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	parent.open_window('新增计划管理','/planManage/dispatch/getPlanManage',1000, 420);
+	parent.open_window('新增计划管理','/planManage/dispatch/getPlanManage',980, 500);
 }
 
 //编辑
@@ -275,7 +283,7 @@ function _edit(id){
 		if(result){
 			layer.msg("该计划号已通过审核，不可修改",{time:2000})
 		}else{
-			parent.open_window('编辑计划管理','/planManage/dispatch/getPlanManage/'+id,1000, 420);
+			parent.open_window('编辑计划管理','/planManage/dispatch/getPlanManage/'+id,980,500);
 		}
 	})
 }
@@ -311,53 +319,36 @@ function _seeDatil(){
 	}else if(ids.length >1){
 		layer.msg('最多选择一条记录查看详情', {time: 2000});
 	}else{
-		parent.open_window('计划明细','/planManage/dispatch/getPlanDetailSee/'+ids,1000, 420);
+		parent.open_window('流向明细','/planManage/dispatch/getPlanDetailSee/'+ids,1000, 420);
 	}
 }
 
-//审核
-function examine(){
+//下发
+function _issued(){
 	// 获取选中记录 id
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
 	if (ids.length == 0) {
-        layer.msg('请选择需要审核的记录', {time: 2000});
+        layer.msg('请选择需要下发的记录', {time: 2000});
 	}else if(ids.length >1){
-		layer.msg('最多选择一条审核记录', {time: 2000});
+		layer.msg('最多选择一条下发记录', {time: 2000});
 	}else{
-		$.post("/planManage/dispatch/getExamineState/"+ids,function(data){
+		//判断是否能下发
+		$.post("/planManage/dispatch/isIssued/"+ids,function(data){
 			if(data){
-				layer.confirm('取消审核?', {icon: 7, title:'审核确认提示'}, function(index){
-					$.post("/planManage/dispatch/examine/"+ids,function(result){
-						if(result.flagnext){
-							layer.msg("已有后续业务产生，取消失败",{time:2000})
-						}else{
-							if(result.flag){
-								layer.msg("已取消审核",{time:2000},function(){
-									parent.refresh_iframe();
-								})
-							}else{
-								layer.msg("取消失败",{time:2000})
-							}
-						}
-					})    
-					layer.close(index);
-				});
-			}else{
-				layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
-					$.post("/planManage/dispatch/examine/"+ids,function(result){
-						if(result.flag){
-							layer.msg('完成审核', {time: 2000}, function(){
+				layer.confirm('确认下发?', {icon: 1, title:'审核下发提示'}, function(index){
+					$.post("/planManage/dispatch/thenIssued/"+ids,function(result){
+						if(result){
+							layer.msg('下发成功', {time: 2500},function(){
 								parent.refresh_iframe();
-			                });
+							});
 						}else{
-							layer.msg('审核失败', {time: 2000}, function(){
-								
-			                });
+							layer.msg('下发失败', {time: 2500});
 						}
-					})    
-					layer.close(index);
-				});
+					})
+				})
+			}else{
+				layer.msg('下发失败，总数量未完全分配', {time: 2500});
 			}
 		})
 	}

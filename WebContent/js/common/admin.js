@@ -40,7 +40,7 @@ function layer_show_noshadow(title,url,w,h){
 		fix: false, //不固定
 		maxmin: true,
 		shade:0,
-		title: title,
+		title: [title,'font-weight:600;color:#fff;background-color: #3367D6;'],
 		content: url
 	});
 }

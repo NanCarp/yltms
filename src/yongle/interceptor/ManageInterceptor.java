@@ -13,9 +13,7 @@ import com.jfinal.plugin.activerecord.Record;
  * @date: 2017年8月10日下午4:48:37
  * @version: 1.0 版本初成
  */
-public class ManageInterceptor implements Interceptor {
-
-	
+public class ManageInterceptor implements Interceptor {	
 	@Override
 	public void intercept(Invocation inv) {
 	    inv.invoke();

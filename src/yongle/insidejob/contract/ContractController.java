@@ -6,11 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
+
+import yongle.interceptor.ManageInterceptor;
 
 
 /**
@@ -20,7 +23,7 @@ import com.jfinal.upload.UploadFile;
  * @date: 2017年8月28日上午11:24:43
  * @version: 1.0 版本初成
  */
-
+@Before(ManageInterceptor.class)
 public class ContractController extends Controller {
     /** 
     * @Title: index 
@@ -32,7 +35,7 @@ public class ContractController extends Controller {
     }
     
     /**
-	 * @desc 展示清单页数据,同时加载成品和半成品
+	 * @desc 展示清单页数据
 	 * @author xuhui
 	 */
 	public void getJson(){	
@@ -57,12 +60,18 @@ public class ContractController extends Controller {
     /** 
     * @Title: getRecord 
     * @Description: 单条记录信息
-    * @author liyu
+    * @author xuhui
     */
     public void getRecord() {
     	Integer id = getParaToInt(0);
-    	Record record = Db.findById("t_insidejob_contract", id);
-    	setAttr("record", record);
+    	if(id!=null){
+    		Record record = Db.findById("t_insidejob_contract", id);
+        	setAttr("record", record);
+    	}
+    	//查询客户信息
+    	String sql = "select * from t_base_customer";
+    	List<Record> customerList = Db.find(sql);
+    	setAttr("customerList", customerList);
         render("contract_detail.html");
     }
     

@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+
+import yongle.interceptor.ManageInterceptor;
 
 
 /**
@@ -17,6 +20,7 @@ import com.jfinal.plugin.activerecord.Record;
  * @date: 2017年8月29日上午14:11:26
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class SettleController extends Controller{
 
 	/**

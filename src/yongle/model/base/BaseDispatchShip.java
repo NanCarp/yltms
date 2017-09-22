@@ -144,6 +144,24 @@ public abstract class BaseDispatchShip<M extends BaseDispatchShip<M>> extends Mo
 		return get("pre_refuel");
 	}
 
+	public M setSiteRefuel(java.math.BigDecimal siteRefuel) {
+		set("site_refuel", siteRefuel);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getSiteRefuel() {
+		return get("site_refuel");
+	}
+
+	public M setSitePay(java.math.BigDecimal sitePay) {
+		set("site_pay", sitePay);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getSitePay() {
+		return get("site_pay");
+	}
+
 	public M setLeftAmount(java.math.BigDecimal leftAmount) {
 		set("left_amount", leftAmount);
 		return (M)this;
@@ -178,6 +196,15 @@ public abstract class BaseDispatchShip<M extends BaseDispatchShip<M>> extends Mo
 
 	public java.util.Date getDeclareDate() {
 		return get("declare_date");
+	}
+
+	public M setDeliveryQuantity(java.math.BigDecimal deliveryQuantity) {
+		set("delivery_quantity", deliveryQuantity);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getDeliveryQuantity() {
+		return get("delivery_quantity");
 	}
 
 	public M setReceivedQuantity(java.math.BigDecimal receivedQuantity) {
@@ -223,6 +250,15 @@ public abstract class BaseDispatchShip<M extends BaseDispatchShip<M>> extends Mo
 
 	public java.lang.Integer getDispatchDetailId() {
 		return get("dispatch_detail_id");
+	}
+
+	public M setDispatchShipRemark(java.lang.String dispatchShipRemark) {
+		set("dispatch_ship_remark", dispatchShipRemark);
+		return (M)this;
+	}
+
+	public java.lang.String getDispatchShipRemark() {
+		return get("dispatch_ship_remark");
 	}
 
 }
