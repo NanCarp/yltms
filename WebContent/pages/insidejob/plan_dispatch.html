@@ -50,9 +50,9 @@
                         <div class="col-md-1 col-sm-2 col-xs-2 head_2">
                             <input type="search" class="form-control" placeholder="计划号" name="plan_no" id="plan_no" value="${plan_no!}">
                         </div>
-                        <div class="col-md-1 col-sm-2 col-xs-2 head_2">
+                        <!-- <div class="col-md-1 col-sm-2 col-xs-2 head_2">
                             <input type="search" class="form-control" placeholder="客户单位" name="consignor" id="consignor" value="${consignor!}">
-                        </div>
+                        </div> -->
                         <div class="col-sm-1 col-xs-2 head_1">
                             <button class="btn btn-primary" onclick="_search()">查询</button>
                         </div>
@@ -88,12 +88,15 @@
                     <thead>
                         <tr>
                             <th>序号</th>
-                            <th>品种</th>
+                            <th>计划号</th>
+                            <th>流向</th>
+                            <th>货名</th>
                             <th>发货日期</th>
                             <th>发货港</th>
+                            <th>目的港</th>
                             <th>收货单位</th>
                             <th>船名</th>
-                            <th>性名</th>
+                            <th>姓名</th>
                             <th>手机号</th>
                             <th>身份证号码</th>
                             <th>吨位</th>
@@ -104,9 +107,12 @@
                         <#list recordList as record>
                         <tr>
                             <td>${record_index+1}</td>
+                            <td>${record.plan_no!}</td>
+                            <td>${record.flow!}</td>
                             <td>${record.goods_name!}</td>
                             <td>${record.estimated_arrvial_date!}</td>
                             <td>${record.delivery_dock!}</td>
+                            <td>${record.destination_port!}</td>
                             <td>${record.consignee!}</td>
                             <td>${record.ship_name!}</td>
                             <td>${record.ship_owner_name!}</td>
@@ -116,15 +122,15 @@
                         </tr>
                         </#list>
                         <tr>
-                            <td colspan="9">合计</td>
+                            <td colspan="12">合计</td>
                             <td id="total"></td>
                         </tr>
                         <tr>
-                            <td colspan="10" class="text-left" id="site_dispatch1">公司发货现场负责人：<input type="text" id="site_dispatch" value="${(dispatch.site_dispatch)!}"></td>
+                            <td colspan="13" class="text-left" id="site_dispatch1">公司发货现场负责人：<input type="text" id="site_dispatch" value="${(dispatch.site_dispatch)!}"></td>
                         </tr>
                         <#else>
                         <tr>
-                            <td colspan="10">没有找到匹配的记录</td>
+                            <td colspan="13">没有找到匹配的记录</td>
                         </tr>
                         </#if>
                     </tbody>
@@ -180,6 +186,9 @@
 					layer.tips('不允许有特殊字符，最多20个字符', '#plan_no', {tips: [1, '#34495E']});return;
 				}					
 			}
+			if($.trim($('#plan_no').val())==''){
+			    layer.tips('计划号不能为空', '#plan_no', {tips: [1, '#34495E']});return;
+            }
 			if($.trim($('#consignor').val())!=''){
 				var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
 				if(!reg.test($('#consignor').val())){
@@ -193,7 +202,7 @@
  	// 保存
  	function _save() {
  		var dispatch_id = $('#dispatch_id').val();
- 		console.log("dispatch_id " + dispatch_id);
+ 		//console.log("dispatch_id " + dispatch_id);
  		if (dispatch_id) {
  			layui.use('layer',function(){
  	            var layer = layui.layer;
@@ -222,6 +231,11 @@
  	}
  	
  	function _print() {
+ 		var dispatch_id = $('#dispatch_id').val();
+        if (!dispatch_id) {
+            layer.msg("请先查询数据", {time: 2000});return;
+        }
+ 		
  		var $td = $('#site_dispatch1');
  		var $input = $('#site_dispatch1').find('input');
  		$td.find('input').remove();
@@ -259,7 +273,11 @@
  	}) */
  	
  	function _export() {
-        
+ 		var dispatch_id = $('#dispatch_id').val();
+ 		if (!dispatch_id) {
+            layer.msg("请先查询数据", {time: 2000});return;
+        }
+ 		
  		document.getElementById("exportLink").click();
  	    /* var $a = $('<a download="somedata.xls" href="#"></a>');
  	    console.log($a);
@@ -284,7 +302,7 @@
  	// 统计总吨数
  	var totalTonnage = 0;
     $('tbody tr').each(function () {
-        var a = parseFloat($(this).find('td').eq(9).text());
+        var a = parseFloat($(this).find('td').eq(12).text());
         if (a) {
             totalTonnage += a;
         }

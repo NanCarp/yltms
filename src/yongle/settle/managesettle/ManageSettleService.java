@@ -30,7 +30,7 @@ public class ManageSettleService {
 		//待审核计划号获取
 		String sqlparam = "SELECT * ";
 		String sql = " from t_dispatch where document_status = 1 "
-				+ " AND manager_settle_state = 0"
+				+ " AND bursar_settle_state = 0"
 				+ " AND id NOT IN "
 				+" (SELECT DISTINCT(k.id)"
 				+" from t_dispatch_ship d" 
@@ -101,6 +101,9 @@ public class ManageSettleService {
 						customer.set("dispatch_ship_id", dispatch_ship_id);
 						customer.set("deduct_price", deduct_price);
 		 				BigDecimal loss = delivery_quantity.subtract(received_quantity);//损耗
+		 				System.out.println(delivery_quantity);
+		 				System.out.println(received_quantity);
+		 				System.out.println(loss);
 		 				ship.set("loss", loss);
 		 				customer.set("loss", loss);
 						BigDecimal fixed_loss = delivery_quantity.multiply(fix_loss_rate).divide(new BigDecimal(100));//定耗

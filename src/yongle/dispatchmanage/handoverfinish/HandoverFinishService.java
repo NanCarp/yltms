@@ -160,7 +160,7 @@ public class HandoverFinishService {
         HSSFWorkbook wbook = new HSSFWorkbook();
         HSSFSheet sheet = wbook.createSheet();
         wbook.setSheetName(0, "调度交接表", (short)1);
-        sheet.addMergedRegion(new Region(0, (short)0, 0, (short)14));
+        sheet.addMergedRegion(new Region(0, (short)0, 0, (short)13));
         // 设置列宽
         //int[] widths = {3000,3000,3000};
         for (int i = 0; i < 14; i++) {

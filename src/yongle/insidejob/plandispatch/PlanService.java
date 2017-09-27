@@ -13,7 +13,7 @@ public class PlanService {
 	              + " ON a.id = b.dispatch_detail_id "
 	              + " LEFT JOIN t_dispatch AS c "
 	              + " ON a.plan_no_id = c.id "
-	              + " WHERE c.examine_state = 1";
+	              + " WHERE c.document_status = 1";
 	        
 	        if (plan_no != null && !"".equals(plan_no)) {
 	            sql += " AND plan_no = '"+ plan_no +"'";

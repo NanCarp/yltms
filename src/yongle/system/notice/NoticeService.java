@@ -20,7 +20,7 @@ public class NoticeService {
 	 * @author xuhui
 	 */
 	public static List<Record> getAllNotice(String title,String type){
-		String sql = "select * from t_notice where 1=1";
+		String sql = "select * from t_notice where type='通知公告'";
 		if(title!=null&&title!=""){
 			sql +=" and title like '%"+title+"%'";
 		}

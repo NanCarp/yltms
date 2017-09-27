@@ -2,10 +2,12 @@ package yongle.insidejob.plandispatch;
 
 import java.util.List;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
+import yongle.interceptor.ManageInterceptor;
 import yongle.model.Dispatch;
 import yongle.utils.ResponseObj;
 
@@ -16,7 +18,7 @@ import yongle.utils.ResponseObj;
  * @date: 2017年8月31日上午8:36:41
  * @version: 1.0 版本初成
  */
-//@Before(ManageInterceptor.class)
+@Before(ManageInterceptor.class)
 public class PlanController extends Controller {
     public void index() {
         render("plan_dispatch.html");

@@ -66,13 +66,12 @@ public class WebSocketController {
 	
 	/**
      * 发生错误时调用
-     * 
      * @param session
      * @param error
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        //error.printStackTrace();
+
     }
     
     // 发送消息

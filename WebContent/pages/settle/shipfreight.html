@@ -29,12 +29,15 @@
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-3" onclick="_detail()">编辑</button>
 						</div>
-						<div class="col-sm-1 col-xs-2 head_1" >
+						<!-- <div class="col-sm-1 col-xs-2 head_1" >
                              <button class="btn btn-4" onclick=" _export()">导出</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
                              <button class="btn btn-5" onclick="_print()">打印</button>
-                        </div> 	 	                 			                									               
+                        </div> --> 	
+                         <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/settle/ship')"><i class="fa fa-refresh"></i></button>
+                        </div>  	                 			                									               
 					</div>				
 				</div>
 			</div>		
@@ -138,7 +141,7 @@ var TableInit = function () {
                 field: 'ship_name',
                 title: '船名'
             },{
-                field: 'loading_tonnage',
+                field: 'delivery_quantity',
                 title: '发货数量'
             },{
                 field: 'received_quantity',
@@ -236,6 +239,11 @@ function _print() {
 		header: "<p></p>"
 	});
 	$('input[type="checkbox"]').show();
+}
+
+//导出
+function _export() {
+    $('li[role="menuitem"]').find('a').click();
 }
 </script>
 </body>

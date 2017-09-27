@@ -127,8 +127,9 @@ public class HandoverFinishController extends Controller {
     */
     public void export() {
         Integer id = getParaToInt();
+        Record r = Db.findById("t_dispatch_detail", id);
         
-        boolean result = HandoverFinishService.export(getResponse(), id);
+        boolean result = HandoverFinishService.export(getResponse(), r.getInt("plan_no_id"));
         
         if (result) {
             renderNull();

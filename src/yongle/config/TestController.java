@@ -2,7 +2,6 @@
  * All rights Reserved, Designed By www.yetangtang.com
  * @Title:  TestController.java   
  * @Package yongle.config   
- * @Description:    TODO(用一句话描述该文件做什么)   
  * @author: sugar Ye    
  * @date:   2017年9月21日 下午4:36:43   
  * @version V1.0 

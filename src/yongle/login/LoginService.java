@@ -70,7 +70,7 @@ public class LoginService {
 	 * @author xuhui
 	 */
 	public static List<Record> getTips(){
-		String sql ="SELECT * from t_notice WHERE type='提醒' AND review = 0 ORDER BY id DESC  LIMIT 0,5";
+		String sql ="SELECT * from t_notice WHERE type='提醒' AND review = 0 ORDER BY id DESC  ";
 		return Db.find(sql);
 	}
 	

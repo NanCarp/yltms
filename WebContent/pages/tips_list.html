@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+<#include "include/header.html">
+<style>
+.top{margin-top: 15px}
+.topfleft{height: 310px;min-width: 330px;}
+.topfright{width: 100%;height: 168px;border: 1px solid #dddddd;}
+.topfleft div{background-size:100% 130px;} 
+.topleft1{margin-left: 30px;display: inline-block;position: relative;top:-40px}
+.topleftthen{display: inline-block;margin-left: 16px;margin-top: 30px}
+.topleftthen p{color: white;}
+.topright{height: 300px;margin-left: 16px;padding-left: 0;}
+.topright1{height: 300px;min-width: 530px;margin-left: 0}
+.topfrightremarks{margin:0 0 0 50px;width: 170px;position: relative;top:-20px;left: 36px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;}
+
+.bottomleft{height: 300px;min-width: 400px;}
+.bottomcenter{height:300px;margin-left: 15px;padding-left: 1px;padding-bottom: 0}
+.calend{height: 340px;margin-top: 0;margin-left: 0}
+.bottomright{margin-left: 15px;padding-left: 0;}
+.bottomrighttop{width: 92%;height: 150px;background: #F4F5F6;border: 1px solid #dddddd;text-align: center;padding-top: 40px}
+.bottomrightbot{width: 92%;height: 136px;background: #5B85DE;border: 1px solid #dddddd;}
+
+.span1{font-size: 15px;font-weight: bold;text-align: left}
+.notice{color: #3367DB;font-weight: bold;font-size: 18px}
+.aler{color: #3367DB;font-weight: bold;font-size: 18px}
+.a_span{width: 100%;height: 40px;float: left;}
+.c_span{width: 100%;height: 40px;float: left;border-bottom: 1px dashed #CCC;overflow: hidden;white-space:nowrap; text-overflow:ellipsis;cursor: pointer;padding-top: 10px}
+i{color: #999999}
+.c_left{width: 10%;overflow: hidden;white-space:nowrap; text-overflow:ellipsis;}
+.c_right{float: right;}
+</style>
+</head>
+<body>
+<div class="panel panel-default container-fluid" style="height:500px;">
+      <div class="panel-heading row">
+          <div class="text-left col-md-4 pull-left notice">
+              <p style="float: left;margin-right: 10px;">提醒</p>
+              <!-- <div style="width:30px;height:30px;background-color:#F00;border-radius:15px;float: left;">
+                  <span style="height:30px;line-height:30px;display:block;color:#FFF;text-align:center !important">${(tipsList?size)!0}</span>
+              </div> -->
+          </div>
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body sroll" style="height: 240px" id="tipscontant">
+      <#if tipsList?? &&tipsList?size gt 0>
+      <#list tipsList as tips> 
+          <span class="c_span" title="点击查看详细">
+              <span class="c_left" onclick="getNotice('${(tips.url)!}')">${tips.title!}</span>
+              <span class="c_right"><i>${tips.publish_time?substring(0,10)}</i></span>
+          </span>
+      </#list>
+      <#else>
+          <span class="c_span" title="点击查看详细" >
+              <span class="c_left">暂无提醒事项 </span>
+              <span class="c_right"></span>
+          </span>
+      </#if>
+</div>
+
+<script>
+function getNotice(url){
+    if(url.indexOf("getRecord")!=-1){
+        parent.open_window("明细",url, 1350, 500);
+    }else{
+        parent.open_window("船舶结算批改申请",url, 1000, 500);
+    }
+}
+
+</script>
+
+</body>
+</html>

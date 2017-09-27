@@ -46,7 +46,10 @@
 		                </div>   
 		                <div class="col-sm-1 col-xs-2 head_4" >
 		                     <button class="btn btn-5" onclick="_seeDatil()">流向明细</button>
-		                </div>             									                 
+		                </div> 
+		                <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/planManage/dispatch')"><i class="fa fa-refresh"></i></button>
+                        </div>             									                 
 					</div>				
 				</div>
 			</div>		
@@ -182,9 +185,6 @@ var TableInit = function () {
                 field: 'seagoing_vessel_name',
                 title: '海轮名称'
             },{
-                field: 'settle_price',
-                title: '结算价'
-            },{
                 field: 'estimated_arrvial_date',
                 title: '预抵日期'
             },{
@@ -196,9 +196,6 @@ var TableInit = function () {
             },{
                 field: 'Excess_deduction_price',
                 title: '超耗扣价'
-            },{
-                field: 'guide_price',
-                title: '指导价'
             },{
                 field: 'plan_state',
                 title: '总数量分配状态',

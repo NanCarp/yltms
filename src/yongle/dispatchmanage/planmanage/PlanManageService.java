@@ -77,7 +77,9 @@ public class PlanManageService{
 					planDetailRecord.set("planned_qty", plandetail.get("b"));//计划数量
 					planDetailRecord.set("destination_port", plandetail.get("c"));//目的港
 					planDetailRecord.set("consignee", plandetail.get("d"));//收货单位
-					planDetailRecord.set("remark", plandetail.get("e"));//备注
+					planDetailRecord.set("guide_price", plandetail.get("e"));//指导价
+					planDetailRecord.set("settle_price", plandetail.get("f"));//结算价
+					planDetailRecord.set("remark", plandetail.get("g"));//备注
 					if(!Db.save("t_dispatch_detail", planDetailRecord)){
 						flagData = false;
 						break;

@@ -1,6 +1,11 @@
 package yongle.site.waterwayfreight;
 
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
@@ -15,7 +20,7 @@ public class WaterwayFreightService {
 
     /** 
     * @Title: getDataPages 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 页面数据
     * @param pageindex
     * @param pagelimit
     * @param plan_no
@@ -60,7 +65,7 @@ public class WaterwayFreightService {
 
     /** 
     * @Title: getRecordById 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 查询船相关信息
     * @return Record
     * @author liyu
     */
@@ -75,6 +80,44 @@ public class WaterwayFreightService {
                 + " ON a.consignee = d.customer_name "
                 + " WHERE b.id = ? ";
         return Db.findFirst(sql, id);
+    }
+
+    /** 
+    * @Title: createNotice 
+    * @Description: 创建提醒
+    * @param id
+    * @return Boolean
+    * @author 
+    */
+    public static Boolean createNotice(Integer id) {
+        boolean result = Db.tx(new IAtom() {
+            @Override
+            public boolean run() throws SQLException {
+                Record r = Db.find(" SELECT a.flow,b.ship_name,b.ship_owner_name,b.ship_owner_phone, "
+                        + " b.pre_refuel,b.site_refuel,b.site_pay,b.prepay,b.refuel_type,b.id AS dispatch_ship_id, "
+                        + " c.plan_no "
+                        + " FROM t_dispatch_detail AS a "
+                        + " LEFT JOIN t_dispatch_ship AS b ON a.id = b.dispatch_detail_id "
+                        + " LEFT JOIN t_dispatch AS c ON a.plan_no_id = c.id "
+                        + " WHERE b.id = ? ", id).get(0);
+                
+                Record notice = new Record(); // 提醒
+                notice.set("title", "运单需要预付款，请确认。");
+                notice.set("type", "提醒");
+                notice.set("publish_time", new Date());
+                Db.save("t_notice", notice);
+                Long notice_id = notice.getLong("id");
+                notice.set("url", "/notice/ship/getWaybill/" + notice_id);
+                Db.update("t_notice", notice);
+                
+                r.set("notice_id", notice_id);
+                Db.save("t_notice_waybill", r);
+                
+                return true;
+            }
+            
+        });
+        return result;
     }
 
 }

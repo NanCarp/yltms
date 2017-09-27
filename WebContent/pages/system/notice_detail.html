@@ -27,6 +27,7 @@
 	
 <body style="width: 90%">
     <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+    	<input id="id" name="id" value="${(record.id)!}" hidden=""> 
         <div class="form-group">
             <label class="col-xs-3 control-label text-right" for="title">标题：</label>
             <div class="col-xs-9">
@@ -71,7 +72,7 @@
                             message: '最多20个字符'
                         }
                     }
-                }
+                },
                 content: {
                     validators: {
                         stringLength: {

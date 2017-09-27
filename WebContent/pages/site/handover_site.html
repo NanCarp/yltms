@@ -4,6 +4,7 @@
 <head>
     <title>调度交接</title>
     <#include "../include/header.html">
+    <script src="${ctx}/resource/jquery-print/printThis.js"></script>
     <style>
     .container{width:100% !important};
     </style> 
@@ -35,10 +36,13 @@
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-5" onclick="_detail()">查看</button>
+                             <button class="btn btn-3" onclick="_detail()">查看</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
                              <button class="btn btn-4" onclick="_export()">导出</button>
+                        </div>
+                        <div class="col-sm-1 col-xs-2 head_1" >
+                             <button class="btn btn-5" onclick="print()">打印</button>
                         </div>
                         <div class="col-sm-1 col-xs-1 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/site/handoversite')"><i class="fa fa-refresh"></i></button>
@@ -47,7 +51,32 @@
                 </div>
             </div>      
             <table id="tb_departments"></table>
-        </div>             
+        </div>
+        <table id="print" style="display: none;">
+            <thead>
+                <tr>
+                    <td colspan="14" class="no-border">宜兴永乐运输有限公司调度员交接表</td>
+                </tr>
+                <tr>
+                    <td>计划号</td>
+                    <td>货名</td>
+                    <td>海船名</td>
+                    <td>发货码头</td>
+                    <td>目的港</td>
+                    <td>船名</td>
+                    <td>姓名</td>
+                    <td>手机号</td>
+                    <td>身份证号码</td>
+                    <td>配载吨位</td>
+                    <td>可载吨位</td>
+                    <td>到港日期</td>
+                    <td>运价</td>
+                    <td>加油</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>             
     </div>
 </div>
 
@@ -147,10 +176,10 @@ var TableInit = function () {
                 field: 'destination_port',
                 title: '目的港'
             }, {
-                field: 'total_quantity',
+                field: 'planned_qty',
                 title: '总吨数'
             }, {
-                field: 'left_quantity',
+                field: 'left_qty',
                 title: '剩余吨数'
             }, {
                 field: 'entry_time',
@@ -158,13 +187,13 @@ var TableInit = function () {
             }, {
                 field: 'entry_man',
                 title: '录入人'
-            }, {
+            }/* , {
                 field:'opt',
                 title:'操作',
                 formatter:function(value,row,index){
                           return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id +')">编辑</button>' ]
                 },
-            }]
+            } */]
         });
     };
 
@@ -205,6 +234,74 @@ function _detail(){
     }
 }
 
+//打印
+function _print() {
+    $('input[type="checkbox"]').hide();
+    $('#tb_departments').printThis({
+        importCSS: true,
+        loadCSS: "../../css/settle/settle_print.css",
+        header: "<p></p>"
+    });
+    $('input[type="checkbox"]').show();
+}
+
+// 打印
+function print() {
+	// 获取选中记录 id
+    var ids = getIdSelections();    
+    // 如果没有选择，提示勾选至少一条数据
+    if (ids.length == 0) {
+        layer.msg('请选择一条记录', {time: 2000});
+    }else if(ids.length >1){
+        layer.msg('最多选择一条记录', {time: 2000});
+    }else{
+        $.post('/site/handoversite/print/' + ids, function (data) {
+        	var $tbody = $('#print tbody');
+        	$tbody.empty();
+        	$(data).each(function () {
+        		var $tr = $('<tr></tr>');
+        		var record = {
+        				plan_no: this.plan_no,
+        				goods_name: this.goods_name,
+        				seagoing_vessel_name: this.seagoing_vessel_name,
+        				delivery_dock: this.delivery_dock,
+        				destination_port: this.destination_port,
+        				ship_name: this.ship_name,
+        				ship_owner_name: this.ship_owner_name,
+        				ship_owner_phone: this.ship_owner_phone,
+        				id_card_no: this.id_card_no,
+        				loading_tonnage: this.loading_tonnage,
+        				available_tonnage: this.available_tonnage,
+        				arrival_date: this.arrival_data,
+        				freight_price: this.freight_price,
+        				pre_refuel: this.pre_refuel
+        		}
+        		
+        		for (var p in record) {
+        			//console.log(p + " " + record[p]);
+        			var v = record[p];
+        			if (!v) {
+        				v = "";
+        			}
+        			$tr.append('<td>'+ v +'</td>');
+        		}
+        		
+        		$tbody.append($tr);
+        		
+        		//console.log($tr);
+        	});
+        });
+        
+        $('#print').printThis({
+            importCSS: true,
+            loadCSS: "../../css/settle/settle_print.css",
+            header: "<p></p>"
+        });
+    }
+    
+    
+}
+
 //导出
 function _export() {
     // 获取选中记录 id
@@ -217,6 +314,7 @@ function _export() {
     }else{
         layer.confirm('确认导出?', {icon: 1, title:'导出提示'}, function(index){
             window.open('/site/handoversite/export/' +ids, '_blank');
+            layer.close(index);
         });
     }
 }
@@ -237,13 +335,6 @@ function stateFormatter(value, row, index) {
         };
     }        
     return value;
-}
-
-//获取被选中数据的id
-function getIdSelections() {
-    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
-        return row.id;
-    });
 }
 
 //日期控件

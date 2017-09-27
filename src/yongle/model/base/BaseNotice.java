@@ -63,4 +63,22 @@ public abstract class BaseNotice<M extends BaseNotice<M>> extends Model<M> imple
 		return get("publish_time");
 	}
 
+	public M setUrl(java.lang.String url) {
+		set("url", url);
+		return (M)this;
+	}
+
+	public java.lang.String getUrl() {
+		return get("url");
+	}
+
+	public M setReview(java.lang.Integer review) {
+		set("review", review);
+		return (M)this;
+	}
+
+	public java.lang.Integer getReview() {
+		return get("review");
+	}
+
 }

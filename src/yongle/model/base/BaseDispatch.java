@@ -63,15 +63,6 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("delivery_dock");
 	}
 
-	public M setDestinationPort(java.lang.String destinationPort) {
-		set("destination_port", destinationPort);
-		return (M)this;
-	}
-
-	public java.lang.String getDestinationPort() {
-		return get("destination_port");
-	}
-
 	public M setSeagoingVesselName(java.lang.String seagoingVesselName) {
 		set("seagoing_vessel_name", seagoingVesselName);
 		return (M)this;
@@ -79,24 +70,6 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 
 	public java.lang.String getSeagoingVesselName() {
 		return get("seagoing_vessel_name");
-	}
-
-	public M setGuidePrice(java.math.BigDecimal guidePrice) {
-		set("guide_price", guidePrice);
-		return (M)this;
-	}
-
-	public java.math.BigDecimal getGuidePrice() {
-		return get("guide_price");
-	}
-
-	public M setSettlePrice(java.lang.String settlePrice) {
-		set("settle_price", settlePrice);
-		return (M)this;
-	}
-
-	public java.lang.String getSettlePrice() {
-		return get("settle_price");
 	}
 
 	public M setPlanState(java.lang.Integer planState) {
@@ -126,12 +99,12 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("transport_consumption");
 	}
 
-	public M setDischargePeriod(java.util.Date dischargePeriod) {
+	public M setDischargePeriod(java.lang.Integer dischargePeriod) {
 		set("discharge_period", dischargePeriod);
 		return (M)this;
 	}
 
-	public java.util.Date getDischargePeriod() {
+	public java.lang.Integer getDischargePeriod() {
 		return get("discharge_period");
 	}
 
@@ -234,6 +207,15 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("left_quantity");
 	}
 
+	public M setIsContant(java.lang.Integer isContant) {
+		set("is_contant", isContant);
+		return (M)this;
+	}
+
+	public java.lang.Integer getIsContant() {
+		return get("is_contant");
+	}
+
 	public M setSiteDispatch(java.lang.String siteDispatch) {
 		set("site_dispatch", siteDispatch);
 		return (M)this;
@@ -241,24 +223,6 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 
 	public java.lang.String getSiteDispatch() {
 		return get("site_dispatch");
-	}
-
-	public M setDispatchReview(java.lang.Integer dispatchReview) {
-		set("dispatch_review", dispatchReview);
-		return (M)this;
-	}
-
-	public java.lang.Integer getDispatchReview() {
-		return get("dispatch_review");
-	}
-
-	public M setDispatchIssue(java.lang.Integer dispatchIssue) {
-		set("dispatch_issue", dispatchIssue);
-		return (M)this;
-	}
-
-	public java.lang.Integer getDispatchIssue() {
-		return get("dispatch_issue");
 	}
 
 	public M setDispatchSettleState(java.lang.Integer dispatchSettleState) {

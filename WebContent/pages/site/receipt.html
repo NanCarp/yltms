@@ -31,6 +31,9 @@
                         <div class="col-sm-1 col-xs-2 head_1">
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
                         </div>
+                        <!-- <div class="col-sm-1 col-xs-2 head_1" >
+                             <button class="btn btn-12" onclick="_review()">审核</button>
+                        </div> -->
                         <div class="col-sm-1 col-xs-2 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/site/receipt')"><i class="fa fa-refresh"></i></button>
                         </div>                  
@@ -198,13 +201,41 @@ var ButtonInit = function () {
 
 // 编辑
 function _edit(id){
-    parent.open_window('修改回单信息','/site/receipt/getRecord/' + id, 915, 500);
+    parent.open_window('修改回单信息','/site/receipt/getRecord/' + id, 945, 600);
 }
 
 // 查看
 function _detail(id) {
-	parent.open_window('运单查看','/site/receipt/detail/' + id, 910, 620);
+	parent.open_window('运单查看','/site/receipt/detail/' + id, 890, 670);
 }
+
+/* //复核
+function _review(){
+ // 获取选中记录 id
+ var ids = getIdSelections();    
+ // 如果没有选择，提示勾选至少一条数据
+ if (ids.length == 0) {
+     layer.msg('请选择一条数据', {time: 2000});
+ }else if(ids.length >1){
+     layer.msg('最多选择一条数据', {time: 2000});
+ }else{
+	 layer.confirm("确认审核",{icon:3},function(){
+	     $.post("/site/receipt/review/"+ids,function(result){
+	    	 if (result.code == 1) {
+	             layer.msg(result.msg, {time: 2000}, function(){
+	                 layer_close();
+	                 //parent.refresh_iframe();
+	                 //location.href = location.href;
+	                 location.replace('/site/receipt');
+	             });
+	
+	         } else {
+	             layer.msg(result.msg, {time: 2000});
+	         }
+	     });
+	 });
+ }
+} */
 
 //全选按钮
 function stateFormatter(value, row, index) {

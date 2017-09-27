@@ -106,6 +106,5 @@ public class AuthorityController extends Controller {
 		boolean result = AuthorityService.delete(ids);
 		renderJson(result);
 	}
-    
-    
+        
 }

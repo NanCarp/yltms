@@ -1,5 +1,8 @@
 package yongle.settle.shipfreight;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -27,5 +30,33 @@ public class ShipSettleService {
         } 
         sqlExceptSelect +=" order by s.id desc";
        return Db.paginate(pageNumber, pageSize, select,sqlExceptSelect);
-	} 
+	}
+	
+    /** 
+    * @Title: getList 
+    * @Description: 打印列表
+    * @param plan_no
+    * @return List<Record>
+    * @author 
+    */
+    public static List<Record> getList(String plan_no) {
+        return getDataPages(1, 1000, plan_no).getList();
+    }
+
+    /** 
+    * @Title: calculateTotal 
+    * @Description: 应收金额合计
+    * @param recordList
+    * @return BigDecimal
+    * @author 
+    */
+    public static BigDecimal calculateTotal(List<Record> recordList) {
+        BigDecimal total = new BigDecimal(0);
+        for (Record r : recordList) {
+            BigDecimal t = r.getBigDecimal("payable_amount");
+            
+            total = total.add(t);
+        }
+        return total;
+    }
 }

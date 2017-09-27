@@ -70,8 +70,8 @@ i{color: #999999}
     			<div  class="topfright">    			
 	    			<div class="panel-body" style="padding-left: 30px">
 	                    <span class="a_span">
-							<span class="span1">部门:</span>
-							<span class="a_right" style="margin-left: 50px">现场部</span>
+							<span class="span1">角色:</span>
+							<span class="a_right" style="margin-left: 50px">超级管理员</span>
 						</span>
 						<span class="a_span">
 							<span class="span1">所属公司:</span>
@@ -100,7 +100,7 @@ i{color: #999999}
                                 	<#if noticesList?? && noticesList?size gt 0>
                                 	<#list noticesList as notices>
                                     <tr class="gradeX" title="点击查看详情">
-                                        <td><a style="float: left;" onclick="getNotice(${notices.id})">${notices.title!}</a><i style="float: right;">${notices.publish_time}</i></td>                                       
+                                        <td><a style="float: left;" onclick="getAffiche(${notices.id})">${notices.title!}</a><i style="float: right;">${notices.publish_time}</i></td>                                       
                                     </tr>
                                     </#list>
                                     <#else>
@@ -117,14 +117,18 @@ i{color: #999999}
     	<div class="bottom row" style="margin-top: 10px">
     		<div class="bottomleft col-sm-5">
     			<div class="panel panel-default container-fluid" >
-                        <div class="panel-heading row">                   
-							<div class="text-left col-md-3 pull-left notice">
-								提醒
-							</div>            
+                        <div class="panel-heading row">
+							<div class="text-left col-md-4 pull-left notice">
+								<p style="float: left;margin-right: 10px;">提醒</p>
+							    <div style="width:30px;height:30px;background-color:#F00;border-radius:15px;float: left;">
+	                                <span style="height:30px;line-height:30px;display:block;color:#FFF;text-align:center !important">${(tipsList?size)!0}</span>
+	                            </div>
+							</div>
+							<div class="col-md-8 text-right" id="more_tips"><a style="position: relative;top: 5px;">查看更多</a></div>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body sroll" style="height: 240px" id="tipscontant">
-                        <#if tipsList?? &&tipsList?size gt 0>
+                        <!-- <#if tipsList?? &&tipsList?size gt 0>
                         <#list tipsList as tips> 
                         	<span class="c_span" title="点击查看详细">
 								<span class="c_left" onclick="getNotice('${(tips.url)!}')">${tips.title!}</span>
@@ -136,7 +140,24 @@ i{color: #999999}
 								<span class="c_left">暂无提醒事项 </span>
 								<span class="c_right"></span>
 							</span>
-						</#if>					                         
+						</#if> -->
+						<#if tipsList?? &&tipsList?size gt 0>
+						<#assign n = 0 />	
+						<#list tipsList as tips>
+						<#assign n = n + 1 />
+						    <#if n lte 5>
+						    <span class="c_span" title="点击查看详细">
+                                <span class="c_left" onclick="getNotice('${(tips.url)!}')">${tips.title!}</span>
+                                <span class="c_right"><i>${tips.publish_time?substring(0,10)}</i></span>
+                            </span>
+						    </#if>
+						</#list>
+						<#else>
+                            <span class="c_span" title="点击查看详细" >
+                                <span class="c_left">暂无提醒事项 </span>
+                                <span class="c_right"></span>
+                            </span>
+						</#if>		                         
                         </div>
                   </div>
     		</div>
@@ -170,7 +191,7 @@ i{color: #999999}
 	<script src="../resource/layer/layer.js"></script>
 	<script src="../js/jquery.nicescroll.min.js"></script>
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <script>  
+    <script>
     $(document).ready(function(){
     	$('#calendar').eCalendar();
     	getWeather(); 
@@ -190,8 +211,19 @@ i{color: #999999}
 		}) 	
 	} 
     function getNotice(url){
-    	parent.open_window("明细",url, 1350, 500);
+    	if(url.indexOf("getRecord")!=-1){
+    		parent.open_window("明细",url, 1350, 500);
+    	}else if(url.indexOf("getWaybill")!=-1){
+            parent.open_window("运单预付款",url, 1000, 250);
+        }else {
+    		parent.open_window("船舶结算批改申请",url, 1000, 500);
+    	}
     }
+    
+    function getAffiche(id){
+    	parent.open_window("公告","/pages/getNotice/"+id, 1000, 420);
+    }
+    
     
     var websocket = null;
   //判断当前浏览器是否支持WebSocket
@@ -214,7 +246,13 @@ i{color: #999999}
 
   //接收到消息的回调方法
   websocket.onmessage = function (event) {
-      updateNotice();
+	  var msg = JSON.parse(event.data);
+	  if(msg.receiver === "indexframe") {
+		  if (msg.action === "refresh") {
+			  updateNotice();
+		  }
+	  }
+      
   }
 
   //连接关闭的回调方法
@@ -236,6 +274,12 @@ i{color: #999999}
     function updateNotice() {
     	window.location.href = window.location.href;
     }
+    
+    
+    //
+    $('#more_tips a').on('click', function () {
+        parent.open_window('提醒信息','/pages/getMoreTips', 800, 570);
+    });
     
     </script>
 </html>

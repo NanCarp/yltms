@@ -216,7 +216,7 @@ $('#submit').on('click', function () {
     if (isOver) {
     	layer.confirm('运价超过指导价，确认保存吗?', {icon: 3, title:'提示'}, function(index){
             // 提交
-            send(); // 更新提醒
+            
             submit(recordList);
             layer.close(index);
         });
@@ -239,7 +239,12 @@ function submit(recordList) {
                 layer_close();
                 parent.parent.refresh_iframe();
             });
-
+            var msg = {
+            		sender: "handover_detail",
+            		receiver: "indexframe",
+            		action: "refresh"
+            }
+            send(JSON.stringify(msg)); // 更新提醒
         } else {
             parent.layer.msg(result.msg, {time: 2000});
         }
@@ -257,6 +262,12 @@ function _review(id) {
 	                layer_close();
 	                parent.parent.refresh_iframe();
 	            });
+	            var msg = {
+	                    sender: "handover_detail",
+	                    receiver: "handover_finish",
+	                    action: "refresh"
+	            }
+	            send(JSON.stringify(msg));
 
 	        } else {
 	            parent.layer.msg(result.msg, {time: 2000});
@@ -771,8 +782,8 @@ function closeWebSocket() {
 }
 
 //发送消息
-function send() {
-    websocket.send("notice");
+function send(msg) {
+    websocket.send(msg);
 }
 
 </script>

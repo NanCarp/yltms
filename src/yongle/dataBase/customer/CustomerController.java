@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
@@ -14,6 +15,7 @@ import com.jfinal.upload.UploadFile;
 
 import yongle.dataBase.ship.ShipService;
 import yongle.insidejob.contract.ContractService;
+import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: CustomerController.java
  * @Description: 客户信息管理
@@ -21,6 +23,7 @@ import yongle.insidejob.contract.ContractService;
  * @date: 2017年8月29日下午16:40:05
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class CustomerController extends Controller{
 
 	/**

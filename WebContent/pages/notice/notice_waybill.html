@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insert title here</title>
+<#include "../include/header.html">
+<style type="text/css">
+    tbody .form-group {
+        margin-bottom: 0px;
+    }
+    .container{width:100% !important};
+    .form-group {
+        line-height: 34px !important;
+        vertical-align: middle !important;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+        <div class="col-xs-12">
+            <div class="container container-fluid" style="margin-top:20px">
+                <div class="row">
+                    <div class="col-sm-2 col-xs-2 head_5">
+                        <button type="button" class="btn btn-success" onclick="confirm(${(notice_id)!})">标记已付款</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+            <table width="100%" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>计划号</th>
+                        <th>流向</th>
+                        <th>船名</th>
+                        <th>姓名</th>
+                        <th width="120px">手机号</th>
+                        <th>加油方式</th>
+                        <th>调度预加油</th>
+                        <th>调度预付款</th>
+                        <th>现场预加油</th>
+                        <th>现场预付款</th>
+                        <th>付款状态</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <#if recordList?? && recordList?size gt 0>
+                    <#list recordList as record>
+                    <tr>
+                        <td>${record.plan_no!}</td>
+                        <td>${record.flow!}</td>
+                        <td>${record.ship_name!}</td>
+                        <td>${record.ship_owner_name!}</td>
+                        <td>${record.ship_owner_phone!}</td>
+                        <td>${record.refuel_type!}</td>
+                        <td>${record.pre_refuel!}</td>
+                        <td>${record.prepay!}</td>
+                        <td>${record.site_refuel!}</td>
+                        <td>${record.site_pay!}</td>
+                        <td>未付款</td>
+                    </tr>
+                    </#list>
+                    <#else>
+                    <tr class="null">
+                        <td colspan="11">暂无数据</td>
+                    </tr>
+                    </#if>
+                </tbody>
+            </table>
+            </div>
+        </div>
+</div>
+
+
+<script>
+
+//同意
+function confirm(id) {
+    layer.confirm('确认已付款?', {icon: 1, title:'提示'}, function(index){
+    	var postData = {
+    			notice_id: id
+    	};
+        $.post("/notice/ship/confirmWaybill/", postData, function (result) {
+            if (result.code == 1) {
+            	// 通知相关页面
+            	var msg = {
+                        sender: "notice_waybill",
+                        receiver: "waterway_freight",
+                        action: "refresh"
+                }
+                send(JSON.stringify(msg));
+            	
+                parent.layer.msg(result.msg, {time: 2000}, function(){
+                    parent.refresh_iframe();
+                    layer_close();
+                });
+
+            } else {
+                parent.layer.msg(result.msg, {time: 2000});
+            }
+        });    
+        layer.close(index);
+    });
+}
+
+
+//WebSocket
+var websocket = null;
+//判断当前浏览器是否支持WebSocket
+if ('WebSocket' in window) {
+websocket = new WebSocket("ws://localhost:8080/websocket");
+}
+else {
+alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+//TODO用户登录系统检查属于自己的提醒消息
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {
+    /* var msg = JSON.parse(event.data);
+    if(msg.receiver === "handover_finish") {
+        if (msg.action === "refresh") {
+            refresh();
+        }
+    } */
+}
+
+//连接关闭的回调方法
+websocket.onclose = function () {
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+    closeWebSocket();
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    websocket.close();
+}
+
+//刷新页面
+function refresh() {
+    location.replace(location.href);
+}
+
+//发送消息
+function send(msg) {
+    websocket.send(msg);
+}
+
+</script>
+</body>
+</html>

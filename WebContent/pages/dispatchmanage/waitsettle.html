@@ -28,7 +28,13 @@
 						</div>
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
-						</div>   	                 			          									               
+						</div> 
+						<div class="col-sm-1 col-xs-2 head_1" >
+		                     <button class="btn btn-12" onclick="managerCheckOut()">审核</button>
+		                </div>  
+		                <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/planManage/waitsettle')"><i class="fa fa-refresh"></i></button>
+                        </div>  	                 			          									               
 					</div>				
 				</div>
 			</div>		
@@ -144,7 +150,7 @@ var TableInit = function () {
                 title: '发货港'
             },{
                 field: 'manager_settle_state',
-                title: '单据状态',
+                title: '审核状态',
                 formatter:function(value,row,index){
                 	if(value==0){
                 		return '审核中'
@@ -154,9 +160,6 @@ var TableInit = function () {
                 	}
                 	if(value==2){
                 		return '取消审核'
-                	}
-                	if(value==3){
-                		return '驳回'
                 	}
                 }
             },{
@@ -212,6 +215,46 @@ function revise(planno){
 	parent.open_window("更改痕迹","/planManage/waitsettle/revise/"+planno,1000,400);
 }
 
+//改变经理审核状态
+function managecheckOut(id){
+	$.post("/settle/managesettle/manageCheck/"+id,function(data){
+		if(data.flag){
+			layer.msg(data.tips,{time:2000},function(){
+				 parent.parent.refresh_iframe();
+			})
+		}else{
+			layer.msg(data.tips,{time:2000})
+		}
+	})
+}
+
+//修改经理审核状态
+function managerCheckOut(){
+	// 获取选中记录 id
+	var ids = getIdSelections();	
+	// 如果没有选择，提示勾选至少一条数据
+	if (ids.length == 0) {
+        layer.msg('请选择一条需要审核的记录', {time: 2000});
+	}else if(ids.length >1){
+		layer.msg('最多选择一条记录', {time: 2000});
+	}else{
+		$.post("/settle/managesettle/ischange/"+ids,function(result){
+			if(result.flag){
+				if(result.num==0||result.num==2){
+					layer.confirm('确认审核?', {icon: 1, title:'确认审核提示'}, function(index){
+						  managecheckOut(ids)
+						  layer.close(index);
+						});
+				}else{
+					managecheckOut(ids);	
+				}
+			}else{
+				layer.msg(result.tips,{time:2000});
+				parent.parent.refresh_iframe();
+			}
+		})
+	}
+}
 </script>
 </body>
 </html>

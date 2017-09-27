@@ -3,8 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>404</title>
+<style type="text/css">
+   body{
+       text-align: center;
+   }
+</style>
 </head>
 <body>
-404
+<img alt="404" src="../../resource/images/404.jpg">
 </body>
+<script type="text/javascript">
+(function(){
+	var img=document.getElementsByTagName("img");
+	img[0].onclick=function(){
+		window.location.href="http://localhost:8080/pages/index";
+	}
+}());
+</script>
 </html>

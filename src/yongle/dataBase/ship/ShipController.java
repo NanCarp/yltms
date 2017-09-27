@@ -6,11 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
+
+import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: ShipController.java
  * @Description: 船舶信息管理
@@ -18,6 +21,7 @@ import com.jfinal.upload.UploadFile;
  * @date: 2017年8月29日下午17:40:05
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class ShipController extends Controller{
 
 	/**

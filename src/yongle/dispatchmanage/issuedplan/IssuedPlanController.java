@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
 import yongle.dispatchmanage.planmanage.PlanManageService;
+import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: IssuedPlanController.java
  * @Description: 已下达计划
@@ -16,6 +18,7 @@ import yongle.dispatchmanage.planmanage.PlanManageService;
  * @date: 2017年9月19日下午4:15:05
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class IssuedPlanController extends Controller {
 
 	/**

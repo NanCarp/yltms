@@ -7,17 +7,17 @@
     tbody .form-group {
         margin-bottom: 0px;
     }
-    .container{width:100% !important};
+    .container{width:100% !important;position: relative;right: 20px;};
     .form-group {
         line-height: 34px !important;
         vertical-align: middle !important;
     }
-    .row {line-height: 34px;vertical-align: middle;width:1000px;margin-left:0;margin-right:0;}
+    .row {line-height: 34px;vertical-align: middle;width:1100px;margin-left:0;margin-right:0;}
     .form-group label {
-        max-width: 120px;
+        max-width: 130px;
     }
     textarea {
-        width: 710px !important;
+        width: 780px !important;
     }
 </style>
 </head>
@@ -49,15 +49,15 @@
         <div class="row" >
             <div class="form-group"></div>
             <div class="form-group ">
-                <label class="col-xs-2 control-label text-right" for="estimated_arrvial_date">发货日期：</label>
+                <label class="col-xs-2 control-label text-right" for="delivery_date">发货日期：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="estimated_arrvial_date" type="text" placeholder="" value="${(record.estimated_arrvial_date)!}" readonly/>
+                    <input class="form_date form-control text-left" id="delivery_date" type="text" placeholder="" name="delivery_date" value="${(record.delivery_date)!}"/>
                 </div>
             </div>
             <div class="form-group ">
                 <label class="col-xs-2 control-label text-right" for="arrival_limit">运到期限：</label>
                 <div class="col-xs-2">
-                    <input class="form_date form-control text-left" id="arrival_limit" type="text" placeholder="" name="arrival_limit" value="${(record.arrival_limit)!}"/>
+                    <input class="form-control text-left" id="arrival_limit" type="text" placeholder="" name="arrival_limit" value="${(record.arrival_limit)!}"/>
                 </div>
             </div>
             <div class="form-group ">
@@ -82,9 +82,24 @@
                 </div>
             </div>
             <div class="form-group ">
-                <label class="col-xs-2 control-label text-right" for="declare_date">报港日期：</label>
+                <label class="col-xs-2 control-label text-right" for="declare_date">空船到港日期：</label>
                 <div class="col-xs-2">
-                    <input class=" form-control text-left" id="declare_date" type="text" placeholder="" value="${(record.declare_date)!}" readonly/>
+                    <input class="form_date form-control text-left" id="declare_date" type="text" placeholder="" name="declare_date" value="${(record.declare_date)!}"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="site_refuel">加油计划：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="site_refuel" type="text" placeholder="" name="site_refuel" value="${(record.site_refuel)!}"/>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="site_pay">预付款：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="site_pay" type="text" placeholder="" name="site_pay" value="${(record.site_pay)!}"/>
                 </div>
             </div>
         </div>
@@ -97,11 +112,20 @@
                 </div>
             </div>
             <div class="form-group ">
+                <label class="col-xs-2 control-label text-right" for="heavy_declare_date">重船报港日期：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="heavy_declare_date" type="text" placeholder="" value="${(record.heavy_declare_date)!}" readonly/>
+                </div>
+            </div>
+            <div class="form-group ">
                 <label class="col-xs-2 control-label text-right" for="unloaded_date">卸空日期：</label>
                 <div class="col-xs-2">
                     <input class=" form-control text-left" id="unloaded_date" type="text" placeholder="" value="${(record.unloaded_date)!}" readonly/>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="form-group"></div>
             <div class="form-group ">
                 <label class="col-xs-2 control-label text-right" for="rainy_days">卸货雨天数：</label>
                 <div class="col-xs-2">
@@ -141,10 +165,33 @@ $('#defaultForm').bootstrapValidator({
         validating: 'glyphicon glyphicon-refresh' */
     },
     fields: {
-    	arrival_limit: {
+    	delivery_date: {
             validators: {
             	notEmpty:{
                     message: '不能为空!'
+                }
+            }
+        },
+        declare_date: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                }
+            }
+        },
+        arrival_limit: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[0-9]+(\.[0-9]{1,3})?$/,
+                    message: '请输入正确的天数'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
                 }
             }
         },
@@ -205,7 +252,8 @@ $('#defaultForm').bootstrapValidator({
         if (result.code == 1) {
             parent.layer.msg(result.msg, {time: 2000}, function(){
                 layer_close();
-                parent.parent.refresh_iframe();
+                //parent.parent.refresh_iframe();
+                parent.refresh_iframe();
             });
 
         } else {

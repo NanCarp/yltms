@@ -4,10 +4,13 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
+
+import yongle.interceptor.ManageInterceptor;
 
 /**
  * @ClassName: NoticeController
@@ -16,6 +19,7 @@ import com.jfinal.plugin.activerecord.Record;
  * @date: 2017年9月18日下午8:56:06
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class NoticeController extends Controller{
 
 	/**

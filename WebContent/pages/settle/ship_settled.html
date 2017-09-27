@@ -30,13 +30,46 @@
                              <button class="btn btn-4" onclick=" _export()">导出</button>
                         </div>
                         <div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-5" onclick="_print()">打印</button>
+                             <button class="btn btn-5" onclick="print()">打印</button>
+                        </div>  
+                        <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/settle/shipsettled')"><i class="fa fa-refresh"></i></button>
                         </div>   	 	                 			                									               
 					</div>				
 				</div>
 			</div>		
 			<table id="tb_departments"></table>
-		</div>             
+		</div>
+		<table id="print" style="display: none;">
+            <thead>
+                <tr>
+                    <td colspan="19" class="no-border">宜兴永乐运输有限公司运输结算清单</td>
+                </tr>
+                <tr>
+                    <td>货物名称</td>
+                    <td>发货日期</td>
+                    <td>发货港</td>
+                    <td>到达港</td>
+                    <td>船名</td>
+                    <td>发货数量</td>
+                    <td>收货数量</td>
+                    <td>损耗</td>
+                    <td>定耗</td>
+                    <td>超耗</td>
+                    <td>扣款</td>
+                    <td>单价</td>
+                    <td>运费</td>
+                    <td>港建费</td>
+                    <td>滞期天数</td>
+                    <td>超期</td>
+                    <td>滞期费</td>
+                    <td>其他</td>
+                    <td>应收金额</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
 	</div>
 </div>
 
@@ -135,7 +168,7 @@ var TableInit = function () {
                 field: 'ship_name',
                 title: '船名'
             },{
-                field: 'loading_tonnage',
+                field: 'delivery_quantity',
                 title: '发货数量'
             },{
                 field: 'received_quantity',
@@ -233,6 +266,65 @@ function _print() {
 		header: "<p></p>"
 	});
 	$('input[type="checkbox"]').show();
+}
+
+//打印
+function print() {
+    var data = $.trim($('#plan_no').val());
+    $.post('/settle/shipsettled/print?plan_no=' + data, function (data) {
+        var recordList = data.recordList;
+        var total = data.total;
+        var $tbody = $('#print tbody');
+        $tbody.empty();
+        $(recordList).each(function () {
+            var $tr = $('<tr></tr>');
+            var record = {
+                    goods_name: this.goods_name,
+                    estimated_arrvial_date: this.estimated_arrvial_date,
+                    delivery_dock: this.delivery_dock,
+                    destination_port: this.destination_port,
+                    ship_name: this.ship_name,
+                    delivery_quantity: this.delivery_quantity,
+                    received_quantity: this.received_quantity,
+                    loss: this.loss,
+                    fixed_loss: this.fixed_loss,
+                    exceed_loss: this.exceed_loss,
+                    deduct_money: this.deduct_money,
+                    freight_price: this.freight_price,
+                    ship_freight: this.ship_freight,
+                    port_construction_fee: this.port_construction_fee,
+                    demurrage_days: this.demurrage_days,
+                    extended_days: this.extended_days,
+                    demurrage_charges: this.demurrage_charges,
+                    other_charges: this.other_charges,
+                    payable_amount: this.payable_amount
+            }
+            
+            for (var p in record) {
+                //console.log(p + " " + record[p]);
+                var v = record[p];
+                if (!v) {
+                    v = "";
+                }
+                $tr.append('<td>'+ v +'</td>');
+            }
+            
+            $tbody.append($tr);
+        });
+        $('#print tbody').append('<tr><td colspan="18">合计</td><td id="total"></td></tr>');
+        $('#total').html(total); // 合计
+    });
+
+    $('#print').printThis({
+        importCSS: true,
+        loadCSS: "../../css/settle/ship_settled.css",
+        header: "<p></p>"
+    });
+}
+
+//导出
+function _export() {
+    $('li[role="menuitem"]').find('a').click();
 }
 </script>
 </body>

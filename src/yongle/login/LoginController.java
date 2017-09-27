@@ -195,7 +195,7 @@ public class LoginController extends Controller{
 	}
 	
 	/**
-	 * @desc 查看明细细心
+	 * @desc 查看提示明细
 	 * @author xuhui
 	 */
 	@Clear
@@ -210,9 +210,25 @@ public class LoginController extends Controller{
 	 * @desc 更新提示数据
 	 * @author xuhui
 	 */
+	@Clear
 	public void getTips(){
 		String sql = "select * from t_notice where type='提醒' and review = 0";
 		List<Record> list = Db.find(sql);
 		renderJson(list);	
 	}
+	
+	/** 
+	* @Title: getMoreTips 
+	* @Description: 查看更多提醒
+	* @author liyu
+	*/
+	public void getMoreTips() {
+		//TODO 只有经理可以查看 此处需要注意
+		// session 获取用户
+	    String sql = "SELECT * FROM t_notice WHERE type='提醒' and review = 0 and publisher = 'admin'";
+        List<Record> list = Db.find(sql);
+        setAttr("tipsList", list);
+        render("tips_list.html");
+	}
+
 }

@@ -55,4 +55,55 @@ public class NoticeShipController extends Controller{
         
         renderJson(res);
     }
+    
+    /**
+     * @desc 打开结算批改申请
+     * @author xuhui
+     */
+    public void settle(){
+    	Integer notice_id = getParaToInt(); // 提醒 id
+        Record r = Db.findById("t_settle_apply", notice_id);
+        setAttr("record", r);
+    	render("notice_application.html");
+    }
+    
+    /** 
+    * @Title: getWaybill 
+    * @Description: 运单预付费提醒
+    * @author 
+    */
+    public void getWaybill() {
+        Integer notice_id = getParaToInt(); // 提醒 id
+        setAttr("notice_id", notice_id);
+        List<Record> recordList = Db.find("SELECT * FROM `t_notice_waybill` WHERE notice_id = ? ", notice_id);
+        setAttr("recordList", recordList);
+        
+        render("notice_waybill.html");
+    }
+    
+    /** 
+    * @Title: confirmWaybill 
+    * @Description: 确认已付款
+    * @author 
+    */
+    public void confirmWaybill() {
+        ResponseObj res = new ResponseObj(); // 返回信息
+        Integer notice_id = getParaToInt("notice_id"); // 提醒 id
+        // 提醒已审核
+        Record r = Db.findById("t_notice", notice_id);
+        r.set("review", 1); // 提醒确认
+        boolean result = Db.update("t_notice", r);
+        // 标记为已付款
+        Record ship = Db.find("SELECT * FROM `t_notice_waybill` WHERE notice_id = ? ", notice_id).get(0);
+        Integer dispatch_ship_id = ship.getInt("dispatch_ship_id");
+        Record record = new Record();
+        record.set("id", dispatch_ship_id);
+        record.set("pay_status", 1);
+        Db.update("t_dispatch_ship", record);
+        
+        res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
+        res.setMsg(result ? "完成" : "失败");
+        
+        renderJson(res);
+    }
 }

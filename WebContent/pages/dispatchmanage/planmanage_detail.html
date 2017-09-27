@@ -30,12 +30,6 @@
         </div>
     </div> 
     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="settle_price">结算价：</label>
-        <div class="col-xs-6">
-            <input class="form-control" placeholder="结算价" name="settle_price" id="settle_price" value="${im.settle_price!}">
-        </div>
-    </div>
-    <div class="form-group">
         <label class="col-xs-5 control-label text-right" for="discharge_period">卸货期限：</label>
         <div class="col-xs-6">
             <input class="form-control form_datetime" placeholder="卸货期限" name="discharge_period" id="discharge_period" value="${im.discharge_period!}">
@@ -82,12 +76,6 @@
         <label class="col-xs-5 control-label text-right" for="consignor">托运人：</label>
         <div class="col-xs-6">
             <input class="form-control" placeholder="托运人" name="consignor" id="consignor" value="${im.consignor!}" style="padding-right: 2px">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="guide_price">指导价：</label>
-        <div class="col-xs-6">
-            <input class="form-control" placeholder="指导价" name="guide_price" id="guide_price" value="${im.guide_price!}">
         </div>
     </div>
     <div class="form-group">
@@ -138,12 +126,6 @@
         </div>
     </div> 
      <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="settle_price">结算价：</label>
-        <div class="col-xs-6">
-            <input class="form-control" placeholder="结算价" name="settle_price" id="settle_price" value="">
-        </div>
-    </div>
-     <div class="form-group">
         <label class="col-xs-5 control-label text-right" for="discharge_period">卸货期限：</label>
         <div class="col-xs-6">
             <input class="form-control form_datetime" placeholder="卸货期限" name="discharge_period" id="discharge_period" value="">
@@ -190,12 +172,6 @@
         <label class="col-xs-5 control-label text-right" for="consignor">托运人：</label>
         <div class="col-xs-6">
             <input class="form-control" placeholder="托运人" name="consignor" id="consignor" value="" style="padding-right: 2px">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="guide_price">指导价：</label>
-        <div class="col-xs-6">
-            <input class="form-control" placeholder="指导价" name="guide_price" id="guide_price" value="">
         </div>
     </div>
      <div class="form-group">
@@ -341,38 +317,6 @@ $(function(){
 						regexp:/^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/,
 						message:'请勿输入特殊字符'
 					}
-				}
-			},
-			guide_price: {//指导价
-				validators: {
-					notEmpty:{
-						message:'请输入结算价'
-					},
-					stringLength: {
-	                    min: 0,
-	                    max: 20,
-	                    message: '最多20个字符'
-	                },
-	                regexp:{
-						regexp:/^\d+(\.\d{1,4})?$/,
-						message:'请保留小数点后4位'
-					}	
-				}
-			},
-			settle_price: {//结算价	
-				validators: {
-					notEmpty:{
-						message:'请输入结算价'
-					},
-					stringLength: {
-	                    min: 0,
-	                    max: 20,
-	                    message: '最多20个字符'
-	                },
-	                regexp:{
-						regexp:/^\d+(\.\d{1,4})?$/,
-						message:'请保留小数点后4位'
-					}	
 				}
 			},
 			estimated_arrvial_date: {//预抵达日期

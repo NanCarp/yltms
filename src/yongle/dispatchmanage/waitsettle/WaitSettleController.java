@@ -140,10 +140,8 @@ public class WaitSettleController extends Controller {
 	public void reviseDetail(){
 		String planNo = getPara("planNo");
 		String ship_name = getPara("shipName");
-		System.out.println(planNo + ship_name);
-		String sql = "select * from t_settle_apply where plan_no ='"+planNo+"' and ship_name ='"+ship_name+"'";
+		String sql = "select * from t_settle_apply where plan_no ='"+planNo+"' and ship_name ='"+ship_name+"' order by id desc";
 		Record record = Db.findFirst(sql);
-		System.out.println(sql);
 		setAttr("record", record);	
 		render("revise_detail_see.html");
 	}

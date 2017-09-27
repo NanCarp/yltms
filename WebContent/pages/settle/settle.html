@@ -25,23 +25,15 @@
 						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
 							<input type="search" class="form-control" placeholder="托运人" name="consignor" id="consignor">
 						</div>
-						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
-							<select class="form-control" name="bursar_settle_state" id="bursar_settle_state">
-								<option value="">-复核状态-</option>
-								<option value="0">待复核</option>
-								<option value="1">已复核</option>
-								<option value="2">取消复核</option>
-							</select>
-						</div>
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>   	                 			  
 		                <div class="col-sm-1 col-xs-2 head_1" >
 		                     <button class="btn btn-5" onclick="_toreview()">复核</button>
-		                </div> 
-		                 <div class="col-sm-1 col-xs-2 head_1" >
-		                     <button class="btn btn-12" onclick="managerCheckOut()">审核</button>
-		                </div>            									               
+		                </div>
+		                 <div class="col-sm-1 col-xs-1 head_1">
+                             <button class="btn btn-9 " onclick="location.replace('/settle/managesettle')"><i class="fa fa-refresh"></i></button>
+                        </div>           									               
 					</div>				
 				</div>
 			</div>		
@@ -158,20 +150,6 @@ var TableInit = function () {
             }, {
                 field: 'delivery_dock',
                 title: '发货港'
-            },{
-                field: 'bursar_settle_state',
-                title: '复核状态',
-                formatter:function(value,row,index){
-                	if(value==0){
-                		return '待复核'
-                	}
-                	if(value==1){
-                		return '已复核'
-                	}
-                	if(value==2){
-                		return '取消复核'
-                	}
-                }
             },{
             	field:'opt',
             	title:'操作',

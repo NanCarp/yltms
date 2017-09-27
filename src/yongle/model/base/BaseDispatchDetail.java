@@ -117,6 +117,24 @@ public abstract class BaseDispatchDetail<M extends BaseDispatchDetail<M>> extend
 		return get("dispatcher");
 	}
 
+	public M setSettlePrice(java.math.BigDecimal settlePrice) {
+		set("settle_price", settlePrice);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getSettlePrice() {
+		return get("settle_price");
+	}
+
+	public M setGuidePrice(java.math.BigDecimal guidePrice) {
+		set("guide_price", guidePrice);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getGuidePrice() {
+		return get("guide_price");
+	}
+
 	public M setFlowState(java.lang.Integer flowState) {
 		set("flow_state", flowState);
 		return (M)this;

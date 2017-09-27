@@ -153,4 +153,22 @@ public abstract class BaseSettleApply<M extends BaseSettleApply<M>> extends Mode
 		return get("remark");
 	}
 
+	public M setNextAdjustFreight(java.math.BigDecimal nextAdjustFreight) {
+		set("next_adjust_freight", nextAdjustFreight);
+		return (M)this;
+	}
+
+	public java.math.BigDecimal getNextAdjustFreight() {
+		return get("next_adjust_freight");
+	}
+
+	public M setApplicationerId(java.lang.Integer applicationerId) {
+		set("applicationerId", applicationerId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getApplicationerId() {
+		return get("applicationerId");
+	}
+
 }

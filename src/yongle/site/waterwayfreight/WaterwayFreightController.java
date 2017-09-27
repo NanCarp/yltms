@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
@@ -98,5 +99,35 @@ public class WaterwayFreightController extends Controller {
         Record r = WaterwayFreightService.getRecordById(id);
         setAttr("record", r);
         render("waterway_freight_detail.html");
+    }
+    
+    /** 
+    * @Title: review 
+    * @Description: 审核
+    * @author 
+    */
+    public void review() {
+        ResponseObj res = new ResponseObj();
+        Integer id = getParaToInt(); // 货运单 id
+        Record r = Db.findById("t_dispatch_ship", id);
+        
+        // 已审核，不能重复审核
+        if (r.getInt("receipt_review") == 1) {
+            res.setCode(ResponseObj.FAILED);
+            res.setMsg("不能重复审核");
+            renderJson(res);
+            return;
+        }
+        
+        // 更新审核状态
+        r.set("receipt_review", 1);
+        boolean result = Db.update("t_dispatch_ship", r);
+        res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
+        res.setMsg(result ? "已审核" : "审核失败");
+        
+        // 生成提醒
+        WaterwayFreightService.createNotice(id);
+        
+        renderJson(res);
     }
 }

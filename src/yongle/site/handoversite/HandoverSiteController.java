@@ -115,13 +115,27 @@ public class HandoverSiteController extends Controller {
     */
     public void export() {
         Integer id = getParaToInt();
-        
-        boolean result = HandoverService.export(getResponse(), id);
+        Record r = Db.findById("t_dispatch_detail", id);
+        boolean result = HandoverService.export(getResponse(), r.getInt("plan_no_id"));
         
         if (result) {
             renderNull();
         } else {
             renderText("导出失败");
         }
+    }
+    
+    public void print() {
+        Integer id = getParaToInt();
+        Integer plan_no_id = Db.findById("t_dispatch_detail", id).getInt("plan_no_id");
+        List<Record> recordList = Db.find("SELECT * "
+                + " FROM t_dispatch_ship AS a "
+                + " LEFT JOIN t_dispatch_detail AS b "
+                + " ON b.id = a.dispatch_detail_id "
+                + " LEFT JOIN t_dispatch AS c "
+                + " ON b.plan_no_id = c.id"
+                + " WHERE c.id = ? ", plan_no_id);
+        
+        renderJson(recordList);
     }
 }

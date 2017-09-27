@@ -27,7 +27,7 @@ public class WaitSettleService {
 		//待审核计划号获取
 		String sqlparam = "SELECT * ";
 		String sql = " from t_dispatch where document_status = 1 "
-				+ " AND manager_settle_state = 1"
+				+ " AND bursar_settle_state = 1"
 				+ " AND id NOT IN "
 				+" (SELECT DISTINCT(k.id)"
 				+" from t_dispatch_ship d" 
