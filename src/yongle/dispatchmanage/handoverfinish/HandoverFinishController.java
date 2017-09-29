@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -23,8 +22,6 @@ import yongle.utils.ResponseObj;
  */
 @Before(ManageInterceptor.class)
 public class HandoverFinishController extends Controller {
-    
-    private ResponseObj msg = new ResponseObj();
     
     /** 
     * @Title: index 

@@ -10,12 +10,11 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
-import yongle.model.DispatchShip;
 import yongle.utils.ResponseObj;
 
 /**
  * @ClassName: HandoverSiteService.java
- * @Description:
+ * @Description: 调度交接现场
  * @author: LiYu
  * @date: 2017年8月31日上午8:21:13
  * @version: 1.0 版本初成
@@ -58,7 +57,7 @@ public class HandoverSiteService {
         }
         
         if (entry_man != null && !"".equals(entry_man)) {
-            sqlExceptSelect += " AND dispatcher like '%" + entry_man + "'";
+            sqlExceptSelect += " AND dispatcher like '%" + entry_man + "%'";
         }
         
         sqlExceptSelect += " ORDER BY plan_no DESC ";
@@ -105,6 +104,7 @@ public class HandoverSiteService {
     * @return List<Record>
     * @author liyu
     */
+    @SuppressWarnings("unchecked")
     private static List<Record> jsonToRecordList(String json) {
         List<JSONObject> list = new ArrayList<>();
         list = JSONObject.parseObject(json, list.getClass());
@@ -118,7 +118,7 @@ public class HandoverSiteService {
 
     /** 
     * @Title: getRecordById 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 查看流向相关信息
     * @param id
     * @return Record
     * @author 

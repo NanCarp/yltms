@@ -65,7 +65,8 @@ function _delete(){
 		   $.post("/system/user/delete/"+ids,function(result){
 			   if(result){
 				   layer.msg('删除成功',{time:2000},function(){
-					   parent.refresh_iframe();
+					   //parent.refresh_iframe();
+					   location.replace('/system/user');
 				   });
 			   }else{
 				   layer.msg('删除失败',{time:2000},function(){
@@ -95,7 +96,8 @@ function _freezeOrEnable(id, state){
         $.post("/system/user/freezeOrEnable?id=" + id + "&state=" + state,function(result) {
             if (result) {
                 layer.msg(info + '成功', {time: 2000}, function(){
-                    parent.refresh_iframe();
+                    //parent.refresh_iframe();
+                	location.replace('/system/user');
                 });
             }
         });
@@ -103,3 +105,4 @@ function _freezeOrEnable(id, state){
 
     });
 }
+

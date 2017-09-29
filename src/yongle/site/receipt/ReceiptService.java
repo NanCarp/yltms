@@ -6,7 +6,7 @@ import com.jfinal.plugin.activerecord.Record;
 
 /**
  * @ClassName: WaterwayFreightService.java
- * @Description:
+ * @Description: 回单录入
  * @author: LiYu
  * @date: 2017年9月1日上午9:10:16
  * @version: 1.0 版本初成
@@ -15,7 +15,7 @@ public class ReceiptService {
 
     /** 
     * @Title: getDataPages 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 数据
     * @param pageindex
     * @param pagelimit
     * @param plan_no
@@ -46,11 +46,11 @@ public class ReceiptService {
         }
         
         if (start_date != null && !"".equals(start_date)) {
-            sqlExceptSelect += " AND estimated_arrvial_date >= '" + start_date + "'";
+            sqlExceptSelect += " AND delivery_date >= '" + start_date + "'";
         }
         
         if (end_date != null && !"".equals(end_date)) {
-            sqlExceptSelect += " AND estimated_arrvial_date <= '" + end_date + "'";
+            sqlExceptSelect += " AND delivery_date <= '" + end_date + "'";
         }
         
         sqlExceptSelect += " ORDER BY plan_no DESC ";
@@ -60,7 +60,7 @@ public class ReceiptService {
 
     /** 
     * @Title: getRecordById 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 回单相关信息
     * @return Record
     * @author liyu
     */

@@ -20,3 +20,6 @@ filepath_commerce=D:/upload/yongle/file/commerce/
 
 #文件下载地址(船员证件)
 filepath_shipCrew=D:/upload/yongle/file/shipCrew/
+
+# 域名
+hostname=http://yongle.ngrok.xiaomiqiu.cn

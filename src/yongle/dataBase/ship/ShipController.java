@@ -59,7 +59,6 @@ public class ShipController extends Controller{
 	 */
 	public void getTab(){
 		Integer id = getParaToInt("id");
-		System.out.println(id);
 		if(id!=null){
 			Record record = Db.findById("t_base_ship", id);
 			setAttr("im", record);
@@ -168,7 +167,6 @@ public class ShipController extends Controller{
 	 */
 	public void getInfo(){
 		Integer id = getParaToInt("id");
-		System.out.println(id);
 		if(id!=null){
 			Record record = Db.findById("t_base_ship", id);
 			setAttr("im", record);
@@ -194,7 +192,6 @@ public class ShipController extends Controller{
 
 		List<Record> list = Db.find(sqlPara);
 		for(Record r:list){
-			System.out.println(r.getInt("id"));
 			deleteDir(new File(PropKit.get("filepath_shipCrew")+r.getInt("id")));
 		}
 		flag = Db.deleteById("t_base_ship", id);
@@ -311,7 +308,6 @@ public class ShipController extends Controller{
 	 * @throws IOException 
 	 */
 	public void watchCrewFile() throws IOException{
-		System.out.println("watchCrewFile");
 		Integer id = getParaToInt("id");
 		String filename = getPara("filename");
 		ShipService.downloadCrewFile(getResponse(), id, filename);

@@ -26,7 +26,6 @@ public class RoleController extends Controller {
         List<Record> roleList =  RoleService.getRoleList(rolename, null);
         setAttr("roleList", roleList);
         setAttr("rolename", rolename);
-        System.out.println("ss"+ roleList);
         render("role.html");
     }
 
@@ -89,7 +88,7 @@ public class RoleController extends Controller {
 	public void delete(){
 		String ids = getPara(0);
 		boolean result = RoleService.delete(ids);
-		System.out.println(result);
+		//System.out.println(result);
 		renderJson(result);
 	}
 

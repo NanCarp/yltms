@@ -90,12 +90,12 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("estimated_arrvial_date");
 	}
 
-	public M setTransportConsumption(java.lang.String transportConsumption) {
+	public M setTransportConsumption(java.math.BigDecimal transportConsumption) {
 		set("transport_consumption", transportConsumption);
 		return (M)this;
 	}
 
-	public java.lang.String getTransportConsumption() {
+	public java.math.BigDecimal getTransportConsumption() {
 		return get("transport_consumption");
 	}
 
@@ -108,12 +108,12 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 		return get("discharge_period");
 	}
 
-	public M setExcessDeductionPrice(java.lang.String excessDeductionPrice) {
+	public M setExcessDeductionPrice(java.math.BigDecimal excessDeductionPrice) {
 		set("Excess_deduction_price", excessDeductionPrice);
 		return (M)this;
 	}
 
-	public java.lang.String getExcessDeductionPrice() {
+	public java.math.BigDecimal getExcessDeductionPrice() {
 		return get("Excess_deduction_price");
 	}
 
@@ -268,6 +268,15 @@ public abstract class BaseDispatch<M extends BaseDispatch<M>> extends Model<M> i
 
 	public java.lang.Integer getDocumentStatus() {
 		return get("document_status");
+	}
+
+	public M setIsapplication(java.lang.Integer isapplication) {
+		set("isapplication", isapplication);
+		return (M)this;
+	}
+
+	public java.lang.Integer getIsapplication() {
+		return get("isapplication");
 	}
 
 }

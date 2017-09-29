@@ -179,23 +179,27 @@ var TableInit = function () {
                 field: 'seagoing_vessel_name',
                 title: '海轮名称'
             },{
-                field: 'settle_price',
-                title: '结算价'
-            },{
                 field: 'estimated_arrvial_date',
-                title: '预抵日期'
+                title: '预发货日期'
             },{
                 field: 'transport_consumption',
-                title: '运输定耗'
+                title: '运输定耗(‰)'
             },{
                 field: 'discharge_period',
                 title: '卸货期限'
             },{
+                field: 'is_contant',
+                title: '含装货时间',
+                formatter:function(value,row,index){
+                	if(value == 1){
+                		return '是';
+                	}else{
+                		return '否';
+                	}
+                }
+            },{
                 field: 'Excess_deduction_price',
                 title: '超耗扣价'
-            },{
-                field: 'guide_price',
-                title: '指导价'
             },{
                 field: 'document_status',
                 title: '单据状态',
@@ -221,6 +225,36 @@ var TableInit = function () {
             },{
                 field: 'entry_man',
                 title: '录入人'
+            },{
+                field: 'billing',
+                title: '开票',
+                formatter:function(value,row,index){
+                	if(value == 1){
+                		return '是';
+                	}else{
+                		return '否';
+                	}
+                }
+            },{
+                field: 'port_fee',
+                title: '港建费',
+                formatter:function(value,row,index){
+                	if(value == 1){
+                		return '是';
+                	}else{
+                		return '否';
+                	}
+                }
+            },{
+                field: 'insurance',
+                title: '保险',
+                formatter:function(value,row,index){
+                	if(value == 1){
+                		return '是';
+                	}else{
+                		return '否';
+                	}
+                }
             },{
             	field:'opt',
             	title:'操作',
@@ -263,7 +297,7 @@ var ButtonInit = function () {
 function _delete(id){
 	$.post("/planManage/issued/Judgedelete/"+id,function(result){
 		if(result){
-			layer.msg("请先清除已配流向信息后再删除",{time:2000})
+			layer.msg("请先清除已配流向信息，<br>以及产生的后续业务后再删除",{time:4000})
 		}else{
 			layer.confirm("确认删除？",{icon:3},function(index){
 				$.post("/planManage/dispatch/delete/"+id,function(data){
@@ -294,7 +328,7 @@ function _seeDatil(){
 	}
 }
 
-
+ 
 //获取被选中数据的id
 function getIdSelections() {
     return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
@@ -302,6 +336,48 @@ function getIdSelections() {
     });
 }
 
+
+
+var websocket = null;
+//判断当前浏览器是否支持WebSocket
+if ('WebSocket' in window) {
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+}
+else {
+    alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+    
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+    //TODO用户登录系统检查属于自己的提醒消息
+}
+
+//连接关闭的回调方法
+websocket.onclose = function () {
+    
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+    closeWebSocket();
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {
+    if(JSON.parse(event.data).pages = 'issuedplan'){
+    	$('#tb_departments').bootstrapTable('refresh');  
+    }
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    websocket.close();
+}
 </script>
 </body>
 </html>

@@ -138,15 +138,10 @@ $('#submit').on('click', function () {
     validator.data('bootstrapValidator').validate();
     var flag = validator.data('bootstrapValidator').isValid();
     if (flag) {
-        console.log('ok');
+        
     } else {
         return;
     }
-    
-    /* var id = $('#id').val();
-    var left_quantity = $('#left_quantity').val();
-    var site_dispatch = $.trim($('#site_dispatch').val());
-    var recordList = getRecordList(); // 列表 */
     
     var left_quantity = $('#left_quantity').val();
     if (left_quantity < 0) {
@@ -160,7 +155,6 @@ $('#submit').on('click', function () {
     		"site_dispatch": $.trim($('#site_dispatch').val()),
     		"recordList": JSON.stringify(getRecordList())
     };
-    console.log(postData);
     $.post("/planManage/handover/save", postData, function(result) {
         if (result.code == 1) {
             parent.layer.msg(result.msg, {time: 2000}, function(){
@@ -520,25 +514,18 @@ $("input[name='sub']").click(function() {
 $('form').on('change', 'input[name=loading_tonnage]', function () {
 	calculateLeftQuantity();
 })
-/* $('form').on('change', 'tbody', function () {
-    calculateLeftQuantity();
-}) */
+
 function calculateLeftQuantity() {
 	var total_quantity = parseFloat($('#total_quantity').val());
-	console.log(total_quantity);
 	var amount = 0.0;
-	//console.log(this);
     $('input[name=loading_tonnage]').each(function () {
-        console.log("input: " + $(this).val());
         var v = $(this).val();
         amount = amount + parseFloat(v == '' ? 0 : v);
     });
     $('td.loading_tonnage').each(function () {
-        console.log("td: " + $(this).text());
         var v = $(this).text();
         amount = amount + parseFloat(v == '' ? 0 : v);
     });
-    console.log("amount: " + amount.toFixed(3));
     var left_quantity = (total_quantity - amount).toFixed(3);
     $('#left_quantity').val(left_quantity);
 }

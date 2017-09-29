@@ -148,7 +148,7 @@ public class HandoverFinishService {
     */
     public static boolean export(HttpServletResponse response, Integer id) {
         
-        Record record = Db.findById("t_dispatch", id);
+        //Record record = Db.findById("t_dispatch", id);
         List<Record> recordList = Db.find("SELECT * "
                 + " FROM t_dispatch_ship AS a "
                 + " LEFT JOIN t_dispatch_detail AS b "
@@ -186,9 +186,9 @@ public class HandoverFinishService {
         
         HSSFRow row;
         String[] a = {"计划号","货名","海船名","发货码头","目的港","船名","姓名","手机号","身份证号码","配载吨位","可载吨位","到港日期","运价","加油"};
-        String[] b = {"plan_no","goods_name","seagoing_vessel_name","delivery_dock","destination_port",
+        /*String[] b = {"plan_no","goods_name","seagoing_vessel_name","delivery_dock","destination_port",
                 "ship_name","ship_owner_name","ship_owner_phone","id_card_no","loading_tonnage",
-                "available_tonnage","arrival_date","freight_price","pre_refuel"};
+                "available_tonnage","arrival_date","freight_price","pre_refuel"};*/
         
         //int i = 1;
         row = sheet.createRow(0);
@@ -309,7 +309,7 @@ public class HandoverFinishService {
             }
         }
         
-        response.addHeader("Content-Disposition", "attachment;filename=" + EncodeUtil.toUtf8String("统计表") + ".xls");
+        response.addHeader("Content-Disposition", "attachment;filename=" + EncodeUtil.toUtf8String("调度员交接表") + ".xls");
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         try {
             ServletOutputStream out = response.getOutputStream();
@@ -322,6 +322,14 @@ public class HandoverFinishService {
         return true;
     }
 
+    
+    /** 
+    * @Title: getRecordById 
+    * @Description: 获取流向信息
+    * @param id
+    * @return Record
+    * @author 
+    */
     public static Record getRecordById(Integer id) {
         String sql = " SELECT *,a.id "
                 + " FROM `t_dispatch_detail` AS a "
@@ -345,7 +353,7 @@ public class HandoverFinishService {
             public boolean run() throws SQLException {
                 // 修改流向状态
                 Record r = Db.findById("t_dispatch_detail", id);
-                r.set("flow_state", 0);
+                r.set("flow_state", 2);
                 Db.update("t_dispatch_detail", r);
                 
                 Record dispatch = new Record();

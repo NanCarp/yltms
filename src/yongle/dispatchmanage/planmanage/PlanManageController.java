@@ -182,7 +182,7 @@ public class PlanManageController extends Controller {
 			Date now = new Date();
 			record.set("entry_time", sdf.format(now));
 			Record admin = (Record) getSession().getAttribute("admin");
-			String adminName = admin.getStr("account");		
+			String adminName = admin.getStr("user_name");		
 			record.set("entry_man",adminName);
 			result = record.save();
 		}
@@ -200,6 +200,8 @@ public class PlanManageController extends Controller {
 		boolean Plan_no_state = false;
 		//判断审核状态 0、待审核，1、已审核，2、取消审核
 		boolean delstate = Db.deleteById("t_dispatch", id);
+		String sql = "delete from t_dispatch_detail where plan_no_id = "+id;
+		Db.update(sql);
 		stateMap.put("delstate", delstate);
 		stateMap.put("Plan_no_state", Plan_no_state);
 		renderJson(stateMap);
@@ -227,8 +229,7 @@ public class PlanManageController extends Controller {
 		Integer id = getParaToInt();		
 		String sql ="select plan_state from t_dispatch where id="+id;
 		Integer state = Db.queryInt(sql);
-		System.out.println(state);
-		if(state==1){
+		if(state!=null&&state==1){
 			flag = true;
 		}
 		renderJson(flag);

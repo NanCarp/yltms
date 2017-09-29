@@ -29,14 +29,16 @@ public class ManageSettleService {
 		
 		//待审核计划号获取
 		String sqlparam = "SELECT * ";
-		String sql = " from t_dispatch where document_status = 1 "
-				+ " AND bursar_settle_state = 0"
-				+ " AND id NOT IN "
-				+" (SELECT DISTINCT(k.id)"
-				+" from t_dispatch_ship d" 
-				+" LEFT JOIN t_dispatch_detail p ON d.dispatch_detail_id = p.id" 
-				+" LEFT JOIN t_dispatch k ON p.plan_no_id = k.id" 
-				+" where d.received_quantity IS NULL OR d.declare_date is NULL or d.unloaded_date is NULL)";
+		String sql = " from t_dispatch where document_status = 1"
+					+" AND bursar_settle_state = 0"
+					+" AND id NOT IN"
+					+" (SELECT kk.id from"
+					+" (SELECT DISTINCT(k.id)"
+					+" from t_dispatch_ship d"
+					+" LEFT JOIN t_dispatch_detail p ON d.dispatch_detail_id = p.id"
+					+" LEFT JOIN t_dispatch k ON p.plan_no_id = k.id"
+					+" where d.received_quantity IS NULL OR d.declare_date is NULL or d.unloaded_date is NULL ) kk"
+					+" where kk.id is not NULL)";
 		if(plan_no!=null&&plan_no!=""){
 			sql +=" and plan_no like '%"+plan_no+"%'";
 		}
@@ -83,17 +85,23 @@ public class ManageSettleService {
 					String sqld = "select goods_name from t_dispatch where id="+id;
 					List<Record> list = Db.find(sqls);
 					String goods_name = Db.queryStr(sqld);//货物名称
+					//获取该计划号下的运输定耗值
+					String sqlFroFix = "select transport_consumption,Excess_deduction_price from t_dispatch where id ="+id;
+					Record recFor = Db.findFirst(sqlFroFix);
+					BigDecimal transportConsumption = recFor.getBigDecimal("transport_consumption");//运输定耗值，千分比
+					BigDecimal deduct_price = recFor.getBigDecimal("Excess_deduction_price");//超耗扣价
 					//根据数据字典的对应货物名称获取损耗信息
 					String sqlbasegoods = "select * from t_base_goods where goods_name = '"+goods_name+"'";
 					Record r1 = Db.findFirst(sqlbasegoods);
-					BigDecimal fix_loss_rate = r1.getBigDecimal("fixed_loss");//获取运输定耗值
-					BigDecimal deduct_price = r1.getBigDecimal("deduct_price");//获取运输损耗值	
+					//BigDecimal fix_loss_rate = r1.getBigDecimal("fixed_loss");//获取运输定耗值
+					//BigDecimal deduct_price = r1.getBigDecimal("deduct_price");//获取超耗扣价
 					for(Record record:list){
 						Integer dispatch_ship_id = record.getInt("id");//根据id获取
 						String sql1 = "select * from t_dispatch_ship where id="+dispatch_ship_id;
 						Record r3 = Db.findFirst(sql1);
 						BigDecimal received_quantity = r3.getBigDecimal("received_quantity");//收货数量
-						BigDecimal delivery_quantity = r3.getBigDecimal("delivery_quantity");//配载数量
+						BigDecimal delivery_quantity = r3.getBigDecimal("delivery_quantity");//发货数量
+						BigDecimal fix_loss_rate = delivery_quantity.multiply(transportConsumption).divide(new BigDecimal(1000));
 						//需要保存的数据
 						Record ship = new Record();
 						Record customer = new Record();
@@ -101,12 +109,9 @@ public class ManageSettleService {
 						customer.set("dispatch_ship_id", dispatch_ship_id);
 						customer.set("deduct_price", deduct_price);
 		 				BigDecimal loss = delivery_quantity.subtract(received_quantity);//损耗
-		 				System.out.println(delivery_quantity);
-		 				System.out.println(received_quantity);
-		 				System.out.println(loss);
 		 				ship.set("loss", loss);
 		 				customer.set("loss", loss);
-						BigDecimal fixed_loss = delivery_quantity.multiply(fix_loss_rate).divide(new BigDecimal(100));//定耗
+						BigDecimal fixed_loss = delivery_quantity.multiply(transportConsumption).divide(new BigDecimal(1000));//定耗
 						ship.set("fixed_loss", fixed_loss);
 						customer.set("fixed_loss", fixed_loss);
 						BigDecimal exceed_loss = loss.subtract(fixed_loss); //超耗

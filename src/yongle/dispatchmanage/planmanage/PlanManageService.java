@@ -62,13 +62,11 @@ public class PlanManageService{
 		boolean flag = Db.tx(new IAtom() {			
 			@Override
 			public boolean run() throws SQLException {
-				// TODO Auto-generated method stub
 				//判断数据是否保存成功
 				boolean flagData = true;
 				//删除该计划号下所有明细，重新保存数据
 				String sql = "delete from t_dispatch_detail where plan_no_id = "+id;
 				Integer num = Db.update(sql);
-				System.out.println(num);
 				List<JSONObject> planDetailList = (List<JSONObject>) JSONObject.parse(PlanDetail);
 				for(JSONObject plandetail:planDetailList){
 					Record planDetailRecord = new Record();

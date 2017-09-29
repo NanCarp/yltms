@@ -120,7 +120,6 @@ public class CustomerService {
 	public static void downloadFile(HttpServletResponse response, Integer id,String filename) throws IOException{
 		Record file = Db.findById("t_base_customer", id);
 		String fileName = file.getStr(filename);
-		System.out.println("fileName:"+fileName);
 		response.setContentType("application/octet-stream");
 		response.setHeader("Content-Disposition", "attachment; filename=" + EncodeUtil.toUtf8String(fileName));
 		String fullFileName = PropKit.get("filepath_commerce")+id+"/"+fileName;

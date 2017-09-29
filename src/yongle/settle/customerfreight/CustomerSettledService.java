@@ -9,7 +9,7 @@ import com.jfinal.plugin.activerecord.Record;
 
 /**
  * @ClassName: CustomerSettledController.java
- * @Description:
+ * @Description: 客户结算管理-已结算
  * @author: xuhui
  * @date: 2017年9月5日上午10:45:55
  * @version: 1.0 版本初成
@@ -33,7 +33,7 @@ public class CustomerSettledService {
     * @Description: 打印列表
     * @param plan_no
     * @return List<Record>
-    * @author 
+    * @author liyu
     */
     public static List<Record> getList(String plan_no) {
         return getDataPage(1, 1000, plan_no).getList();
@@ -44,7 +44,7 @@ public class CustomerSettledService {
     * @Description: 应收金额合计
     * @param recordList
     * @return BigDecimal
-    * @author 
+    * @author liyu
     */
     public static BigDecimal calculateTotal(List<Record> recordList) {
         BigDecimal total = new BigDecimal(0);

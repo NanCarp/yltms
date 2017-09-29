@@ -63,7 +63,6 @@
 	var zTreeNodes = ${menuListJson!};
 	// 角色权限
     var authority = "${authority!}";
-//    console.log(authority);
     var zNodes = [];
     var menuArray = authority.split(',');
     $(zTreeNodes).each(function(){
@@ -89,7 +88,6 @@
         if(str["isHidden"] === false) {
             zNodes.push(str);
         }
-//        console.log(str);
 
     });
 	$.fn.zTree.init($("#authority"), setting, zNodes);

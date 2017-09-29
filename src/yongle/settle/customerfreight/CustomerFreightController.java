@@ -10,12 +10,11 @@ import com.jfinal.plugin.activerecord.Record;
 
 import yongle.interceptor.ManageInterceptor;
 import yongle.model.CustomerSettle;
-import yongle.model.DispatchShip;
 import yongle.utils.ResponseObj;
 
 /**
  * @ClassName: CustomerFreightController.java
- * @Description:
+ * @Description: 客户结算管理-待结算
  * @author: LiYu
  * @date: 2017年9月5日上午10:45:55
  * @version: 1.0 版本初成
@@ -64,7 +63,6 @@ public class CustomerFreightController extends Controller {
     */
     public void getRecord() {
         Integer id = getParaToInt();
-        System.out.println(id);
         Record r = CustomerFreightService.getRecordById(id);
         setAttr("record", r);
         

@@ -12,9 +12,6 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
-
-import yongle.dataBase.ship.ShipService;
-import yongle.insidejob.contract.ContractService;
 import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: CustomerController.java
@@ -39,13 +36,9 @@ public class CustomerController extends Controller{
 	 * @author xuhui
 	 */
 	public void getJson(){
-
 		String customer_name = getPara("customer_name");
 		String customer_type = getPara("customer_type");
 		String company_information = getPara("company_information");
-		
-		System.out.println(customer_name+":"+customer_type+":"+company_information);
-		
 		
     	Integer	pageindex = 0;
     	Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit");
@@ -248,7 +241,6 @@ public class CustomerController extends Controller{
     public void watchFile() throws IOException{
     	Integer id = getParaToInt("id");
     	String filename = getPara("filename");
-    	System.out.println(id+filename);
     	CustomerService.downloadFile(getResponse(), id,filename);
 		renderNull();
     }

@@ -30,6 +30,6 @@ public class CountTime implements Runnable {
 		}	
 		map.put(username, 0);
 		session.setAttribute("countMap", map);
-		System.out.println("time out");
+		//System.out.println("time out");
 	}
 }

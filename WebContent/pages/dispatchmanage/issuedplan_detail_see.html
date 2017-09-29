@@ -10,41 +10,63 @@
 </style>
 </head>
 <body>
-<div class="container" style="margin-top: 30px">
+<div class="container">
         <form id="f1">
             <div class="col-xs-12">
+            
             <!-- <div class="panel panel-default">
-            <div class="panel-heading"> --> 
+            <div class="panel-heading"> -->
+                <div class="container container-fluid" style="margin-top: 20px;margin-bottom: 20px">
+                    <div class="row">
+                        <div class="col-sm-2 col-xs-2 head_1">
+                            <button type="button" class="btn btn-success" onclick="_newRow()">增行</button>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 head_1">
+                            <button type="button" class="btn btn-4" onclick="_deleteRow()">删行</button>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 head_1">
+                            <button  type="button" class="btn btn-3" onclick="_editRow()">修改</button>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 head_1">
+                            <button id="submit" class="btn btn-11" >保存</button>
+                        </div>
+                    </div>
+                </div>
             <!-- </div> -->
             <!-- <div class="panel-body"> -->
             	<input id="id" name="id" value="${planId!}" hidden="">
                 <table width="100%" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="checkAll"></th>
                             <th>序号</th>
                             <th>流向</th>
                             <th>计划数量</th>
                             <th>目的港</th>
                             <th>收货单位</th>
+                            <th>指导价</th>
+                            <th>结算价</th>
                             <th>备注</th>
+                            <th hidden="">id</th>
                         </tr>
                     </thead>
                     <tbody id="tbody">
                         <#if listDetail?? && listDetail?size gt 0>
                         <#list listDetail as detail>
                         <tr>
+                            <td><input type="checkbox" name="sub" _id="${detail.id!}"></td>
                             <td>${detail_index+1}</td>
                             <td>${detail.flow!}</td>
                             <td>${detail.planned_qty!}</td>
                             <td>${detail.destination_port!}</td>
                             <td>${detail.consignee!}</td>
+                            <td>${detail.settle_price!}</td>
+                            <td>${detail.guide_price!}</td>
                             <td>${detail.remark!}</td>
+                            <td hidden="">${detail.id!}</td>
                         </tr>
                         </#list>
                         <#else>
-                        <tr>
-                        	<td colspan="6">暂无流向数据</td>
-                        </tr>
                         </#if>
                     </tbody>
                 </table>
@@ -53,5 +75,339 @@
             </div>
 </form>
 </div>
+
+
+<script>
+var item = {
+    a:null,
+    b:null,
+    c:null,
+    d:null,
+    e:null,
+    f:null,
+    g:null,
+    h:null,
+}
+
+//提交
+$('#submit').on('click', function () {
+    // 校验
+    var validator = bindValidator('form');
+    validator.data('bootstrapValidator').validate();
+    var flag = validator.data('bootstrapValidator').isValid();
+    if (flag) {
+        
+    } else {
+        return;
+    }
+    
+    var id = $("#id").val();
+    var productList = getRecordList(); // 产品列表
+    var postData = {"id":id,"productList": JSON.stringify(productList)};
+     if(!judge(postData)){
+    	 return;
+     }
+    $.post("/planManage/issued/savePlanDetailSee", postData, function(result) {
+        if (result) {
+            parent.layer.msg("保存成功", {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg("保存失败", {time: 2000});
+        }  
+    });
+});
+
+function bindValidator(obj){
+    if ($(obj).data('bootstrapValidator')) {
+        $(obj).data('bootstrapValidator', null);
+    }
+    // 表单校验
+    var validator = $(obj).bootstrapValidator({
+        //message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            a: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\-\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            b: {
+                validators: {
+                	notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,4})?$/,
+                        message: '请输入正确的计划数量'
+                    }, 
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            c: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }
+                }
+            },
+            d: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            e: {
+                validators: {
+                	regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
+                    }, 
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            f: {
+                validators: {
+                	regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                        message: '请输入正确的金额'
+                    }, 
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            g: {
+                validators: {
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            }
+
+        }
+    });
+    return validator;
+}
+
+//表操作
+var count = $('#tbody tr').length; // 当前记录条数
+// 记录为零时，新增一行
+if (count === 0) {
+    _newRow();
+}
+// 新增行
+function _newRow() {
+    var $tbody = $('#tbody');
+    var row = '<tr class="edit">'+
+                  '<td><input type="checkbox" name="sub" _id=""></td>'+
+                  '<td name="count">'+ (count+1) +'</td>';
+    for (var p in item) {
+    	if(p!='h'){
+    		row += '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="'+p+'" value=""/></div></td>';
+    	}else{
+        row += '<td hidden=""><div class="form-group form-group-sm"><input class="form-control" type="text" name="'+p+'" value=""/></div></td>';
+    	}
+    }
+    row += '</tr>';  
+    $tbody.append(row);
+    count++;
+}
+// 删除行
+function _deleteRow() {
+    // 获取选中记录数量
+    var amount = $(":checked[name='sub']").length;
+    // 如果没有选择，提示勾选至少一条数据
+    if (amount === 0) {
+        layer.msg('请至少选择一条记录', {time: 2000});
+        return;
+    }
+    // 移除勾选记录
+    $(":checked[name='sub']").each(function(){
+        $(this).parent().parent().remove();
+    });
+    // 更新序号
+    var i = 0;
+    $('#tbody tr').each(function() {
+        i++;
+        $(this).find('td').eq(1).html(i);
+    });
+    // 更新当前记录数
+    count = i;
+    // 记录为零时，新增一行
+    if (count === 0) {
+        _newRow();
+    }
+    // 清除勾选
+    $("#checkAll").prop("checked" , false);
+}
+// 编辑行
+function _editRow() {
+    // 获取选中记录数量
+    var amount = $(":checked[name='sub']").length;
+    // 如果没有选择，提示勾选至少一条数据
+    if (amount === 0) {
+        layer.msg('请至少选择一条记录', {time: 2000});
+        return;
+    }
+    // 内容改为 input
+    $(":checked[name='sub']").each(function(){
+        var $tr = $(this).parent().parent();
+        var type = $tr.attr('class');
+        if("edit" === type) {
+            return true; // 跳过编辑状态的记录
+        }
+        var $tdList = $tr.find("td");
+        var valueArray = new Array();
+        var i = 0;
+        for (var p in item) {
+        	valueArray.push($tdList.eq(i+2).html());
+        	i = i + 1;
+        }
+        var index = $tdList.eq(1).html();
+        var row = '<td><input type="checkbox" name="sub" _id=""></td>'+
+                '<td name="count">'+ index +'</td>';
+        for (var p in item) {
+        	if(p!='h'){
+        		row += '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="'+p+'" value=""/></div></td>';
+        	}else{
+        		row += '<td hidden=""><div class="form-group form-group-sm"><input class="form-control" type="text" name="'+p+'" value=""/></div></td>';
+        	}	
+        }
+        $tr.empty().append(row);
+        var $inputList = $tr.find("input");
+        for (var i = 0; i < valueArray.length; i++) {
+        	$inputList.eq(i+1).val(valueArray[i]);
+        }
+        $tr.attr('class','edit'); // 编辑状态
+    });
+    // 清除勾选
+    $("input[name='sub']").prop("checked", false);
+    $("#checkAll").prop("checked" , false);
+}
+
+// 获取产品列表
+function getRecordList() {
+    var recordList = []; 
+    // 
+    $('#tbody tr').each(function() {
+        var $tr = $(this);
+        var type = $tr.attr("class");
+        var valueArray = new Array();
+        if ("edit" === type) {
+            var $inputList = $tr.find('input');
+            var i = 0;
+            for (var p in item) {
+                valueArray.push($.trim($inputList.eq(i+1).val()));
+                i = i + 1;
+            }
+        } else {
+            var $tdList = $tr.find("td");
+            var i = 0;
+            for (var p in item) {
+                valueArray.push($.trim($tdList.eq(i+2).html()));
+                i = i + 1;
+            }
+        }
+        // 去除空记录
+        if (!valueArray.length>0) {
+            return true;
+        }
+        // 联系人对象
+        var record = {};
+        var i = 0;
+        for (var p in item) {
+        	record[p] = valueArray[i];
+        	i++;
+        }
+        recordList.push(record);
+    });
+	return recordList;
+}
+//全选、全不选
+$("#checkAll").click(function() {
+    $("input[name='sub']").prop("checked", this.checked);
+});
+$("input[name='sub']").click(function() {
+    var $subs = $("input[name='sub']");
+    $("#checkAll").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);
+});
+
+//判断计划数量合计是否等于合计数量
+function judge(postdata){
+	var k = false;
+	$.ajax({
+		type:"post",
+		url:"/planManage/dispatch/isAll",
+		data:postdata,
+		async:false,
+		success:function(result){
+			if(result.flag==0){
+				k = true;
+			}else if(result.flag==-1){
+				//总数小于
+				layer.msg('保存失败，计划数量超过合计数量', {time: 2000});
+			}else{
+				//总数大于
+				k = true;
+			}
+		},
+		error:function(error){
+			console.log(error);
+		}
+	})
+	return k;
+}
+</script>
 </body>
 </html>

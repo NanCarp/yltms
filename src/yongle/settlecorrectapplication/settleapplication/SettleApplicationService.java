@@ -18,7 +18,7 @@ public class SettleApplicationService {
     
     /** 
     * @Title: getDataPages 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 
     * @param pageindex
     * @param pagelimit
     * @param plan_no
@@ -31,18 +31,18 @@ public class SettleApplicationService {
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, String plan_no, String apply_begin,
             String apply_end, String dispatcher) {
         String select = " SELECT * ";
-        String sqlExceptSelect = " FROM `t_settle_apply` ";
+        String sqlExceptSelect = " FROM `t_settle_apply` where 1=1";
         
         if (plan_no != null && !"".equals(plan_no)) {
             sqlExceptSelect += " AND plan_no like '%"+ plan_no +"'";
         }
         
         if (apply_begin != null && !"".equals(apply_begin)) {
-            sqlExceptSelect += " AND entry_time > '" + apply_begin + "'";
+            sqlExceptSelect += " AND apply_date > '" + apply_begin + "'";
         }
         
         if (apply_end != null && !"".equals(apply_end)) {
-            sqlExceptSelect += " AND entry_time < '" + apply_end + "'";
+            sqlExceptSelect += " AND apply_date < '" + apply_end + "'";
         }
         
         if (dispatcher != null && !"".equals(dispatcher)) {
@@ -50,13 +50,12 @@ public class SettleApplicationService {
         }
         
         sqlExceptSelect += " ORDER BY id desc";
-        
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }
 
     /** 
     * @Title: deleteById 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description:  
     * @return boolean
     * @author liyu
     */

@@ -37,7 +37,7 @@ public class ShipSettleService {
     * @Description: 打印列表
     * @param plan_no
     * @return List<Record>
-    * @author 
+    * @author liyu
     */
     public static List<Record> getList(String plan_no) {
         return getDataPages(1, 1000, plan_no).getList();
@@ -48,7 +48,7 @@ public class ShipSettleService {
     * @Description: 应收金额合计
     * @param recordList
     * @return BigDecimal
-    * @author 
+    * @author liyu
     */
     public static BigDecimal calculateTotal(List<Record> recordList) {
         BigDecimal total = new BigDecimal(0);

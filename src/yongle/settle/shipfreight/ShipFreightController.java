@@ -1,6 +1,5 @@
 package yongle.settle.shipfreight;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
 import yongle.interceptor.ManageInterceptor;
-import yongle.settle.customerfreight.CustomerFreightService;
 /**
  * @ClassName: ShipFreightController.java
  * @Description: 结算审核表-船舶运费结算清单
@@ -56,7 +54,6 @@ public class ShipFreightController extends Controller {
 	 */
 	public void getEdit(){
 		Integer id = getParaToInt();
-		System.out.println("id:"+id);
 	    Record r = ShipFreightService.getRecordById(id);
 	    setAttr("record", r);
 		render("shipfreight_detail.html");
@@ -70,7 +67,6 @@ public class ShipFreightController extends Controller {
 		//判断是否保存成功
 		boolean flag = false;
 		Integer id = getParaToInt("id");
-		System.out.println(id);
 		Integer dispatch_ship_id = getParaToInt("dispatch_ship_id");
 		Long port_construction_fee = getParaToLong("port_construction_fee");//港建费
 		String demurrage_days = getPara("demurrage_days");//滞期天数

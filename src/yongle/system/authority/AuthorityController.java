@@ -102,7 +102,7 @@ public class AuthorityController extends Controller {
 	 */
 	public void delete(){
 		String ids = getPara(0);
-		System.out.println(ids);
+		//System.out.println(ids);
 		boolean result = AuthorityService.delete(ids);
 		renderJson(result);
 	}

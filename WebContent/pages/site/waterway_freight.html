@@ -31,9 +31,11 @@
                         <div class="col-sm-1 col-xs-2 head_1">
                             <button class="btn btn-primary" onclick="doQuery()">查询</button>
                         </div>
+                        <#if _review??>
                         <div class="col-sm-1 col-xs-2 head_1" >
                              <button class="btn btn-12" onclick="_review()">审核</button>
                         </div>
+                        </#if>
                         <div class="col-sm-1 col-xs-2 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/site/waterwayfreight')"><i class="fa fa-refresh"></i></button>
                         </div>                  
@@ -46,6 +48,8 @@
 </div>
 
 <script>
+var canEdit = ${_edit!0};
+var canReview = ${_review!0};
 // 阻止键盘点击按钮
 $('button').keydown(function () {
     return false;
@@ -174,17 +178,21 @@ var TableInit = function () {
                 title: '付款状态',
                 formatter:function(value,row,index){
                     if(value == 1){
-                        return '已付款';
+                        return '已付';
                     }else{
-                        return '未付款';
+                        return '未付';
                     }
                 }
             }, {
                 field:'opt',
                 title:'操作',
                 formatter:function(value,row,index){
-                    return ['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">修改</button> '+
-                    	    '<button class="btn btn-xs btn-success"  onclick="_detail('+row.id+')">查看</button>'];
+                	var str = "";
+                	if (canEdit === 1) {
+                		str = '<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+','+ row.receipt_review +')">修改</button> ';
+                	}
+                	str += '<button class="btn btn-xs btn-success"  onclick="_detail('+row.id+')">查看</button>';
+                    return [str];
                 },
             }]
         });
@@ -220,7 +228,10 @@ var ButtonInit = function () {
 
 
 // 编辑
-function _edit(id){
+function _edit(id, receipt_review){
+	if (receipt_review == 1) {
+		layer.msg('已审核，不能修改', {time: 2000});return;
+	}
     parent.open_window('修改运单信息','/site/waterwayfreight/getRecord/' + id, 945, 600);
 }
 
@@ -229,7 +240,7 @@ function _detail(id) {
 	parent.open_window('运单查看','/site/waterwayfreight/detail/' + id, 890, 670);
 }
 
-//复核
+// 审核
 function _review(){
  // 获取选中记录 id
  var ids = getIdSelections();    
@@ -242,11 +253,18 @@ function _review(){
      layer.confirm("确认审核",{icon:3},function(){
          $.post("/site/waterwayfreight/review/"+ids,function(result){
              if (result.code == 1) {
+            	 // 通知相关页面刷新
+            	 var msg = {
+                         sender: "waterway_freight",
+                         receiver: "indexframe",
+                         action: "refresh"
+                 }
+                 send(JSON.stringify(msg));
+            	 
                  layer.msg(result.msg, {time: 2000}, function(){
                      layer_close();
-                     //parent.refresh_iframe();
-                     //location.href = location.href;
-                     location.replace('/site/waterwayfreight');
+                     //location.replace('/site/waterwayfreight');
+                     refresh();
                  });
     
              } else {
@@ -292,7 +310,7 @@ $(".form_datetime").datetimepicker({
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-websocket = new WebSocket("ws://localhost:8080/websocket");
+websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
 }
 else {
 alert('当前浏览器 Not support websocket')
@@ -333,7 +351,7 @@ function closeWebSocket() {
 
 //刷新页面
 function refresh() {
-    location.replace(location.href);
+	$('#tb_departments').bootstrapTable('refresh');
 }
 
 //发送消息

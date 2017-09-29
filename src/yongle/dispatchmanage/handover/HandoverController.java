@@ -71,16 +71,6 @@ public class HandoverController extends Controller {
     * @author liyu
     */
     public void getRecord() {
-        /*Integer id = getParaToInt();
-        Record record = Db.findById("t_dispatch", id);
-        setAttr("record", record);
-        List<Record> recordList = Db.find("SELECT *,a.id FROM `t_dispatch_ship` AS a LEFT JOIN t_dispatch_detail AS b ON a.dispatch_detail_id = b.id WHERE dispatch_id = ? ", id);
-        setAttr("recordList", recordList);
-        
-        // 收货单位
-        List<Record> consigneeList = Db.find("SELECT * FROM t_dispatch_detail WHERE plan_no_id = ?", id);
-        // setAttr("consigneeList", consigneeList);
-        setAttr("consigneeList", JsonKit.toJson(consigneeList));*/
         Integer id = getParaToInt(); // 流向 id
         Record record = HandoverService.getRecordById(id);
         setAttr("record", record);
@@ -100,7 +90,7 @@ public class HandoverController extends Controller {
         String left_qty = getPara("left_qty"); // 剩余吨数
         String recordList = getPara("recordList"); // 驳船列表
         Record user = getSessionAttr("admin");
-        user = Db.findById("t_user", 1);
+        //user = Db.findById("t_user", 1);
         String dispatcher = user.getStr("user_name");
         
         msg = HandoverService.save(dispatch_detail_id, left_qty, recordList, dispatcher);

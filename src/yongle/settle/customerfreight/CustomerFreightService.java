@@ -6,7 +6,7 @@ import com.jfinal.plugin.activerecord.Record;
 
 /**
  * @ClassName: CustomerFreightService.java
- * @Description:
+ * @Description: 客户结算管理-待结算
  * @author: LiYu
  * @date: 2017年9月5日上午10:46:15
  * @version: 1.0 版本初成
@@ -15,7 +15,7 @@ public class CustomerFreightService {
 
     /** 
     * @Title: getDataPages 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 数据
     * @param pageindex
     * @param pagelimit
     * @param plan_no
@@ -36,7 +36,7 @@ public class CustomerFreightService {
 
     /** 
     * @Title: getRecordById 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 根据船 id 获取相关数据
     * @return Record
     * @author liyu
     */

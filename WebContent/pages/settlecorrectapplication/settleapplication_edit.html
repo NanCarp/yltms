@@ -160,6 +160,9 @@ $('#defaultForm').bootstrapValidator({
                     regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
                     message: '不能包含特殊字符'
                 }, 
+                notEmpty:{
+                    message: '不能为空!'
+                }, 
                 stringLength: {
                     min: 0,
                     max: 20,
@@ -189,6 +192,9 @@ $('#defaultForm').bootstrapValidator({
                     regexp: /^[a-zA-Z0-9_\s\u0391-\uFFE5]+$/,
                     message: '不能包含特殊字符'
                 }, 
+                notEmpty:{
+                    message: '不能为空!'
+                }, 
                 stringLength: {
                     min: 0,
                     max: 20,
@@ -202,7 +208,10 @@ $('#defaultForm').bootstrapValidator({
                     min: 0,
                     max: 20,
                     message: '不能超过 20 个字符',
-                }
+                },notEmpty:{
+                    message: '不能为空!'
+                }, 
+        
             }
         },
         goods_name: {
@@ -215,7 +224,10 @@ $('#defaultForm').bootstrapValidator({
                     min: 0,
                     max: 20,
                     message: '不能超过 20 个字符',
-                }
+                },
+                notEmpty:{
+                    message: '不能为空!'
+                }, 
             }
         },
         seagoing_vessel_name: {
@@ -228,7 +240,10 @@ $('#defaultForm').bootstrapValidator({
                     min: 0,
                     max: 20,
                     message: '不能超过 20 个字符',
-                }
+                },
+                notEmpty:{
+                    message: '不能为空!'
+                }, 
             }
         },
         freight_begin_end: {
@@ -241,7 +256,10 @@ $('#defaultForm').bootstrapValidator({
                     min: 0,
                     max: 50,
                     message: '不能超过 50 个字符',
-                }
+                },
+                notEmpty:{
+                    message: '不能为空!'
+                }, 
             }
         },
         loading_tonnage: {
@@ -254,7 +272,10 @@ $('#defaultForm').bootstrapValidator({
                     min: 0,
                     max: 20,
                     message: '不能超过 20 个字符',
-                }
+                },
+                notEmpty:{
+                    message: '不能为空!'
+                }, 
             }
         },
         adjust_freight: {
@@ -279,7 +300,10 @@ $('#defaultForm').bootstrapValidator({
                     min: 0,
                     max: 100,
                     message: '不能超过 100 个字符',
-                }
+                },
+                notEmpty:{
+                    message: '不能为空!'
+                }, 
             }
         },
         remark: {
@@ -296,15 +320,27 @@ $('#defaultForm').bootstrapValidator({
 .on('success.form.bv', function(e) {
     e.preventDefault();
     var postData = $('form').serialize();
+     var ship_name= $.trim($('#ship_name').val());
+	 var plan_no= $.trim($('#plan_no').val());	
+    if(!judgeShip(plan_no,ship_name)){
+    	window.top.layer.msg("重复申请，请核对您的数据", {time: 2000});
+    	return;
+    };
     $.post("/settlecorrect/app/save", postData, function(result) {
         if (result.code == 1) {
             parent.layer.msg(result.msg, {time: 2000}, function(){
-            	websocket.send("提示");
+            	var dataForMessage={
+            			id:null,
+            			pages:null,
+            			hiddenId:result.data,
+            			tips:'1',
+            	}
+            	websocket.send(JSON.stringify(dataForMessage));
                 layer_close();
                 parent.parent.refresh_iframe();
             });
-
         } else {
+        	layer_close();
             parent.layer.msg(result.msg, {time: 2000});
         }
     });
@@ -324,7 +360,9 @@ $('#plan_no').on('change', function () {
 		    $('#seagoing_vessel_name').val(data.seagoing_vessel_name);
 		    //$('#freight_begin_end').val(data.delivery_dock + "到" + data.destination_port);
         } else {
-            
+        	$('#consignor').val("");
+        	 $('#goods_name').val("");
+        	 $('#seagoing_vessel_name').val("");
         }
 	})
 	
@@ -339,16 +377,33 @@ $('#ship_name').on('change', function () {
     $.post('/settlecorrect/app/getInfoByShipName', postData, function (result) {
         if (result.code == 1) {
             var data = result.data;
-            //console.log(data);
             $('#ship_owner_name').val(data.ship_owner_name);
             $('#ship_owner_phone').val(data.ship_owner_phone);
-            $('#loading_tonnage').val(data.loading_tonnage);
+            $('#loading_tonnage').val(data.delivery_quantity);
         } else {
-            
+        	 $('#ship_owner_name').val("");
+        	 $('#ship_owner_phone').val("");
+        	 $('#loading_tonnage').val("");
         }
     })
     
 });
+
+//判断申请中是否有该船只
+function judgeShip(plan_no,ship_name){
+	//判断是否有该条数据未处理
+	var flag = false;
+	$.ajax({
+		url:"/settlecorrect/app/judge",
+		type:"POST",
+		data:{"plan_no":plan_no,"ship_name":ship_name},
+		async:false,//异步还是同步
+		success:function(data){
+			flag = data;
+		}
+	});
+	return flag;
+}
 
 // input textarea 输入完成后，去除前后空格
 $('input, textarea').on('change', function () {
@@ -359,7 +414,7 @@ $('input, textarea').on('change', function () {
  var websocket = null;
   //判断当前浏览器是否支持WebSocket
   if ('WebSocket' in window) {
-      websocket = new WebSocket("ws://localhost:8080/websocket");
+      websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
   }
   else {
       alert('当前浏览器 Not support websocket')
@@ -389,7 +444,6 @@ $('input, textarea').on('change', function () {
   function closeWebSocket() {
       websocket.close();
   }
-
     
 </script>
 </body>

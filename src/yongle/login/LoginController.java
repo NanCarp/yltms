@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
@@ -40,11 +39,9 @@ public class LoginController extends Controller{
 	* @return void
 	* @throws 
 	*/	
-	@Before(ManageInterceptor.class)
 	public void index(){
 		// session 获取用户
 		Record user = getSessionAttr("admin");
-		user = Db.findById("t_user", 1);
 		// 角色 id
         Integer roleId = user.getInt("role_id");
         // 角色对应菜单列表
@@ -52,7 +49,6 @@ public class LoginController extends Controller{
         setAttr("menuList", menuList);
         // 账号姓名
         setAttr("user_name", user.getStr("user_name"));
-
         render("index.html");
 	}
 	
@@ -65,7 +61,7 @@ public class LoginController extends Controller{
 	*/
 	@Clear
 	public void login() {
-		
+		getSession().setMaxInactiveInterval(60*60*8);
 		render("login.html");
 		
 	}
@@ -88,7 +84,6 @@ public class LoginController extends Controller{
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
 		String username = getPara("username");
 		String password = getPara("password");
 		
@@ -109,7 +104,6 @@ public class LoginController extends Controller{
 		    }
 		    
 		    // 查看是否到期，0：正常，1：提示快到期，2：已到期，无法登录
-		    System.out.println(compareDate(cutoffTime, new Date()));
             if(admin.getInt("type") == 2||compareDate(cutoffTime, new Date())==-1) {
                 responseMap = new HashMap<>();
                 responseMap.put("result", result);  
@@ -130,7 +124,7 @@ public class LoginController extends Controller{
 		}
 		responseMap.put("result", result);	
 		responseMap.put("msg", msg);
-		responseMap.put("type", admin.getInt("type"));
+		//responseMap.put("type", admin.getInt("type"));
 		renderJson(responseMap);
 	}
 	
@@ -151,19 +145,33 @@ public class LoginController extends Controller{
 	
 	
 	/**
-	 * @desc 自用仓库库存信息查询页面
+	 * @desc iframe 信息
 	 * @author xuhui
 	 */
 	public void iframe(){
+	    Record user = (Record) getSession().getAttribute("admin");
+	    
 		//通知公告
 		List<Record> noticesList = LoginService.getNotices();
 		
 		//提醒
-		List<Record> tipsList = LoginService.getTips();
+		List<Record> tipsList = LoginService.getTips(user);
 		
 		setAttr("noticesList", noticesList);
 		setAttr("tipsList", tipsList);
-		
+		//获取登录人
+		String userName = user.getStr("user_name");
+		//获取创建时间
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String createTime = formatter.format(user.getDate("create_time"));
+		//获取登录人的角色
+		String sqlForRole = "SELECT * from t_user u LEFT JOIN t_role r ON u.role_id = r.id where u.id = "+user.getInt("id");
+		String roleType = Db.findFirst(sqlForRole).getStr("role_type");	
+		Integer hiddenId = user.getInt("id");
+		setAttr("createTime", createTime);
+		setAttr("userName", userName);
+		setAttr("roleType", roleType);
+		setAttr("hiddenId", hiddenId);
 		render("indexframe.html");	
 	}
 
@@ -223,12 +231,21 @@ public class LoginController extends Controller{
 	* @author liyu
 	*/
 	public void getMoreTips() {
-		//TODO 只有经理可以查看 此处需要注意
 		// session 获取用户
-	    String sql = "SELECT * FROM t_notice WHERE type='提醒' and review = 0 and publisher = 'admin'";
-        List<Record> list = Db.find(sql);
-        setAttr("tipsList", list);
+	    Record user = getSessionAttr("admin"); // 登陆用户
+        setAttr("tipsList", LoginService.getTips(user));
         render("tips_list.html");
+	}
+	
+	/**
+	 * @desc 查看已经通过审核的结算申请
+	 * @author 许辉
+	 */
+	public void getEndApplication(){
+		Integer id = getParaToInt();
+		Record record = Db.findById("t_settle_apply", id);
+		setAttr("record", record);
+		render("endapplication.html");
 	}
 
 }

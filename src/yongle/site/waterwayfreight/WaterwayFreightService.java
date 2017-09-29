@@ -2,7 +2,6 @@ package yongle.site.waterwayfreight;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -40,7 +39,8 @@ public class WaterwayFreightService {
                 + " ON a.plan_no_id = c.id "
                 + " LEFT JOIN t_base_customer AS d "
                 + " ON a.consignee = d.customer_name "
-                + " WHERE c.document_status = 1 ";
+                + " WHERE c.document_status = 1 "
+                + " AND a.flow_state = 1 ";
         
         if (plan_no != null && !"".equals(plan_no)) {
             sqlExceptSelect += " AND plan_no like '%"+ plan_no +"'";
@@ -51,11 +51,11 @@ public class WaterwayFreightService {
         }
         
         if (start_date != null && !"".equals(start_date)) {
-            sqlExceptSelect += " AND estimated_arrvial_date >= '" + start_date + "'";
+            sqlExceptSelect += " AND delivery_date >= '" + start_date + "'";
         }
         
         if (end_date != null && !"".equals(end_date)) {
-            sqlExceptSelect += " AND estimated_arrvial_date <= '" + end_date + "'";
+            sqlExceptSelect += " AND delivery_date <= '" + end_date + "'";
         }
         
         sqlExceptSelect += " ORDER BY plan_no DESC ";
@@ -89,7 +89,7 @@ public class WaterwayFreightService {
     * @return Boolean
     * @author 
     */
-    public static Boolean createNotice(Integer id) {
+    public static Boolean createNotice(Integer id, Record user) {
         boolean result = Db.tx(new IAtom() {
             @Override
             public boolean run() throws SQLException {
@@ -104,6 +104,8 @@ public class WaterwayFreightService {
                 Record notice = new Record(); // 提醒
                 notice.set("title", "运单需要预付款，请确认。");
                 notice.set("type", "提醒");
+                notice.set("publisher", user.getStr("user_name")); // 发布者
+                notice.set("receiver", 2); // 接收者，财务
                 notice.set("publish_time", new Date());
                 Db.save("t_notice", notice);
                 Long notice_id = notice.getLong("id");

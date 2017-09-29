@@ -3,7 +3,6 @@ package yongle.settlecorrectapplication.settleapplication;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.jfinal.aop.Before;
@@ -27,6 +26,15 @@ import yongle.utils.ResponseObj;
 public class SettleApplicationController extends Controller {
 
 	public void index(){
+		Record user = getSessionAttr("admin");
+		Integer roleId = user.getInt("role_id");
+		String mopids = Db.queryStr("select button_ids from t_role_button where role_id="+roleId);
+		if(mopids.indexOf("101")!=-1){
+			setAttr("_settle", true);
+		}
+		if(mopids.indexOf("102")!=-1){
+			setAttr("_add", true);
+		}
 		render("settleapplication.html");
 	}
 
@@ -83,10 +91,9 @@ public class SettleApplicationController extends Controller {
         ResponseObj res = new ResponseObj(); // 返回信息
         SettleApply r = getModel(SettleApply.class, "");
         Record user = getSessionAttr("admin");
-        
-        user = Db.findById("t_user", 1); // TODO
-        String user_name = user.getStr("user_name");
+        String user_name = user.getStr("account");
         r.setDispatcher(user_name); // 调度员
+        r.setApplicationerId(user.getInt("id"));
         Date now = new Date();
         r.setApplyDate(now);// 申请时间
         
@@ -103,11 +110,14 @@ public class SettleApplicationController extends Controller {
                 tips.set("publisher", admin.get("account"));
                 tips.set("publish_time", new Date());
                 tips.set("url", "/notice/ship/settle/"+r.getId());
+                //经理获取
+                tips.set("receiver", 1);
                 tips.set("review", 0);
                 Db.save("t_notice", tips);
             }  
         } else { // 编辑
             result = r.update();
+            
         }
         res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
         res.setMsg(result ? ResponseObj.SAVE_SUCCESS : ResponseObj.SAVE_FAILED);
@@ -156,13 +166,14 @@ public class SettleApplicationController extends Controller {
             boolean result = Db.update("t_settle_apply", record);
             res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
             res.setMsg(result ? "完成审核" : "审核失败");
+            res.setData(Db.findById("t_settle_apply", id).getInt("applicationerId"));//传入发布者Id
             if(result){
             	//审核成功修改提示状态
             	String sql ="update t_notice set review = 1 where url='/notice/ship/settle/"+id+"'";
             	Db.update(sql);
             	//审核成功修改运费价格
             	if(planNo!=null&&planNo!=""&shipName!=null&&shipName!=""){
-                	String sqlForAdjustFreight = "SELECT s.id,s.total_freight,s.ship_name,d.flow,p.plan_no"
+                	String sqlForAdjustFreight = "SELECT s.id,s.ship_freight,s.ship_name,d.flow,p.plan_no"
                 			+" from t_dispatch_ship s" 
                 			+" LEFT JOIN t_dispatch_detail d ON s.dispatch_detail_id = d.id" 
                 			+" LEFT JOIN t_dispatch p ON p.id = d.plan_no_id" 
@@ -171,26 +182,25 @@ public class SettleApplicationController extends Controller {
                 	//获取船数据id
                 	Integer planNoShipId = planNoRec.getInt("id");
                 	//运价
-                	BigDecimal total_freight = planNoRec.getBigDecimal("total_freight");
+                	BigDecimal ship_freight = planNoRec.getBigDecimal("ship_freight");
                 	//保存为调整前运价
                 	Record recForSaveNextAdjustFreight = new Record();
                 	recForSaveNextAdjustFreight.set("id", id);
-                	recForSaveNextAdjustFreight.set("next_adjust_freight", total_freight);
+                	recForSaveNextAdjustFreight.set("next_adjust_freight", ship_freight);
                 	Db.update("t_settle_apply",recForSaveNextAdjustFreight);
-                	String sqlForChangeTotalFreight = "update t_dispatch_ship set total_freight ="+adjust_freight
+                	String sqlForChangeTotalFreight = "update t_dispatch_ship set ship_freight ="+adjust_freight
                 			+" where id = "+planNoShipId;
                 	Db.update(sqlForChangeTotalFreight);
-                }
-            	
-            	
+                }            	           	
             }
         }else{
             record.set("manager_review", 1);
             boolean result = Db.update("t_settle_apply", record);
             res.setCode(result ? ResponseObj.OK : ResponseObj.FAILED);
             res.setMsg(result ? "该申请已通过审核" : "操作失败");
+            res.setData(Db.findById("t_settle_apply", id).getInt("applicationerId"));//传入发布者Id
         }
-        
+    	changeApplicationState(planNo);
         renderJson(res);
     }
     
@@ -260,4 +270,19 @@ public class SettleApplicationController extends Controller {
     	}
     	renderJson(flag);
     }  
+    
+    /**
+     * @author xuhui
+     */
+    public void changeApplicationState(String planNo){
+    	String sql = "select * from t_settle_apply where manager_review = 1 and plan_no = '"+planNo+"'";
+    	String sqlp = "";
+    	Record record = Db.findFirst(sql);
+    	if(record!=null){
+    		sqlp = "update t_dispatch set isapplication = 1 where  plan_no = '"+planNo+"'";
+    	}else{
+    		sqlp = "update t_dispatch set isapplication = 0 where  plan_no = '"+planNo+"'";
+    	}
+    	Db.update(sqlp);
+    }
 }

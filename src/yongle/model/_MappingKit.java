@@ -32,6 +32,7 @@ public class _MappingKit {
 		arp.addMapping("t_menu", "id", Menu.class);
 		arp.addMapping("t_notice", "id", Notice.class);
 		arp.addMapping("t_notice_ship", "id", NoticeShip.class);
+		arp.addMapping("t_notice_waybill", "id", NoticeWaybill.class);
 		arp.addMapping("t_role", "id", Role.class);
 		arp.addMapping("t_role_button", "id", RoleButton.class);
 		arp.addMapping("t_role_menu", "id", RoleMenu.class);

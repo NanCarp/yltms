@@ -176,12 +176,12 @@ var TableInit = function () {
                 title: '剩余数量'
             }, {
                 field: 'flow_state',
-                title: '单据状态',
+                title: '配船状态',
                 formatter:function(value,row,index){
                     if(row.flow_state == 1) {
-                        return "已配完";
+                        return "完成";
                     } else {
-                        return "未配完";
+                        return "未配";
                     }
                 }
             }, {
@@ -254,8 +254,9 @@ function _cancel() {
             $.post("/planManage/handoverfinish/cancel/"+ids,function(result){
                 if (result.code == 1) {
                     layer.msg(result.msg, {time: 2000}, function(){
-                        layer_close();
-                        parent.parent.refresh_iframe();
+	                    $('#tb_departments').bootstrapTable('refresh');
+                    	layer_close();
+                        //parent.parent.refresh_iframe();
                     });
                     // 通知相关页面刷新
                     var msg = {
@@ -341,7 +342,7 @@ var ButtonInit = function () {
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-  websocket = new WebSocket("ws://localhost:8080/websocket");
+  websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
 }
 else {
   alert('当前浏览器 Not support websocket')
@@ -382,13 +383,16 @@ function closeWebSocket() {
 
 // 刷新页面
 function refresh() {
-	location.replace(location.href);
+	$('#tb_departments').bootstrapTable('refresh');
 }
 
 //发送消息
 function send(msg) {
     websocket.send(msg);
 }
+
+
+
 </script>
 
 </body>

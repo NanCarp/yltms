@@ -243,6 +243,38 @@ $('#defaultForm').bootstrapValidator({
                 }
             }
         },
+        site_refuel: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                    message: '请输入正确的金额'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
+        site_pay: {
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                    message: '请输入正确的金额'
+                }, 
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '不能超过 20 个字符',
+                }
+            }
+        },
     },
 })
 .on('success.form.bv', function(e) {
@@ -253,9 +285,9 @@ $('#defaultForm').bootstrapValidator({
             parent.layer.msg(result.msg, {time: 2000}, function(){
                 layer_close();
                 //parent.parent.refresh_iframe();
-                parent.refresh_iframe();
+                //parent.refresh_iframe();
             });
-
+            sendTo("waterway_freight", "refresh");
         } else {
             parent.layer.msg(result.msg, {time: 2000});
         }
@@ -275,6 +307,58 @@ $(".form_date").datetimepicker({
     startView: 2,// 日视图
     minView: 2,
 });
+
+//WebSocket
+var websocket = null;
+//判断当前浏览器是否支持WebSocket
+if ('WebSocket' in window) {
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+}
+else {
+    alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+    //TODO用户登录系统检查属于自己的提醒消息
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {
+}
+
+//连接关闭的回调方法
+websocket.onclose = function () {
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+    closeWebSocket();
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    websocket.close();
+}
+
+//发送消息
+function send(msg) {
+    websocket.send(msg);
+}
+
+// 发送给特定目标，进行特定操作
+function sendTo(receiver, action) {
+    var msg = {
+            receiver: receiver,
+            action: action
+    };
+    websocket.send(JSON.stringify(msg));
+}
+
 
 </script>
 </body>

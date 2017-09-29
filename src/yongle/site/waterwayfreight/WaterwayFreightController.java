@@ -1,5 +1,6 @@
 package yongle.site.waterwayfreight;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,16 @@ public class WaterwayFreightController extends Controller {
     * @author liyu
     */
     public void index() {
+        Record admin = getSessionAttr("admin");
+        Integer rid = admin.getInt("role_id");
+        String buttons = Db.queryStr("select button_ids from t_role_button where role_id = ?", rid);
+        if(buttons.indexOf("103")!=-1){
+            setAttr("_review", 1);
+        }
+        if(buttons.indexOf("104")!=-1){
+            setAttr("_edit", 1);
+        }
+
         render("waterway_freight.html");
     }
     
@@ -84,8 +95,7 @@ public class WaterwayFreightController extends Controller {
         DispatchShip record = getModel(DispatchShip.class, "");
         boolean b = record.update();
         res.setCode(b ? ResponseObj.OK : ResponseObj.FAILED);
-        res.setMsg(b ? "保存成功" : "保存失败");
-        
+        res.setMsg(b ? "保存成功" : "保存失败");      
         renderJson(res);
     }
     
@@ -119,6 +129,16 @@ public class WaterwayFreightController extends Controller {
             return;
         }
         
+        // 信息未录入，不能审核
+        BigDecimal quantity =  Db.queryBigDecimal("SELECT delivery_quantity FROM t_dispatch_ship WHERE id = ?", id);
+        if (quantity == null) {
+            res.setCode(ResponseObj.FAILED);
+            res.setMsg("信息未录入，不能审核");
+            renderJson(res);
+            return;
+        }
+        
+        
         // 更新审核状态
         r.set("receipt_review", 1);
         boolean result = Db.update("t_dispatch_ship", r);
@@ -126,7 +146,8 @@ public class WaterwayFreightController extends Controller {
         res.setMsg(result ? "已审核" : "审核失败");
         
         // 生成提醒
-        WaterwayFreightService.createNotice(id);
+        Record user = getSessionAttr("admin");
+        WaterwayFreightService.createNotice(id, user);
         
         renderJson(res);
     }

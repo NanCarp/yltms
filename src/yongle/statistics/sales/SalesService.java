@@ -8,7 +8,7 @@ import com.jfinal.plugin.activerecord.Record;
 
 /**
  * @ClassName: SettleApplicationService.java
- * @Description:
+ * @Description:  销售统计
  * @author: LiYu
  * @date: 2017年9月12日下午2:21:10
  * @version: 1.0 版本初成
@@ -17,7 +17,7 @@ public class SalesService {
     
     /** 
     * @Title: getDataPages 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 数据
     * @param pageindex
     * @param pagelimit
     * @param plan_no
@@ -50,38 +50,23 @@ public class SalesService {
 
     /** 
     * @Title: getShipSettleList 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 船结算信息
     * @param id
     * @return List<Record>
     * @author liyu
     */
     public static List<Record> getShipSettleList(Integer id) {
-        
-        /*return Db.find(" SELECT *,a.id "
-                + " FROM `t_ship_settle` AS a "
-                + " LEFT JOIN t_dispatch_ship AS b "
-                + " ON a.dispatch_ship_id = b.id "
-                + " LEFT JOIN t_dispatch AS c "
-                + " ON b.dispatch_id = c.id WHERE c.id = ?", id);*/
         return Db.find("SELECT * FROM v_ship_settle WHERE plan_no_id = ? ", id);
     }
 
     /** 
     * @Title: getCustomerSettleList 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 客户结算信息
     * @param id
     * @return List<Record>
     * @author 
     */
     public static List<Record> getCustomerSettleList(Integer id) {
-        
-        /*return Db.find("SELECT *,a.id "
-                + " FROM `t_customer_settle` AS a "
-                + " LEFT JOIN t_dispatch_ship AS b "
-                + " ON a.dispatch_ship_id = b.id "
-                + " LEFT JOIN t_dispatch AS c "
-                + " ON b.dispatch_id = c.id WHERE c.id = ? ", id);*/
-        
         return Db.find("SELECT * FROM v_customer_settle WHERE plan_no_id = ? ", id);
     }
 

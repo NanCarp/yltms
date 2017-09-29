@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
 /**
@@ -52,7 +51,6 @@ public class LoginService {
 		record.set("agent", loginRecordMap.get("MoblieOrPc"));
 		record.set("login_time",loginRecordMap.get("loginTime"));
 		record.set("logout_time",new Date());
-		System.out.println(loginRecordMap.get("userid"));
 		return Db.save("t_user_log", record);
 	}
 	
@@ -69,8 +67,13 @@ public class LoginService {
 	 * @desc 提醒
 	 * @author xuhui
 	 */
-	public static List<Record> getTips(){
-		String sql ="SELECT * from t_notice WHERE type='提醒' AND review = 0 ORDER BY id DESC  ";
+	public static List<Record> getTips(Record user){
+	    Integer id = user.getInt("role_id");
+		String sql ="SELECT * from t_notice WHERE type='提醒' AND review = 0 ";
+		if (id != 1) {
+		   sql += " and receiver = " + id;
+		}
+		sql += " ORDER BY id DESC ";
 		return Db.find(sql);
 	}
 	

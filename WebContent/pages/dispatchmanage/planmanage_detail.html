@@ -11,14 +11,20 @@
     <title>新增计划管理</title>
     <#include "../include/header.html">   	
 </head>
+<style>
+.col-xs-2{padding-left: 2px;padding-right: 2px}
+.col-xs-5{padding-left: 2px;padding-right: 2px}
+.col-xs-6{padding-left: 2px;padding-right: 2px}
+</style>
+
 
 <body>
 <form class="form-horizontal" role="form" style="margin-top:20px;" id="defaultForm">
 	<#if im??>	
-	<div style="display: inline-block;max-width: 300px">	
+	<div style="display: inline-block;max-width: 300px;">	
 	<input hidden="" value="${im.id!}" name="id" id="id">
      <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="plan_no">计划号：</label>
+        <label class="col-xs-5 control-label text-right" for="plan_no" style="min-width:100px ">计划号：</label>
         <div class="col-xs-6">
             <input class="form-control" placeholder="系统自动生成" name="plan_no" id="plan_no" value="${im.plan_no!}" disabled="disabled" style="padding-right: 2px">
         </div>
@@ -30,17 +36,23 @@
         </div>
     </div> 
     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="discharge_period">卸货期限：</label>
+        <label class="col-xs-5 control-label text-right" for="import_total_dollar">合计数量：</label>
         <div class="col-xs-6">
-            <input class="form-control form_datetime" placeholder="卸货期限" name="discharge_period" id="discharge_period" value="${im.discharge_period!}">
+            <input class="form-control" placeholder="合计数量" name="total_quantity" id="total_quantity" value="${im.total_quantity!}">
         </div>
-    </div>  
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="discharge_period">装卸货期限：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="晴天数量" name="discharge_period" id="discharge_period" value="${im.discharge_period!}">
+        </div>
+    </div>
  </div>  
- <div style="display:inline-block;max-width: 300px"> 
+ <div style="display:inline-block;max-width: 300px;"> 
     <div class="form-group">
         <label class="col-xs-5 control-label text-right" for="goods_name">货物名称：</label>
         <div class="col-xs-6">
-            <select class="form-control selectpicker" placeholder="货物名称" name="goods_name" id="goods_name" data-live-search="true" onchange="getfixed_loss()">
+            <select class="form-control selectpicker" placeholder="货物名称" name="goods_name" id="goods_name"  onchange="getfixed_loss()">
             	<option value="">--选择货物品种--</option>
             	<#if goodslist?? &&goodslist?size gt 0>
             		<#list goodslist as goods>
@@ -59,19 +71,22 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="estimated_arrvial_date">预抵日期：</label>
+        <label class="col-xs-5 control-label text-right" for="estimated_arrvial_date">预发货日期：</label>
         <div class="col-xs-6">
-            <input class="form-control form_datetime" placeholder="预抵日期" name="estimated_arrvial_date" id="estimated_arrvial_date" value="${im.estimated_arrvial_date!}">
+            <input class="form-control form_datetime" placeholder="预发货日期" name="estimated_arrvial_date" id="estimated_arrvial_date" value="${im.estimated_arrvial_date!}">
         </div>
     </div> 
     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="Excess_deduction_price">超耗扣价：</label>
+        <label class="col-xs-5 control-label text-right" for="is_contant">含装货时间：</label>
         <div class="col-xs-6">
-            <input class="form-control" placeholder="超耗扣价" name="Excess_deduction_price" id="Excess_deduction_price" value="${im.Excess_deduction_price!}">
+            <select class="form-control" name="is_contant" id="is_contant">
+            	<option value="1" <#if im.is_contant==1>selected</#if>>是</option>
+            	<option value="0" <#if im.is_contant==0>selected</#if>>否</option>
+            </select>
         </div>
     </div>
 </div>
-<div style="display:inline-block;max-width: 300px" >
+<div style="display:inline-block;max-width: 300px;margin-left: 0px;margin-bottom: 49px" >
 	<div class="form-group">
         <label class="col-xs-5 control-label text-right" for="consignor">托运人：</label>
         <div class="col-xs-6">
@@ -79,34 +94,34 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="">运输定耗：</label>
+        <label class="col-xs-5 control-label text-right" for="">运输定耗(‰)：</label>
         <div class="col-xs-6">
-            <input class="form-control" placeholder="运输定耗" name="transport_consumption" id="transport_consumption" value="${im.transport_consumption!}" readonly="readonly">
+            <input class="form-control" placeholder="运输定耗" name="transport_consumption" id="transport_consumption" value="${im.transport_consumption!}">
         </div>
     </div>
-     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="import_total_dollar">合计数量：</label>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="Excess_deduction_price">超耗扣价：</label>
         <div class="col-xs-6">
-            <input class="form-control" placeholder="合计数量" name="total_quantity" id="total_quantity" value="${im.total_quantity!}">
+            <input class="form-control" placeholder="超耗扣价" name="Excess_deduction_price" id="Excess_deduction_price" value="${im.Excess_deduction_price!}">
         </div>
     </div>
 </div>
 	<div class="form-group">
-        <label class="col-xs-2 control-label text-right" for="discharge_period" style="max-width:137.5px">费用信息：</label>
-        <label class="col-xs-6 control-label text-left" for="import_total_price" style="max-width: 260px">
+        <label class="col-xs-2 control-label text-right" for="discharge_period" style="max-width:126.88px">费用信息：</label>
+        <label class="col-xs-6 control-label text-left" for="import_total_price" style="max-width: 220px">
      	 	<input name="billing" id="billing" type="checkbox" value="1" <#if im.billing==true>checked</#if>><span style="margin-right: 26px">开票</span>
        		<input name="port_fee" id="port_fee" type="checkbox" value="1" <#if im.port_fee==true>checked</#if>><span style="margin-right: 20px">港建费</span>
         	<input name="insurance" id="insurance" type="checkbox" value="1" <#if im.insurance==true>checked</#if>><span style="margin-right: 20px">保险</span>
      	 </label> 
     </div> 
 	<div class="form-group">
-        <label class="col-xs-2 control-label text-right" for="remark" style="max-width:137.5px">备注：</label>
+        <label class="col-xs-2 control-label text-right" for="remark" style="max-width:126.88px">备注：</label>
         <div class="col-xs-6">
-            <textarea class="form-control" placeholder="备注" name="remark" id="remark" value="" style="min-height: 100px;width:745px">${im.remark!}</textarea>
+            <textarea class="form-control" placeholder="备注" name="remark" id="remark" value="" style="min-height: 100px;width:700px">${im.remark!}</textarea>
         </div>
     </div>  
     <div class="form-group">
-        <label class="col-xs-2 control-label" for="v" style="max-width:137.5px"></label>
+        <label class="col-xs-2 control-label" for="v" style="max-width:126.88px"></label>
         <div class="col-xs-6">
             <button id="v" type="submit" class="btn btn-11">　提交　</button>
        	</div>
@@ -125,18 +140,24 @@
             <input class="form-control" placeholder="发货港" name="delivery_dock" id="delivery_dock" value="">
         </div>
     </div> 
-     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="discharge_period">卸货期限：</label>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="import_total_dollar">合计数量：</label>
         <div class="col-xs-6">
-            <input class="form-control form_datetime" placeholder="卸货期限" name="discharge_period" id="discharge_period" value="">
+            <input class="form-control" placeholder="合计数量" name="total_quantity" id="total_quantity" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="discharge_period">装卸货期限：</label>
+        <div class="col-xs-6">
+            <input class="form-control" placeholder="晴天数量" name="discharge_period" id="discharge_period" value="">
         </div>
     </div>
  </div>  
- <div style="display:inline-block;max-width: 300px"> 
+ <div style="display:inline-block;max-width: 300px;"> 
     <div class="form-group">
         <label class="col-xs-5 control-label text-right" for="goods_name" >货物名称：</label>
         <div class="col-xs-6">
-            <select class="form-control selectpicker" placeholder="货物名称" name="goods_name" id="goods_name" data-live-search="true" onchange="getfixed_loss()">
+            <select class="form-control selectpicker" placeholder="货物名称" name="goods_name" id="goods_name"  onchange="getfixed_loss()">
             <option value="">--选择货物品种--</option>
             	<#if goodslist?? &&goodslist?size gt 0>
             		<#list goodslist as goods>
@@ -155,19 +176,22 @@
         </div>
     </div>
      <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="estimated_arrvial_date">预抵日期：</label>
+        <label class="col-xs-5 control-label text-right" for="estimated_arrvial_date">预发货日期：</label>
         <div class="col-xs-6">
-            <input class="form-control form_datetime" placeholder="预抵日期" name="estimated_arrvial_date" id="estimated_arrvial_date" value="">
+            <input class="form-control form_datetime" placeholder="预发货日期" name="estimated_arrvial_date" id="estimated_arrvial_date" value="">
         </div>
     </div> 
-      <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="Excess_deduction_price">超耗扣价：</label>
+    <div class="form-group">
+        <label class="col-xs-5 control-label text-right" for="is_contant">含装货时间：</label>
         <div class="col-xs-6">
-            <input class="form-control" placeholder="超耗扣价" name="Excess_deduction_price" id="Excess_deduction_price" value="">
+            <select class="form-control" name="is_contant" id="is_contant">
+            	<option value="1">是</option>
+            	<option value="0">否</option>
+            </select>
         </div>
     </div>
 </div>
-<div style="display:inline-block;max-width: 300px">
+<div style="display:inline-block;max-width: 300px;margin-left: 0px;margin-bottom: 49px">
 	<div class="form-group">
         <label class="col-xs-5 control-label text-right" for="consignor">托运人：</label>
         <div class="col-xs-6">
@@ -175,34 +199,34 @@
         </div>
     </div>
      <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="transport_consumption">运输定耗：</label>
+        <label class="col-xs-5 control-label text-right" for="transport_consumption">运输定耗(‰)：</label>
         <div class="col-xs-6">
-            <input class="form-control" placeholder="货物名称自动带出" name="transport_consumption" id="transport_consumption" value="" readonly="readonly" style="padding-right: 2px">
+            <input class="form-control" placeholder="货物名称自动带出" name="transport_consumption" id="transport_consumption" value="" style="padding-right: 2px">
         </div>
     </div>
     <div class="form-group">
-        <label class="col-xs-5 control-label text-right" for="import_total_dollar">合计数量：</label>
+        <label class="col-xs-5 control-label text-right" for="Excess_deduction_price">超耗扣价：</label>
         <div class="col-xs-6">
-            <input class="form-control" placeholder="合计数量" name="total_quantity" id="total_quantity" value="">
+            <input class="form-control" placeholder="超耗扣价" name="Excess_deduction_price" id="Excess_deduction_price" value="">
         </div>
     </div>
-</div>
+</div> 
 	<div class="form-group">
-        <label class="col-xs-2 control-label text-right" for="discharge_period" style="max-width:137.5px">费用信息：</label>
-        <label class="col-xs-6 control-label text-left" for="import_total_price" style="max-width: 260px">
+        <label class="col-xs-2 control-label text-right" style="max-width:126.88px">费用信息：</label>
+        <label class="col-xs-6 control-label text-left"  style="max-width: 220px">
      	 	<input name="billing" id="billing" type="checkbox" value="1"><span style="margin-right: 26px">开票</span>
        		<input name="port_fee" id="port_fee" type="checkbox" value="1"><span style="margin-right: 20px">港建费</span>
         	<input name="insurance" id="insurance" type="checkbox" value="1"><span style="margin-right: 20px">保险</span>
      	 </label> 
     </div> 
 	<div class="form-group">
-        <label class="col-xs-2 control-label text-right" for="remark" style="max-width:137.5px">备注：</label>
+        <label class="col-xs-2 control-label text-right" for="remark" style="max-width:126.88px">备注：</label>
         <div class="col-xs-6">
-            <textarea class="form-control" placeholder="备注" name="remark" id="remark" value="" style="min-height: 100px;width:745px"></textarea>
+            <textarea class="form-control" placeholder="备注" name="remark" id="remark" value="" style="min-height: 100px;width:700px"></textarea>
         </div>
     </div>  
     <div class="form-group">
-        <label class="col-xs-2 control-label" for="v" style="max-width:137.5px"></label>
+        <label class="col-xs-2 control-label" for="v" style="max-width:126.88px"></label>
         <div class="col-xs-6">
             <button id="v" type="submit" class="btn btn-11">　提交　</button>
        	</div>
@@ -211,6 +235,19 @@
 </form>
 
 <script type="text/javascript">
+//websocket发送内容
+
+$(function(){
+    $(':checkbox[name="is_contant"]').each(function(){
+        $(this).click(function(){
+            if($(this).attr('checked')){
+                $(':checkbox[type="checkbox"]').removeAttr('checked');
+                $(this).attr('checked','checked');
+            }
+        });
+    });
+});
+
 $(window).on('load',function(){
 	$('.selectpicker').selectpicker({
 		'selectedText':'cat'
@@ -322,7 +359,7 @@ $(function(){
 			estimated_arrvial_date: {//预抵达日期
 				validators: {
 					notEmpty:{
-						message:'请输入预抵日期'
+						message:'请输入预发货日期'
 					},
 					stringLength: {
 	                    min: 0,
@@ -344,16 +381,20 @@ $(function(){
 					}										
 				}
 			},
-			discharge_period: {//卸货日期
+			discharge_period: {//卸货天数
 				validators: {
 					notEmpty:{
-						message:'请输入卸货日期'
+						message:'请输入卸货天数'
 					},
 					stringLength: {
 	                    min: 0,
 	                    max: 20,
 	                    message: '最多20个字符'
-	                }
+	                },
+					regexp:{
+						regexp:/^\d{1,2}$/,
+						message:'请输入两位整数'
+					}	
 				}
 			},
 			Excess_deduction_price: {//超耗扣价
@@ -417,7 +458,7 @@ $(function(){
 	 $.post("/planManage/dispatch/savePlanManage", $('#defaultForm').serialize(), function(result) {
 		if(result){
 			layer.msg("保存成功",{time:2000},function(){
-				layer_close();
+				layer_close();				
 				parent.refresh_iframe();
 			})
 		}else{
@@ -437,6 +478,9 @@ function getfixed_loss(){
 		}
 	})
 }
+
+
+
 </script>
 </body>
 

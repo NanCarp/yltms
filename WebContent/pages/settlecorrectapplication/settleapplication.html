@@ -36,10 +36,10 @@
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>
 						<div class="col-sm-1 col-xs-2 head_1" >
-                             <button class="btn btn-12" onclick="_review()">审核</button>
+                             <button class="btn btn-12" <#if _settle??> onclick="_review()"<#else>disabled</#if> >审核</button>
                         </div>
 						<div class="col-sm-1 col-xs-2 head_1">
-		                    <button class="btn btn-success" onclick="_add()">新增</button>
+		                    <button class="btn btn-success" <#if _add??> onclick="_add()"<#else>disabled</#if>>新增</button>
 		                </div>
 		                <div class="col-sm-1 col-xs-1 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/settlecorrect/app')"><i class="fa fa-refresh"></i></button>
@@ -253,6 +253,12 @@ function _delete(id, manager_review){
 		$.post("/settlecorrect/app/delete/"+id,function(data){
 			if(data){
 				layer.msg("删除成功",{time:2000},function(){
+					var dataForMessage={
+                			id:null,
+                			pages:null,
+                			tips:'1',
+                	}
+                	websocket.send(JSON.stringify(dataForMessage));
 					parent.refresh_iframe();
 				})
 			}else{
@@ -280,14 +286,20 @@ function _review() {
             }
             layer.confirm(a, {icon: 1, title:'审核确认提示'}, function(index){
                 $.post("/settlecorrect/app/review/"+ids,function(result){
-                    if(result == 1){
+                    if(result.code == 1){
                         layer.msg(result.msg, {time: 2000}, function(){
-                        	websocket.send("提示");
+                        	var dataForMessage={
+                        			id:null,
+                        			pages:null,
+                        			hiddenId:result.data,
+                        			tips:'1',
+                        			cageId:ids
+                        	}
+                        	websocket.send(JSON.stringify(dataForMessage));
                             parent.refresh_iframe();
                         });
                     }else{
                         layer.msg(result.msg, {time: 2000}, function(){
-                        	websocket.send("提示");
                         	parent.refresh_iframe();
                         });
                     }
@@ -309,7 +321,7 @@ function getIdSelections() {
 var websocket = null;
  //判断当前浏览器是否支持WebSocket
  if ('WebSocket' in window) {
-     websocket = new WebSocket("ws://localhost:8080/websocket");
+     websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
  }
  else {
      alert('当前浏览器 Not support websocket')
@@ -319,7 +331,14 @@ var websocket = null;
  websocket.onerror = function () {
      
  };
+ 
+ websocket.onmessage = function (event) {
+	  if(JSON.parse(event.data).pages=='settledFromIndexframe'){
+		  $('#tb_departments').bootstrapTable('refresh'); 
+	  }
 
+ }
+ 
  //连接成功建立的回调方法
  websocket.onopen = function () {
      //TODO用户登录系统检查属于自己的提醒消息

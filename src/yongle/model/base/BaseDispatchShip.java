@@ -297,4 +297,22 @@ public abstract class BaseDispatchShip<M extends BaseDispatchShip<M>> extends Mo
 		return get("ship_freight");
 	}
 
+	public M setReceiptReview(java.lang.Integer receiptReview) {
+		set("receipt_review", receiptReview);
+		return (M)this;
+	}
+
+	public java.lang.Integer getReceiptReview() {
+		return get("receipt_review");
+	}
+
+	public M setPayStatus(java.lang.Integer payStatus) {
+		set("pay_status", payStatus);
+		return (M)this;
+	}
+
+	public java.lang.Integer getPayStatus() {
+		return get("pay_status");
+	}
+
 }

@@ -5,8 +5,23 @@ import java.util.List;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
+/**
+ * @ClassName: PlanService.java
+ * @Description: 计划调度信息
+ * @author: liyu
+ * @date: 2017年9月27日下午3:41:32
+ * @version: 1.0 版本初成
+ */
 public class PlanService {
-	  public static List<Record> getRecordList(String plan_no, String consignor) {
+	  /** 
+	* @Title: getRecordList 
+	* @Description: 根据 计划 id 查询
+	* @param plan_no
+	* @param consignor
+	* @return List<Record>
+	* @author 
+	*/
+	public static List<Record> getRecordList(String plan_no, String consignor) {
 	      String sql = " SELECT b.*,c.*,a.*  "
 	              + " FROM `t_dispatch_detail` AS a "
 	              + " LEFT JOIN t_dispatch_ship AS b "
@@ -18,7 +33,6 @@ public class PlanService {
 	        if (plan_no != null && !"".equals(plan_no)) {
 	            sql += " AND plan_no = '"+ plan_no +"'";
 	        }
-	        System.out.println(sql);
 	        if (consignor != null && !"".equals(consignor)) {
 	            sql += " AND consignor like '%"+ consignor +"'";
 	        }

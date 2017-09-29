@@ -54,6 +54,15 @@ public abstract class BaseNotice<M extends BaseNotice<M>> extends Model<M> imple
 		return get("publisher");
 	}
 
+	public M setReceiver(java.lang.String receiver) {
+		set("receiver", receiver);
+		return (M)this;
+	}
+
+	public java.lang.String getReceiver() {
+		return get("receiver");
+	}
+
 	public M setPublishTime(java.util.Date publishTime) {
 		set("publish_time", publishTime);
 		return (M)this;

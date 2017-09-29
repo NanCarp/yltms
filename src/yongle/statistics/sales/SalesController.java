@@ -14,7 +14,7 @@ import yongle.interceptor.ManageInterceptor;
 
 /**
  * @ClassName: SalesController.java
- * @Description:
+ * @Description: 销售统计
  * @author: LiYu
  * @date: 2017年9月13日下午3:16:56
  * @version: 1.0 版本初成

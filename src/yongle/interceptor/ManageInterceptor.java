@@ -16,7 +16,7 @@ import com.jfinal.plugin.activerecord.Record;
 public class ManageInterceptor implements Interceptor {	
 	@Override
 	public void intercept(Invocation inv) {
-	    inv.invoke();
+	    //inv.invoke();
 		Controller c = inv.getController();
 		Record admin = c.getSessionAttr("admin");
 		if(admin!=null){

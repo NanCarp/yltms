@@ -8,6 +8,7 @@ td,th {
 .no-border {
     border:0 !important; 
 }
-#consigner {
-	
-}
+/* td > div {
+	width: 100px;
+	white-space: normal;
+} */

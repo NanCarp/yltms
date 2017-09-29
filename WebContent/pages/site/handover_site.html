@@ -182,10 +182,10 @@ var TableInit = function () {
                 field: 'left_qty',
                 title: '剩余吨数'
             }, {
-                field: 'entry_time',
+                field: 'dispatcher_entry_time',
                 title: '录入时间'
             }, {
-                field: 'entry_man',
+                field: 'dispatcher',
                 title: '录入人'
             }/* , {
                 field:'opt',
@@ -278,7 +278,6 @@ function print() {
         		}
         		
         		for (var p in record) {
-        			//console.log(p + " " + record[p]);
         			var v = record[p];
         			if (!v) {
         				v = "";
@@ -287,8 +286,6 @@ function print() {
         		}
         		
         		$tbody.append($tr);
-        		
-        		//console.log($tr);
         	});
         });
         

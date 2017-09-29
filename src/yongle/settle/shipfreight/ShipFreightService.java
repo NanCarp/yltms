@@ -18,7 +18,7 @@ public class ShipFreightService {
 	 * @author xuhui
 	 */
 	public static Page<Record> getDataPages(Integer pageNumber,Integer pageSize,String plan_no){
-	    String select = " select s.*,k.*,e.*,d.* ";
+	    String select = " select s.*,k.*,e.*,d.*,s.id";
         String sqlExceptSelect = " from t_ship_settle s LEFT JOIN t_dispatch_ship d ON s.dispatch_ship_id = d.id"
         						+" LEFT JOIN t_dispatch_detail e ON e.id = d.dispatch_detail_id" 
         						+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id where s.payable_amount is null";
@@ -39,7 +39,7 @@ public class ShipFreightService {
 	        String sql = " select d.*,e.*,k.*,s.*,s.id"
 	        		+" from t_ship_settle s LEFT JOIN t_dispatch_ship d ON s.dispatch_ship_id = d.id"
 					+" LEFT JOIN t_dispatch_detail e ON e.id = d.dispatch_detail_id"  
-					+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id  where s.dispatch_ship_id="+id;
+					+" LEFT JOIN t_dispatch k ON k.id = e.plan_no_id  where s.id="+id;
 	        return Db.findFirst(sql);
 	    }
     

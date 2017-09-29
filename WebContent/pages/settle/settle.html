@@ -229,7 +229,7 @@ function getIdSelections() {
 
 //查看详情
 function _seedetail(id){	
-	parent.open_window('计划明细','/settle/managesettle/getDetail/'+id,1000, 420);
+	parent.open_window('计划明细','/settle/managesettle/getDetail/'+id,1200, 420);
 }
 
 
@@ -238,6 +238,14 @@ function checkOut(id){
 	$.post("/settle/managesettle/bursarCheckOut/"+id,function(data){
 		if(data.flag){
 			layer.msg(data.tips,{time:2000},function(){
+				var dataForMessage={
+            			id:null,
+            			pages:'manageSettle',
+            			hiddenId:null,
+            			tips:null,
+            			cageId:null
+            	}
+            	websocket.send(JSON.stringify(dataForMessage));
 				 parent.parent.refresh_iframe();
 			})
 		}else{
@@ -311,6 +319,56 @@ function reject(){
 			layer.close(index);
 			});	
 	}
+}
+
+
+var websocket = null;
+//判断当前浏览器是否支持WebSocket
+if ('WebSocket' in window) {
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+}
+else {
+    alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+    
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+    //TODO用户登录系统检查属于自己的提醒消息
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {  
+	var msg = JSON.parse(event.data);
+    if(msg.receiver === "settle") {
+        if (msg.action === "refresh") {
+            refresh();
+        }
+    }
+}
+
+//连接关闭的回调方法
+websocket.onclose = function (event) {
+    
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+    closeWebSocket();
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    websocket.close();
+}
+
+//刷新页面
+function refresh() {
+    $('#tb_departments').bootstrapTable('refresh');
 }
 </script>
 </body>

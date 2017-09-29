@@ -16,7 +16,7 @@ import yongle.utils.ResponseObj;
 
 /**
  * @ClassName: HandoverSiteController.java
- * @Description: 调度交接
+ * @Description: 调度交接现场
  * @author: LiYu
  * @date: 2017年8月31日上午8:20:59
  * @version: 1.0 版本初成
@@ -68,7 +68,7 @@ public class HandoverSiteController extends Controller {
     
     /** 
     * @Title: getRecord 
-    * @Description: 
+    * @Description: 查看流向相关信息
     * @author liyu
     */
     public void getRecord() {
@@ -125,6 +125,11 @@ public class HandoverSiteController extends Controller {
         }
     }
     
+    /** 
+    * @Title: print 
+    * @Description: 打印
+    * @author 
+    */
     public void print() {
         Integer id = getParaToInt();
         Integer plan_no_id = Db.findById("t_dispatch_detail", id).getInt("plan_no_id");

@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jfinal.aop.Before;
-import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
-import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -16,7 +14,7 @@ import com.jfinal.plugin.activerecord.Record;
 import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: CustomerSettledController.java
- * @Description:
+ * @Description: 客户结算管理-已结算
  * @author: xuhui
  * @date: 2017年9月5日上午10:45:55
  * @version: 1.0 版本初成

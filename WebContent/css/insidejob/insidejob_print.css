@@ -16,3 +16,9 @@ td,th {
 .hidden {
 	display: none;
 }
+#print1 {
+	display: table !important;
+}
+input {
+	border: 0;
+}

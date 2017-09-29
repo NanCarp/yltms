@@ -27,7 +27,6 @@ public class DictionaryController extends Controller {
     public void getJson(){
     	String keyword = getPara("keyword");
     	String key = getPara("key");
-    	System.out.println(keyword+":"+key);
     	Integer	pageindex = 0;
     	Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit");
     	Integer offset = getParaToInt("offset")==null?0:getParaToInt("offset");
@@ -39,7 +38,6 @@ public class DictionaryController extends Controller {
     	List<Record> dictionaryList = DictionService.getDictionaryPages(pageindex, pagelimit,keyword,key).getList();
     	map.put("rows", dictionaryList);
     	map.put("total",DictionService.getDictionaryPages(pageindex, pagelimit,keyword,key).getTotalRow());
-    	System.out.println(dictionaryList);
     	renderJson(map);
     }
     

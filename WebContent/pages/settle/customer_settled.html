@@ -109,6 +109,14 @@ var TableInit = function () {
             buttonsAlign:"right",               //按钮位置  
             exportDataType: "basic",              //basic', 'all', 'selected'.
             exportTypes:['excel'],
+            exportOptions:{  
+                ignoreColumn: [0],  //忽略某一列的索引  
+                fileName: '客户运费结算对账单',  //文件名称设置  
+                worksheetName: 'sheet1',  //表格工作区名称  
+                tableName: '客户运费结算对账单',  
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],  
+                //onMsoNumberFormat: DoOnMsoNumberFormat  
+            },
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true,                   //是否显示分页（*）
@@ -129,12 +137,12 @@ var TableInit = function () {
             showRefresh:true,           
             locale: "zh-CN",                    //中文支持,
             //是否显示父子表
-            columns: [{
+            columns: [/* {
                 field:"checked",
                 checkbox: true,
                 formatter:stateFormatter            
                 
-            },{
+            }, */{
                 field:"SerialNumber",
                 title:'序号',
                 formatter:function(value,row,index){
@@ -180,7 +188,7 @@ var TableInit = function () {
                 field: 'freight_price',
                 title: '单价'
             }, {
-                field: 'total_freight',
+                field: 'ship_freight',
                 title: '运费'
             }, {
                 field: 'port_construction_fee',
@@ -259,7 +267,7 @@ function _print() {
 
 //导出
 function _export() {
-    $('li[role="menuitem"]').find('a').click();
+    $('li[data-type="excel"]').find('a').click();
 }
 
 //打印
@@ -388,6 +396,58 @@ var ButtonInit = function () {
 };
 
 
+var websocket = null;
+//判断当前浏览器是否支持WebSocket
+if ('WebSocket' in window) {
+  websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+}
+else {
+  alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+  
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+  //TODO用户登录系统检查属于自己的提醒消息
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {
+  if(JSON.parse(event.data).pages=='customerSettle'){
+	  $('#tb_departments').bootstrapTable('refresh');
+  };
+  
+  var msg = JSON.parse(event.data);
+  if(msg.receiver === "sales") {
+      if (msg.action === "refresh") {
+          refresh();
+      }
+  }
+}
+
+//连接关闭的回调方法
+websocket.onclose = function (event) {
+  
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+  closeWebSocket();
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+  websocket.close();
+}
+
+//刷新页面
+function refresh() {
+    $('#tb_departments').bootstrapTable('refresh');
+}
 </script>
 
 </body>

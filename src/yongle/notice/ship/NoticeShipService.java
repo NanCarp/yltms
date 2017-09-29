@@ -3,7 +3,6 @@ package yongle.notice.ship;
 import java.sql.SQLException;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
-import com.jfinal.plugin.activerecord.Record;
 
 public class NoticeShipService {
 

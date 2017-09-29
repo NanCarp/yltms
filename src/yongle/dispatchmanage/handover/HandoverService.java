@@ -52,7 +52,7 @@ public class HandoverService {
         String sqlExceptSelect = " FROM `t_dispatch_detail` AS a "
                 + " LEFT JOIN t_dispatch AS b "
                 + " ON a.plan_no_id = b.id "
-                + " WHERE a.flow_state = 0 "
+                + " WHERE a.flow_state != 1 "
                 + " AND b.examine_state = 1 ";
         
         if (plan_no != null && !"".equals(plan_no)) {
@@ -113,6 +113,8 @@ public class HandoverService {
                     Record notice = new Record(); // 提醒
                     notice.set("title", "调度运价超出指导价，请确认。");
                     notice.set("type", "提醒");
+                    notice.set("publisher", dispatcher); // 发布者
+                    notice.set("receiver", 1); // 接收者，经理
                     notice.set("publish_time", new Date());
                     Db.save("t_notice", notice);
                     Long notice_id = notice.getLong("id");
@@ -130,9 +132,10 @@ public class HandoverService {
                 
                 // 更新 dispatch_detail 表
                 Record dispatch = Db.findById("t_dispatch_detail", dispatch_detail_id);
-                dispatch.set("left_qty", left_qty);
+                dispatch.set("left_qty", left_qty == "" ? null : left_qty);
                 dispatch.set("dispatcher", dispatcher); 
                 dispatch.set("dispatcher_entry_time", new Date());
+                dispatch.set("flow_state", 2); // 配船状态，正在配船
                 Db.update("t_dispatch_detail", dispatch);
                 
                 return true;
@@ -174,7 +177,6 @@ public class HandoverService {
     */
     public static boolean export(HttpServletResponse response, Integer id) {
         
-        Record record = Db.findById("t_dispatch", id);
         List<Record> recordList = Db.find("SELECT * "
                 + " FROM t_dispatch_ship AS a "
                 + " LEFT JOIN t_dispatch_detail AS b "
@@ -212,9 +214,6 @@ public class HandoverService {
         
         HSSFRow row;
         String[] a = {"计划号","货名","海船名","发货码头","目的港","船名","姓名","手机号","身份证号码","配载吨位","可载吨位","到港日期","运价","加油"};
-        String[] b = {"plan_no","goods_name","seagoing_vessel_name","delivery_dock","destination_port",
-                "ship_name","ship_owner_name","ship_owner_phone","id_card_no","loading_tonnage",
-                "available_tonnage","arrival_date","freight_price","pre_refuel"};
         
         //int i = 1;
         row = sheet.createRow(0);
@@ -230,20 +229,6 @@ public class HandoverService {
             cell0.setCellStyle(cellBorder);
             cell0.setCellValue(a[j]);
         }
-        
-        /*for (int j = 0; j < recordList.size(); j++) {
-            Record r = recordList.get(j);
-            row = sheet.createRow(j + 2);
-            for (int k = 0; k < b.length; k++) {
-                HSSFCell cell0 = row.createCell((short) 0);
-                cell0.setEncoding(HSSFCell.ENCODING_UTF_16);
-                cell0.setCellStyle(cellBorder);
-                String key = b[k];
-                Object obj = r.get(key);
-                //String s = obj == null ? "" : obj.toString();
-                cell0.setCellValue("" + obj);
-            }
-        }*/
         
         for (int j = 0; j < recordList.size(); j++) {
             Record r = recordList.get(j);
@@ -335,7 +320,7 @@ public class HandoverService {
             }
         }
         
-        response.addHeader("Content-Disposition", "attachment;filename=" + EncodeUtil.toUtf8String("统计表") + ".xls");
+        response.addHeader("Content-Disposition", "attachment;filename=" + EncodeUtil.toUtf8String("调度员交接表") + ".xls");
         response.setContentType("application/vnd.ms-excel;charset=utf-8");
         try {
             ServletOutputStream out = response.getOutputStream();

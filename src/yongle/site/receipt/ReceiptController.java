@@ -1,11 +1,11 @@
 package yongle.site.receipt;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
@@ -82,6 +82,14 @@ public class ReceiptController extends Controller {
     public void save() {
         ResponseObj res = new ResponseObj();
         DispatchShip record = getModel(DispatchShip.class, "");
+        //获取实际运费价格，收货数量 乘以 运价
+        BigDecimal freight_price = record.getBigDecimal("freight_price");//运价
+        BigDecimal received_quantity = record.getBigDecimal("received_quantity");//收货数量
+        BigDecimal ship_freight = freight_price.multiply(received_quantity);//运费
+        //System.out.println(freight_price);
+        //System.out.println(received_quantity);
+        //System.out.println(ship_freight);
+        record.set("ship_freight", ship_freight);        
         boolean b = record.update();
         res.setCode(b ? ResponseObj.OK : ResponseObj.FAILED);
         res.setMsg(b ? "保存成功" : "保存失败");

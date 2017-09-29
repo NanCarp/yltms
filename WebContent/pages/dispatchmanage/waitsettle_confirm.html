@@ -21,6 +21,7 @@
 				<tr>
 					<th>序号</th>
 					<th>计划日期</th>
+					<th>流向</th>
 					<th>船名</th>
 					<th>计划数量</th>
 					<th>损耗</th>
@@ -39,6 +40,7 @@
 				<tr>
 					<td>${im_index+1}</td>
 					<td>${im.entry_time!}</td>
+					<td>${im.flow!}</td>
 					<td>${im.ship_name!}</td>
 					<td>${im.loading_tonnage!}</td>
 					<td>${im.delivery_quantity-im.received_quantity}</td>
@@ -47,8 +49,8 @@
 					<td>${im.refuel_type!}</td>
 					<td>${im.pre_refuel!}</td>
 					<td>${im.estimated_arrvial_date!}</td>
-					<td>${im.loading_tonnage!}</td>
-					<td>${im.prepay!}</td>
+					<td>${im.delivery_quantity!}</td>
+					<td>${im.site_pay!}</td>
 					<td>${im.refuel_type!}</td>
 					<td>${im.site_refuel!}</td>
 				</tr>

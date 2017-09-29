@@ -2,6 +2,7 @@ package yongle.system.user;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,7 @@ public class UserController extends Controller {
         record.set("role_id", roleId);
         record.set("account", account);
         record.set("user_name", user_name);
+        record.set("create_time", new Date());
         if (id != null) {// 编辑
             // 密码
             Record user = Db.findById("t_user", id);           

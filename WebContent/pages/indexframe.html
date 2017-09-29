@@ -62,16 +62,16 @@ i{color: #999999}
     					<img src="../picture/user.png">
     				</div>
     				<div class="topleftthen">
-    					<p><span style="font-size: 17px;font-weight: bold;">现场管理</span></p>
+    					<p><span style="font-size: 17px;font-weight: bold;">${roleType!}</span></p>
     					<p style="margin-top: 10px"><span>创建日期</span></p>
-    					<p>2017-9-15 13:59:06</p>
+    					<p>${createTime!}</p>
     				</div>
     			</div>
     			<div  class="topfright">    			
 	    			<div class="panel-body" style="padding-left: 30px">
 	                    <span class="a_span">
-							<span class="span1">角色:</span>
-							<span class="a_right" style="margin-left: 50px">超级管理员</span>
+							<span class="span1">用户:</span>
+							<span class="a_right" style="margin-left: 50px">${userName!}</span>
 						</span>
 						<span class="a_span">
 							<span class="span1">所属公司:</span>
@@ -181,6 +181,7 @@ i{color: #999999}
     		</div>
     	</div>
     </div>
+    <input hidden="" id="hiddenId" name="hiddenId" value="${hiddenId!}">
 </body>
     <script src="../vendor/calender/js/jquery.min.js"></script>
     <script src="../vendor/calender/js/jquery.e-calendar.js"></script>
@@ -228,7 +229,7 @@ i{color: #999999}
     var websocket = null;
   //判断当前浏览器是否支持WebSocket
   if ('WebSocket' in window) {
-      websocket = new WebSocket("ws://localhost:8080/websocket");
+      websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
   }
   else {
       alert('当前浏览器 Not support websocket')
@@ -244,6 +245,7 @@ i{color: #999999}
       //TODO用户登录系统检查属于自己的提醒消息
   }
 
+  var hiddenId = $("#hiddenId").val();
   //接收到消息的回调方法
   websocket.onmessage = function (event) {
 	  var msg = JSON.parse(event.data);
@@ -252,11 +254,18 @@ i{color: #999999}
 			  updateNotice();
 		  }
 	  }
-      
+
+	  if(JSON.parse(event.data).tips==1){
+		  updateNotice();
+	  }
+
+      if(JSON.parse(event.data).hiddenId==hiddenId){
+    	  parent.open_window('提示：您的该条审核已通过审核！','/pages/getEndApplication/'+JSON.parse(event.data).cageId,900,500);
+      };  
   }
 
   //连接关闭的回调方法
-  websocket.onclose = function () {
+  websocket.onclose = function (event) {
       
   }
 

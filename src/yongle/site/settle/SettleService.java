@@ -21,7 +21,6 @@ public class SettleService {
 						+ ",d.seagoing_vessel_name,d.delivery_dock,d.dispatch_settle_state"
 						+ ",d.manager_settle_state,d.dispatcher,d.site_dispatch";
 		String sql = " from"
-				
 					+" t_dispatch d"
 					+" where d.examine_state = 1"
 					+ " AND d.dispatch_settle_state = 1"  

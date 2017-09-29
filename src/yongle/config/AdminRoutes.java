@@ -1,9 +1,9 @@
 package yongle.config;
 import com.jfinal.config.Routes;
 
+import yongle.dataBase.customer.CustomerController;
 import yongle.dataBase.goods.GoodsController;
 import yongle.dataBase.port.PortController;
-import yongle.dataBase.customer.CustomerController;
 import yongle.dataBase.ship.ShipController;
 import yongle.dispatchmanage.handover.HandoverController;
 import yongle.dispatchmanage.handoverfinish.HandoverFinishController;
@@ -26,7 +26,6 @@ import yongle.site.receipt.ReceiptController;
 import yongle.site.settle.SettleController;
 import yongle.site.waterwayfreight.WaterwayFreightController;
 import yongle.statistics.sales.SalesController;
-import yongle.site.settle.SettleController;
 import yongle.system.authority.AuthorityController;
 import yongle.system.button.ButtonController;
 import yongle.system.dictionary.DictionaryController;
@@ -129,10 +128,6 @@ public class AdminRoutes extends Routes{
         
         // 提醒-调度运价超出指导价
         add("/notice/ship",NoticeShipController.class,"/notice");
-
-        
-        //ws测试
-        add("/test",TestController.class,"/test");
 
 	}
 }

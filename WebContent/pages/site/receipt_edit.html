@@ -25,6 +25,8 @@
 <div class="container">
     <form id="defaultForm">
         <input type="hidden" name="id" value="${(record.id)!}">
+        <input type="hidden" name="ship_freight" value="${(record.id)!}">
+        <input type="hidden" name="freight_price" value="${(record.freight_price)!}">
         <div class="row" >
             <div class="form-group"></div>
             <div class="form-group ">
@@ -49,9 +51,9 @@
         <div class="row">
             <div class="form-group"></div>
             <div class="form-group ">
-                <label class="col-xs-2 control-label text-right" for="estimated_arrvial_date">发货日期：</label>
+                <label class="col-xs-2 control-label text-right" for="delivery_date">发货日期：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="estimated_arrvial_date" type="text" placeholder="" value="${(record.estimated_arrvial_date)!}" readonly/>
+                    <input class="form-control text-left" id="delivery_date" type="text" placeholder="" value="${(record.delivery_date)!}" readonly/>
                 </div>
             </div>
             <div class="form-group ">
@@ -229,9 +231,10 @@ $('#defaultForm').bootstrapValidator({
         if (result.code == 1) {
             parent.layer.msg(result.msg, {time: 2000}, function(){
                 layer_close();
-                parent.parent.refresh_iframe();
+                //parent.parent.refresh_iframe();
             });
-
+            sendTo("receipt", "refresh");
+            semdTo("settle", "refresh")
         } else {
             parent.layer.msg(result.msg, {time: 2000});
         }
@@ -251,6 +254,57 @@ $(".form_date").datetimepicker({
     startView: 2,// 日视图
     minView: 2,
 });
+
+//WebSocket
+var websocket = null;
+//判断当前浏览器是否支持WebSocket
+if ('WebSocket' in window) {
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+}
+else {
+    alert('当前浏览器 Not support websocket')
+}
+
+//连接发生错误的回调方法
+websocket.onerror = function () {
+};
+
+//连接成功建立的回调方法
+websocket.onopen = function () {
+    //TODO用户登录系统检查属于自己的提醒消息
+}
+
+//接收到消息的回调方法
+websocket.onmessage = function (event) {
+}
+
+//连接关闭的回调方法
+websocket.onclose = function () {
+}
+
+//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+window.onbeforeunload = function () {
+    closeWebSocket();
+}
+
+//关闭WebSocket连接
+function closeWebSocket() {
+    websocket.close();
+}
+
+//发送消息
+function send(msg) {
+    websocket.send(msg);
+}
+
+// 发送给特定目标，进行特定操作
+function sendTo(receiver, action) {
+    var msg = {
+            receiver: receiver,
+            action: action
+    };
+    websocket.send(JSON.stringify(msg));
+}
 
 </script>
 </body>

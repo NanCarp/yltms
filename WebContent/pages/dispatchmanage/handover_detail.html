@@ -191,16 +191,10 @@ $('#submit').on('click', function () {
     validator.data('bootstrapValidator').validate();
     var flag = validator.data('bootstrapValidator').isValid();
     if (flag) {
-        console.log('ok');
     } else {
         return;
     }
     
-    /* var left_qty = $('#left_qty').val();
-    if (left_qty < 0) {
-    	layer.msg("剩余吨数不能为负，请重新分配", {time: 2000});
-    	return;
-    } */
     // 运价不超过指导价
     var recordList = getRecordList();
     var isOver = false;
@@ -212,11 +206,9 @@ $('#submit').on('click', function () {
     		this.over_guide_price = 0;
     	}
     });
-    //console.log(recordList);
     if (isOver) {
     	layer.confirm('运价超过指导价，确认保存吗?', {icon: 3, title:'提示'}, function(index){
             // 提交
-            
             submit(recordList);
             layer.close(index);
         });
@@ -227,24 +219,31 @@ $('#submit').on('click', function () {
 });
 // 提交
 function submit(recordList) {
+	// 如果数据为空，提示添加数据，禁止审核
+    if ($('#tbody').find('tr[class="null"]').length === 1) {
+        layer.msg("请添加数据后保存", {time: 2000});return;
+    }
 	var postData = {
             "id": $('#id').val(),
             "left_qty": $('#left_qty').val(),
             "recordList": JSON.stringify(recordList)
     };
-    //console.log(postData);return;
     $.post("/planManage/handover/save", postData, function(result) {
         if (result.code == 1) {
             parent.layer.msg(result.msg, {time: 2000}, function(){
                 layer_close();
-                parent.parent.refresh_iframe();
+                //parent.parent.refresh_iframe();
             });
+            // 通知相关页面更新
             var msg = {
             		sender: "handover_detail",
             		receiver: "indexframe",
             		action: "refresh"
             }
             send(JSON.stringify(msg)); // 更新提醒
+            msg.receiver = "handover";
+            send(JSON.stringify(msg));
+            
         } else {
             parent.layer.msg(result.msg, {time: 2000});
         }
@@ -252,22 +251,37 @@ function submit(recordList) {
     });
 }
 
-
 // 审核
 function _review(id) {
 	layer.confirm('确认审核?', {icon: 1, title:'审核确认提示'}, function(index){
+		// 如果数据为空，提示添加数据，禁止审核
+		/* if ($('#tbody').find('tr[class="null"]').length === 1) {
+		    layer.msg("请添加数据后审核", {time: 2000});return;
+		} */
+		// 如果没有保存，提示先保存后审核
+		//console.log($('#tbody').find('tr[class="edit"]').length);
+        if ($('#tbody').find('tr[class="edit"]').length > 0) {
+            layer.msg("请保存数据后审核", {time: 2000});return;
+        }
+		
 		$.post("/planManage/handover/review/" + id, function (result) {
 	        if (result.code == 1) {
 	            parent.layer.msg(result.msg, {time: 2000}, function(){
 	                layer_close();
-	                parent.parent.refresh_iframe();
+	                //parent.refresh_iframe();
 	            });
+	            // 通知相关页面更新
 	            var msg = {
 	                    sender: "handover_detail",
 	                    receiver: "handover_finish",
 	                    action: "refresh"
 	            }
 	            send(JSON.stringify(msg));
+	            
+	            // 通知父页面更新
+	            sendTo("handover", "refresh");
+	            
+                sendTo("waterway_freight", "refresh");
 
 	        } else {
 	            parent.layer.msg(result.msg, {time: 2000});
@@ -517,10 +531,6 @@ var count = $('#tbody tr').length; // 当前记录条数
 if ($('#tbody').find('tr[class="null"]').length === 1) {
 	count = 0;
 }
-// 记录为零时，新增一行
-/* if (count === 0) {
-    _newRow();
-} */
 
 // 新增行
 function _newRow() {
@@ -564,7 +574,6 @@ function _deleteRow() {
     count = i;
     // 记录为零时，新增一行
     if (count === 0) {
-        //_newRow();
         $('#tbody').append('<tr class="null"><td colspan="16">暂无数据</td></tr>');
     }
     // 清除勾选
@@ -620,8 +629,6 @@ function getRecordList() {
     
     var recordList = [];
     var a = $('#tbody').find('tr[class="null"]');
-    console.log(a);
-    console.log(a.length);
     // 没有数据，返回空
     if ($('#tbody').find('tr[class="null"]').length === 1) {
     	return recordList;
@@ -645,10 +652,8 @@ function getRecordList() {
             var $tdList = $tr.find("td");
             var i = 0;
             for (var p in item) {
-                //valueArray.push($.trim($tdList.eq(i+2).html()));
                 var v = $.trim($tdList.eq(i+2).html());
                 if (item[p] === "select") {
-                	//console.log($tdList.eq(i+2));
                     v = $tdList.eq(i+2).attr("value");
                 }
                 record[p] = v == '' ? null : v;
@@ -679,45 +684,34 @@ $('#delBtn').on('click', function () {
 })
 function calculateLeftQuantity() {
 	var planned_qty = parseFloat($('#planned_qty').val());
-	console.log(planned_qty);
 	var amount = 0.0;
-	//console.log(this);
     $('input[name=loading_tonnage]').each(function () {
-        console.log("input: " + $(this).val());
         var v = $(this).val();
         amount = amount + parseFloat(v == '' ? 0 : v);
     });
     $('td.loading_tonnage').each(function () {
-        console.log("td: " + $(this).text());
         var v = $(this).text();
         amount = amount + parseFloat(v == '' ? 0 : v);
     });
-    console.log("amount: " + amount.toFixed(3));
     var left_qty = (planned_qty - amount).toFixed(3);
     $('#left_qty').val(left_qty);
 }
 //根据船名带出相关信息
 $('form').on('change', 'input[name="ship_name"]', function () {
-    console.log($(this).val());
     var $this = $(this);
     var $tr = $this.parent().parent().parent();
-    console.log($tr);
     var postData = {
             ship_name: $.trim($this.val()),
     }
     $.post("/planManage/handover/getShipInfoByShipName", postData, function(result) {
         if (result.code == 1) {
-            console.log(result.data);
             var data = result.data;
             $tr.find('input[name="ship_owner_name"]').val(data.shipowname);
             $tr.find('input[name="ship_owner_phone"]').val(data.phone_num);
             $tr.find('input[name="id_card_no"]').val(data.ID_number);
             $tr.find('input[name="available_tonnage"]').val(data.ship_ton);
 
-        } else {
-            console.log("查无此船");
         }
-        
     });
 });
 
@@ -744,11 +738,12 @@ $('form').on('change', 'input[name=loading_tonnage], input[name=freight_price]',
 	$tr.find('input[name=total_freight]').val(isNaN(total_freight) ? '' : total_freight);
 });
 
-
+// WebSocket
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-    websocket = new WebSocket("ws://localhost:8080/websocket");
+	//console.log(window.location.host);
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
 }
 else {
     alert('当前浏览器 Not support websocket')
@@ -784,6 +779,15 @@ function closeWebSocket() {
 //发送消息
 function send(msg) {
     websocket.send(msg);
+}
+
+// 发送给特定目标，进行特定操作
+function sendTo(receiver, action) {
+	var msg = {
+			receiver: receiver,
+			action: action
+	};
+	websocket.send(JSON.stringify(msg));
 }
 
 </script>

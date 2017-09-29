@@ -95,7 +95,7 @@ $('#submit').on('click', function () {
     validator.data('bootstrapValidator').validate();
     var flag = validator.data('bootstrapValidator').isValid();
     if (flag) {
-        console.log('ok');
+        
     } else {
         return;
     }
@@ -104,7 +104,6 @@ $('#submit').on('click', function () {
     		"id": $('#id').val(),
     		"recordList": JSON.stringify(getRecordList())
     };
-    //console.log(postData);
     
     $.post("/site/handoversite/save", postData, function(result) {
         if (result.code == 1) {
