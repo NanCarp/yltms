@@ -85,11 +85,30 @@ public class ReceiptController extends Controller {
         //获取实际运费价格，收货数量 乘以 运价
         BigDecimal freight_price = record.getBigDecimal("freight_price");//运价
         BigDecimal received_quantity = record.getBigDecimal("received_quantity");//收货数量
-        BigDecimal ship_freight = freight_price.multiply(received_quantity);//运费
-        //System.out.println(freight_price);
-        //System.out.println(received_quantity);
-        //System.out.println(ship_freight);
-        record.set("ship_freight", ship_freight);        
+        BigDecimal ship_freight_total = freight_price.multiply(received_quantity);//运费
+        //调度预付款
+        BigDecimal prepay = record.getBigDecimal("prepay");
+        if(prepay==null){
+        	prepay = new BigDecimal(0);
+        }
+        //调度预加油
+        BigDecimal pre_refuel = record.getBigDecimal("pre_refuel");
+        if(pre_refuel==null){
+        	pre_refuel = new BigDecimal(0);
+        }
+        //现场预付款
+        BigDecimal site_pay = record.getBigDecimal("site_pay");
+        if(site_pay==null){
+        	site_pay = new BigDecimal(0);
+        }
+        //现场预加油
+        BigDecimal site_refuel = record.getBigDecimal("site_refuel");
+        if(site_refuel==null){
+        	site_refuel = new BigDecimal(0);
+        }
+        BigDecimal ship_freight = ship_freight_total.subtract(prepay).subtract(pre_refuel).subtract(site_pay).subtract(site_refuel);
+        record.set("ship_freight", ship_freight);
+        record.set("receipt_finish", 1); // 回单填写完成
         boolean b = record.update();
         res.setCode(b ? ResponseObj.OK : ResponseObj.FAILED);
         res.setMsg(b ? "保存成功" : "保存失败");

@@ -29,17 +29,14 @@
 						<div class="col-sm-1 col-xs-2 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>                    			
-						<div class="col-sm-1 col-xs-2 head_1">
-		                    <button class="btn btn-success" onclick="_add()">新增</button>
-		                </div>
-		               	<div class="col-sm-1 col-xs-2 head_4" >
+		               	<div class="col-sm-2 col-xs-3 head_4" >
 		                     <button class="btn btn-5" onclick=" _seeDatil()">查看明细</button>
 		                </div> 
-		                <div class="col-sm-1 col-xs-2 head_1">
-		                    <button class="btn btn-4" onclick="_blackList()">拉黑</button>
+		                <div class="col-sm-2 col-xs-3 head_5">
+		                    <button class="btn btn-4" onclick="_outblackList()">移出黑名单</button>
 		                </div>
-		                 <div class="col-sm-1 col-xs-1 head_1">
-                             <button class="btn btn-9 " onclick="location.replace('/dataBase/ship')"><i class="fa fa-refresh"></i></button>
+		                 <div class="col-sm-1 col-xs-1 head_1" style="margin-top:2px">
+                             <button class="btn btn-9 " onclick="location.replace('/dataBase/shipblack')"><i class="fa fa-refresh"></i></button>
                         </div> 	                      									                 
 					</div>				
 				</div>
@@ -90,7 +87,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '/dataBase/ship/getJson',         //请求后台的URL（*）
+            url: '/dataBase/shipblack/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -221,38 +218,40 @@ function _seeDatil(){
 	}
 }
 
-//获取被选中数据的id
-function getIdSelections() {
-    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
-        return row.id;
-    });
-}
-
 var dataForMessage={
 		id:null,
-		pages:'shipblacklist'
+		pages:'shipoutblacklist'
 }
 
-function _blackList(){
+function _outblackList(){
 	// 获取选中记录 id
 	var ids = getIdSelections();
 	// 如果没有选择，提示勾选至少一条数据
 	if (ids.length == 0) {
 		layer.msg('请选择至少一条船舶信息', {time: 2000});
 	}else{
-		layer.confirm("确认列为黑名单",{icon:7},function(){
-			$.post("/dataBase/ship/setBlack/"+ids,function(data){
+		layer.confirm("确认移除黑名单",{icon:7},function(){
+			$.post("/dataBase/shipblack/setOutBlack/"+ids,function(data){
 				if(data){
-					 layer.msg('成功列为黑名单', {time: 2000},function(){
+					 layer.msg('成功移除黑名单', {time: 2000},function(){
 						 websocket.send(JSON.stringify(dataForMessage));
 						 parent.refresh_iframe();
 					 });
+					 
 				}else{
 					layer.msg('操作失败', {time: 2000});
 				}
 			})
 		})
 	}
+}
+
+
+//获取被选中数据的id
+function getIdSelections() {
+    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        return row.id;
+    });
 }
 
 var websocket = null;
@@ -291,7 +290,7 @@ websocket.close();
 
 //接收到消息的回调方法
 websocket.onmessage = function (event) {
-    if(JSON.parse(event.data).pages = 'shipoutblacklist'){
+    if(JSON.parse(event.data).pages = 'shipblacklist'){
     	$('#tb_departments').bootstrapTable('refresh');  
     }
 }

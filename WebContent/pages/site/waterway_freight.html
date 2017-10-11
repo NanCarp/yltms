@@ -260,6 +260,7 @@ function _review(){
                          action: "refresh"
                  }
                  send(JSON.stringify(msg));
+            	 sendTo("settle", "refresh");
             	 
                  layer.msg(result.msg, {time: 2000}, function(){
                      layer_close();
@@ -310,7 +311,8 @@ $(".form_datetime").datetimepicker({
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+//websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
 alert('当前浏览器 Not support websocket')
@@ -357,6 +359,15 @@ function refresh() {
 //发送消息
 function send(msg) {
     websocket.send(msg);
+}
+
+//发送给特定目标，进行特定操作
+function sendTo(receiver, action) {
+    var msg = {
+            receiver: receiver,
+            action: action
+    };
+    websocket.send(JSON.stringify(msg));
 }
 </script>
 

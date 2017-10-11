@@ -13,6 +13,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 
+import yongle.dataBase.shipblacklist.ShipBlackService;
 import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: ShipController.java
@@ -331,4 +332,15 @@ public class ShipController extends Controller{
     	}
     	return dir.delete();
     }
+    
+    /**
+	 * @desc 黑名单列表
+	 * @author xuhui
+	 */
+	public void setBlack(){
+		String blackList = getPara();
+		//判断是否成功
+		boolean flag = ShipService.setBlack(blackList);
+		renderJson(flag);
+	}
 }

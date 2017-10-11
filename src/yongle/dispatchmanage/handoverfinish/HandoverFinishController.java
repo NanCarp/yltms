@@ -90,7 +90,7 @@ public class HandoverFinishController extends Controller {
         // 存在后续业务，不能取消
         if (HandoverFinishService.hasBusiness(id)) {
             res.setCode(ResponseObj.FAILED);
-            res.setMsg("现场管理已有业务，不能取消审核");
+            res.setMsg("已录入现场信息，不能取消审核");
             renderJson(res);
             return;
         }

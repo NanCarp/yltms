@@ -237,12 +237,19 @@
 					var _id = $(obj).attr('id'); // iframe id
 					var topWindow = $(window.parent.document); // 获得父页面
 					var show_navLi = topWindow.find("iframe"); // 找到所有 iframe
-					show_navLi.each(function(){ // 判断是否存在
+				    /* show_navLi.each(function(){ // 判断是否存在
 						if($(this).attr("src") == _href){
 							bStop = true;
 							//bStopIndex = show_navLi.index($(this));
 						}
+					}); */
+					var tabs = topWindow.find(".layui-tab-title li");
+					tabs.each(function() {
+						if ($(this).attr("lay-id")== _id) {
+                            bStop = true;
+                        }
 					});
+					
 					if(!bStop) { // 存在，则不重复打开
 						creatIframe(_id, _href, _titleName);
 						
@@ -265,7 +272,7 @@
 		  
 		  
 		});	
-		 $(function(){
+	    $(function(){
 			$(".dropdown-toggle").mouseenter(function(){
 				$(this).css('background','#3367D6');
 			})	
@@ -277,25 +284,10 @@
 			} 
 		}) 
 		
-		// true为 PC 端，false 为手机端
-		function IsPC() {
-		    var userAgentInfo = navigator.userAgent;
-		    var Agents = ["Android", "iPhone",
-		                "SymbianOS", "Windows Phone",
-		                "iPad", "iPod"];
-		    var flag = true;
-		    for (var v = 0; v < Agents.length; v++) {
-		        if (userAgentInfo.indexOf(Agents[v]) > 0) {
-		            flag = false;
-		            break;
-		        }
-		    }
-		    return flag;
-		}
-		 //修改密码
-		 function change_pwd(){
-			open_window('修改密码','/system/user/change_pwd',480, 330);
-		 }
+	    //修改密码
+        function change_pwd(){
+            open_window('修改密码','/system/user/change_pwd',480, 330);
+        }
 	</script>
 
 </body>

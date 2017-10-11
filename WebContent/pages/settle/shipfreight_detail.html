@@ -104,9 +104,9 @@
         <div class="row">
             <div class="form-group"></div>
             <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="total_freight">运费：</label>
+                <label class="col-xs-1 control-label text-right" for="ship_freight">运费：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="total_freight" type="text" placeholder="" name="total_freight" value="${(record.total_freight)!}" readonly/>
+                    <input class="form-control text-left" id="ship_freight" type="text" placeholder="" name="ship_freight" value="${(record.ship_freight)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -143,7 +143,7 @@
                 </div>
             </div>
             <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="payable_amount">应收费用：</label>
+                <label class="col-xs-1 control-label text-right" for="payable_amount">应付费用：</label>
                 <div class="col-xs-2">
                     <input class="form-control text-left" id="payable_amount" name="payable_amount" type="text" placeholder="" value="${(record.payable_amount)!}" />
                 </div>
@@ -302,7 +302,8 @@ $(".form_date").datetimepicker({
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-  websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+  //websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
   alert('当前浏览器 Not support websocket')

@@ -124,15 +124,15 @@
         <div class="row">
             <div class="form-group"></div>
             <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="total_freight">运费：</label>
+                <label class="col-xs-1 control-label text-right" for="ship_freight">运费：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="total_freight" type="text" placeholder="" value="${(record.total_freight)!}" readonly/>
+                    <input class="form-control text-left" id="ship_freight" type="text" placeholder="" value="${(record.ship_freight)!}" readonly/>
                 </div>
-            </div>
+            </div>       
             <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="port_construction_fee">港建费：</label>
+                <label class="col-xs-1 control-label text-right" for="rainy_days">雨天：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="port_construction_fee" type="text" placeholder="" name="port_construction_fee" value="${(record.port_construction_fee)!}"/>
+                    <input class="form-control text-left" id="rainy_days" type="text" placeholder="" value="${(record.rainy_days)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -148,14 +148,35 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="form-group"></div>
-            <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="rainy_days">雨天：</label>
+                <div class="row">
+         <div class="form-group"></div>
+        <div class="form-group form-group-sm">
+                <label class="col-xs-1 control-label text-right" for="other_charges">开票：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="rainy_days" type="text" placeholder="" value="${(record.rainy_days)!}" readonly/>
+                    <input class="form-control text-left" id="rainy_days" type="text" placeholder="" name="other_charges" value="${(record.billing?string('是', '否'))!}" readonly="readonly"/>
                 </div>
             </div>
+            <div class="form-group form-group-sm">
+                <label class="col-xs-1 control-label text-right" for="other_charges">保险：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="rainy_days" type="text" placeholder="" name="other_charges" value="${(record.insurance?string('是', '否'))!}" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-xs-1 control-label text-right" for="other_charges">港建：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="rainy_days" type="text" placeholder="" name="other_charges" value="${(record.port_fee?string('是', '否'))!}" readonly="readonly"/>
+                </div>
+            </div>
+            <div class="form-group form-group-sm">
+                <label class="col-xs-1 control-label text-right" for="port_construction_fee">港建费：</label>
+                <div class="col-xs-2">
+                    <input class="form-control text-left" id="port_construction_fee" type="text" placeholder="" name="port_construction_fee" value="${(record.port_construction_fee)!}"/>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="form-group"></div>
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="extended_days">超期：</label>
                 <div class="col-xs-2">
@@ -174,11 +195,8 @@
                     <input class="form-control text-left" id="rainy_days" type="text" placeholder="" name="other_charges" value="${(record.other_charges)!}" />
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="form-group"></div>
             <div class="form-group form-group-sm">
-                <label class="col-xs-1 control-label text-right" for="payable_amount">应付金额：</label>
+                <label class="col-xs-1 control-label text-right" for="payable_amount">应收费用：</label>
                 <div class="col-xs-2">
                     <input class="form-control text-left" id="payable_amount" type="text" placeholder="" name="payable_amount" value="${(record.payable_amount)!}" />
                 </div>
@@ -311,7 +329,8 @@ $('#defaultForm').bootstrapValidator({
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-  websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+  //websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
   alert('当前浏览器 Not support websocket')

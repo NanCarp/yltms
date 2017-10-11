@@ -183,7 +183,12 @@ var TableInit = function () {
                 title: '预发货日期'
             },{
                 field: 'transport_consumption',
-                title: '运输定耗(‰)'
+                title: '运输定耗(‰)',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'discharge_period',
                 title: '卸货期限'
@@ -199,7 +204,12 @@ var TableInit = function () {
                 }
             },{
                 field: 'Excess_deduction_price',
-                title: '超耗扣价'
+                title: '超耗扣价',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'document_status',
                 title: '单据状态',
@@ -297,7 +307,7 @@ var ButtonInit = function () {
 function _delete(id){
 	$.post("/planManage/issued/Judgedelete/"+id,function(result){
 		if(result){
-			layer.msg("请先清除已配流向信息，<br>以及产生的后续业务后再删除",{time:4000})
+			layer.msg("请先清除已配流向，<br>以及产生的后续业务后再删除",{time:4000})
 		}else{
 			layer.confirm("确认删除？",{icon:3},function(index){
 				$.post("/planManage/dispatch/delete/"+id,function(data){
@@ -341,7 +351,7 @@ function getIdSelections() {
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+    websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
     alert('当前浏览器 Not support websocket')

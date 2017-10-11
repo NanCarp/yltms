@@ -110,7 +110,7 @@
                             <td>${record.plan_no!}</td>
                             <td>${record.flow!}</td>
                             <td>${record.goods_name!}</td>
-                            <td>${record.estimated_arrvial_date!}</td>
+                            <td>${(record.arrival_date?string("MM-dd"))!}</td>
                             <td>${record.delivery_dock!}</td>
                             <td>${record.destination_port!}</td>
                             <td>${record.consignee!}</td>
@@ -184,7 +184,7 @@
                             <td>${record_index+1}</td>
                             <td>${record.flow!}</td>
                             <td>${record.goods_name!}</td>
-                            <td>${record.estimated_arrvial_date!}</td>
+                            <td>${(record.arrival_date?string("MM-dd"))!}</td>
                             <td>${record.delivery_dock!}</td>
                             <td>${record.destination_port!}</td>
                             <td>${record.consignee!}</td>
@@ -302,6 +302,7 @@
         }
  	}
  	
+ 	// 打印
  	function _print() {
  		var dispatch_id = $('#dispatch_id').val();
         if (!dispatch_id) {
@@ -324,6 +325,7 @@
  		$td.append('公司发货现场负责人：').append($input);
  	}
  	
+ 	// 导出
  	function _export() {
  		var dispatch_id = $('#dispatch_id').val();
  		if (!dispatch_id) {

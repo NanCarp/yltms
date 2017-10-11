@@ -148,13 +148,28 @@ var TableInit = function () {
                 title: '收货数量'
             },{
                 field: 'loss',
-                title: '损耗'
+                title: '损耗',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'fixed_loss',
-                title: '定耗'
+                title: '定耗',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'exceed_loss',
-                title: '超耗'
+                title: '超耗',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'deduct_money',
                 title: '扣款'
@@ -163,7 +178,12 @@ var TableInit = function () {
                 title: '单价'
             },{
                 field: 'ship_freight',
-                title: '运费'
+                title: '运费',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'port_construction_fee',
                 title: '港建费'
@@ -181,7 +201,7 @@ var TableInit = function () {
                 title: '其他'
             },{
                 field: 'payable_amount',
-                title: '应收费用'
+                title: '应付费用'
             }]
         });
     };
@@ -250,7 +270,8 @@ function _export() {
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-  websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+  //websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
   alert('当前浏览器 Not support websocket')

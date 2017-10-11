@@ -29,7 +29,7 @@ public class WaitSettleController extends Controller {
 	}
 	
 	/**
-	 * @desc 展示清单页数据,同时加载成品和半成品
+	 * @desc 
 	 * @author xuhui
 	 */
 	public void getJson(){

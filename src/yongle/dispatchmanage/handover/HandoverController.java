@@ -148,7 +148,16 @@ public class HandoverController extends Controller {
         String ship_name = getPara("ship_name"); // 船名
         Record ship = Db.findFirst("SELECT * FROM t_base_ship WHERE ship_name = ?", ship_name);
         
+        // 提示此船在黑名单中
+        if (ship!=null && ship.getInt("blacklist") == 1) {
+            res.setCode(ResponseObj.FAILED);
+            res.setMsg("此船在黑名单中，请选择其他船只。");
+            renderJson(res);
+            return;
+        }
+        
         res.setCode(ship != null ? ResponseObj.OK : ResponseObj.FAILED);
+        res.setMsg(ship != null ? "" : "船舶信息中不存在该船");
         res.setData(ship);
         
         renderJson(res);

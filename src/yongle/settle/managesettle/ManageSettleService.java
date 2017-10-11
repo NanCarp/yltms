@@ -29,7 +29,7 @@ public class ManageSettleService {
 		
 		//待审核计划号获取
 		String sqlparam = "SELECT * ";
-		String sql = " from t_dispatch where document_status = 1"
+		/*String sql = " from t_dispatch where document_status = 1"
 					+" AND bursar_settle_state = 0"
 					+" AND id NOT IN"
 					+" (SELECT kk.id from"
@@ -38,7 +38,18 @@ public class ManageSettleService {
 					+" LEFT JOIN t_dispatch_detail p ON d.dispatch_detail_id = p.id"
 					+" LEFT JOIN t_dispatch k ON p.plan_no_id = k.id"
 					+" where d.received_quantity IS NULL OR d.declare_date is NULL or d.unloaded_date is NULL ) kk"
-					+" where kk.id is not NULL)";
+					+" where kk.id is not NULL)";*/
+		String sql = " from t_dispatch"
+				+" where document_status = 1" 
+				+" AND bursar_settle_state = 0"
+				+" AND id NOT IN"
+				+" (SELECT kk.id from"
+				+" (SELECT DISTINCT(k.id)"
+				+" from t_dispatch_ship d"
+				+" LEFT JOIN t_dispatch_detail p ON d.dispatch_detail_id = p.id"
+				+" LEFT JOIN t_dispatch k ON p.plan_no_id = k.id"
+				+" where d.receipt_review=0) kk"
+				+" where kk.id is not NULL)";
 		if(plan_no!=null&&plan_no!=""){
 			sql +=" and plan_no like '%"+plan_no+"%'";
 		}

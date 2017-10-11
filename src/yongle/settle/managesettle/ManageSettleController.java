@@ -97,6 +97,16 @@ public class ManageSettleController extends Controller{
 	public void bursarCheckOut(){
 		Map<String,Object> map = new HashMap<String,Object>();
 		Integer id = getParaToInt(0);
+		// 回单未完成，禁止复核
+		List<Record> ships = ManageSettleService.getDetail(id);
+		for (Record ship : ships) {
+		    if (ship.getInt("receipt_finish") == 0) {
+		        map.put("tips","请在回单录入完成后复核");
+		        map.put("flag", false);
+		        renderJson(map);
+		        return;
+		    }
+		}
 		//判断是否更改成功
 		boolean flag = false;
 		String tips ="";

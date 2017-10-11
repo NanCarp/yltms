@@ -7,19 +7,25 @@ password = 123456
 devMode=true
 
 #文件下载地址
+#filepath = /root/upload/yongle/file/
 filepath = D:/upload/yongle/file/
 
 #文件下载地址(合同管理)
+#filepath_contant=/root/upload/yongle/file/contant/
 filepath_contant=D:/upload/yongle/file/contant/
 
 #文件下载地址(船舶信息管理-船证件信息)
+#filepath_ship=/root/upload/yongle/file/ship/
 filepath_ship=D:/upload/yongle/file/ship/
 
 #文件下载地址(客户信息管理-工商资料)
+#filepath_commerce=/root/upload/yongle/file/commerce/
 filepath_commerce=D:/upload/yongle/file/commerce/
 
 #文件下载地址(船员证件)
+#filepath_shipCrew=/root/upload/yongle/file/shipCrew/
 filepath_shipCrew=D:/upload/yongle/file/shipCrew/
 
 # 域名
-hostname=http://yongle.ngrok.xiaomiqiu.cn
+hostname=yl.qibuyun.cn
+#hostname=localhost:8080

@@ -4,11 +4,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletResponse;
 
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
@@ -32,7 +34,7 @@ public class ShipService {
 	 */
 	public static Page<Record> getJson(Integer pageNumber,Integer pageSize
 			,String shipowname,String ship_name){
-		String sql = " from t_base_ship where 1=1";
+		String sql = " from t_base_ship where blacklist=0";
 		if(shipowname!=null){
 			sql +=" and shipowname like '%"+shipowname+"%'";
 		}
@@ -134,5 +136,26 @@ public class ShipService {
 		}
 		in.close();
 		out.close();
+	}
+	
+	/**
+	 * @desc 修改黑名单
+	 * @author xuhui
+	 */
+	public static boolean setBlack(String blackList){
+		
+		boolean flag = Db.tx(new IAtom() {
+			@Override
+			public boolean run() throws SQLException {
+				// TODO Auto-generated method stub
+				String[] ids =  blackList.split(",");
+				for(String id:ids){
+					String sql = "UPDATE t_base_ship SET blacklist = 1 WHERE id = "+id;
+					Db.update(sql);
+				}
+				return true;
+			}
+		});
+		return flag;
 	}
 }

@@ -57,7 +57,6 @@
 		</div>             
 	</div>
 </div>
-
 <script>
 $(".form_datetime").datetimepicker({
 	format: "yyyy-mm-dd",
@@ -189,13 +188,23 @@ var TableInit = function () {
                 title: '预发货日期'
             },{
                 field: 'transport_consumption',
-                title: '运输定耗(‰)'
+                title: '运输定耗(‰)',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'discharge_period',
                 title: '卸货期限'
             },{
                 field: 'Excess_deduction_price',
-                title: '超耗扣价'
+                title: '超耗扣价',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'plan_state',
                 title: '总数量分配状态',
@@ -289,7 +298,7 @@ function _edit(id){
 function _delete(id){
 	$.post("/planManage/dispatch/getExamineState/"+id,function(result){
 		if(result){
-			layer.msg("该计划号已审核，禁止删除",{time:2000})
+			layer.msg("该计划号已审核，不可删除",{time:2000})
 		}else{
 			layer.confirm("确认删除？",{icon:3},function(index){
 				$.post("/planManage/dispatch/delete/"+id,function(data){
@@ -325,7 +334,6 @@ var dataForMessage={
 		pages:'issuedplan'
 }
 
-
 //下发
 function _issued(){
 	// 获取选中记录 id
@@ -352,7 +360,7 @@ function _issued(){
 					})
 				})
 			}else{
-				layer.msg('下发失败，总数量未完全分配', {time: 2500});
+				layer.msg('请先添加流向明细', {time: 2500});
 			}
 		})
 	}
@@ -368,7 +376,7 @@ function getIdSelections() {
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-  websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+  websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
   alert('当前浏览器 Not support websocket')
@@ -398,6 +406,8 @@ window.onbeforeunload = function () {
 function closeWebSocket() {
   websocket.close();
 }
+
+
 </script>
 </body>
 </html>

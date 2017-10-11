@@ -133,7 +133,7 @@ var TableInit = function () {
                 field:'opt',
                 title:'操作',
                 formatter:function(value,row,index){
-                    return ['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">编辑</button>',
+                    return ['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">编辑</button> '+
                     	    '<button class="btn btn-xs btn-4"  onclick="_delete('+row.id+')">删除</button>'];
                 },
             }]

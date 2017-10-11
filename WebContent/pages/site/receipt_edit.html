@@ -25,8 +25,9 @@
 <div class="container">
     <form id="defaultForm">
         <input type="hidden" name="id" value="${(record.id)!}">
-        <input type="hidden" name="ship_freight" value="${(record.id)!}">
         <input type="hidden" name="freight_price" value="${(record.freight_price)!}">
+        <input type="hidden" name="prepay" value="${(record.prepay)!}"/>
+        <input type="hidden" name="pre_refuel" value="${(record.pre_refuel)!}"/>
         <div class="row" >
             <div class="form-group"></div>
             <div class="form-group ">
@@ -95,13 +96,13 @@
             <div class="form-group ">
                 <label class="col-xs-2 control-label text-right" for="site_refuel">加油计划：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="site_refuel" type="text" placeholder="" value="${(record.site_refuel)!}" readonly/>
+                    <input class="form-control text-left" id="site_refuel" type="text" placeholder="" name="site_refuel" value="${(record.site_refuel)!}" readonly="readonly"/>
                 </div>
             </div>
             <div class="form-group ">
                 <label class="col-xs-2 control-label text-right" for="site_pay">预付款：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="site_pay" type="text" placeholder="" value="${(record.site_pay)!}" readonly/>
+                    <input class="form-control text-left" id="site_pay" type="text" placeholder="" name="site_pay" value="${(record.site_pay)!}" readonly="readonly"/>
                 </div>
             </div>
         </div>
@@ -234,7 +235,7 @@ $('#defaultForm').bootstrapValidator({
                 //parent.parent.refresh_iframe();
             });
             sendTo("receipt", "refresh");
-            semdTo("settle", "refresh")
+            sendTo("settle", "refresh")
         } else {
             parent.layer.msg(result.msg, {time: 2000});
         }
@@ -259,7 +260,8 @@ $(".form_date").datetimepicker({
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+    //websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
     alert('当前浏览器 Not support websocket')

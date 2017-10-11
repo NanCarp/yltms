@@ -5,6 +5,7 @@ import yongle.dataBase.customer.CustomerController;
 import yongle.dataBase.goods.GoodsController;
 import yongle.dataBase.port.PortController;
 import yongle.dataBase.ship.ShipController;
+import yongle.dataBase.shipblacklist.ShipBlackListController;
 import yongle.dispatchmanage.handover.HandoverController;
 import yongle.dispatchmanage.handoverfinish.HandoverFinishController;
 import yongle.dispatchmanage.issuedplan.IssuedPlanController;
@@ -97,6 +98,8 @@ public class AdminRoutes extends Routes{
         add("/dataBase/customer",CustomerController.class,"/database");
         //基础数据 - 船舶信息管理
         add("/dataBase/ship",ShipController.class,"/database");
+        //基础数据 - 船舶黑名单信息
+        add("/dataBase/shipblack",ShipBlackListController.class,"/database");
         
 		//系统管理-角色管理控制器
 		add("/system/role",RoleController.class,"/system");
