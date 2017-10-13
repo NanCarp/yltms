@@ -18,10 +18,10 @@ public class ReceiptService {
     * @Description: 数据
     * @param pageindex
     * @param pagelimit
-    * @param plan_no
-    * @param ship_name
-    * @param start_date
-    * @param end_date
+    * @param plan_no 计划号
+    * @param ship_name 船名
+    * @param start_date 起始日期
+    * @param end_date 截止日期
     * @return Page<Record>
     * @author liyu
     */

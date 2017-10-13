@@ -1,5 +1,6 @@
 package yongle.settle.shipfreight;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,9 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
 import yongle.interceptor.ManageInterceptor;
+import yongle.model.CustomerSettle;
+import yongle.model.ShipSettle;
+import yongle.utils.ResponseObj;
 /**
  * @ClassName: ShipFreightController.java
  * @Description: 结算审核表-船舶运费结算清单
@@ -64,26 +68,8 @@ public class ShipFreightController extends Controller {
 	 * @author xuhui
 	 */
 	public void save(){
-		//判断是否保存成功
-		boolean flag = false;
-		Integer id = getParaToInt("id");
-		Integer dispatch_ship_id = getParaToInt("dispatch_ship_id");
-		Long port_construction_fee = getParaToLong("port_construction_fee");//港建费
-		String demurrage_days = getPara("demurrage_days");//滞期天数
-		Integer extended_days = getParaToInt("extended_days");//超期天数
-		Long demurrage_charges = getParaToLong("demurrage_charges");//滞港费
-		String other_charges = getPara("other_charges");//其他费用
-		Long payable_amount = getParaToLong("payable_amount");//应收金额
-		Record record = new Record();
-		record.set("id",id);
-		record.set("dispatch_ship_id", dispatch_ship_id);
-		record.set("port_construction_fee", port_construction_fee);
-		record.set("demurrage_days", demurrage_days);
-		record.set("extended_days", extended_days);
-		record.set("demurrage_charges", demurrage_charges);
-		record.set("other_charges", other_charges);
-		record.set("payable_amount", payable_amount);
-		flag = Db.update("t_ship_settle", record);
-		renderJson(flag);
+		ShipSettle record = getModel(ShipSettle.class, "");
+        boolean flag = record.update();
+        renderJson(flag);
 	}
 }

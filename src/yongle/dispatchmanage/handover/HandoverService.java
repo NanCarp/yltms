@@ -29,20 +29,22 @@ import yongle.utils.ResponseObj;
 
 /**
  * @ClassName: HandoverService.java
- * @Description:
- * @author: 
+ * @Description: 调度交接
+ * @author: liyu
  * @date: 2017年9月22日下午6:10:43
  * @version: 1.0 版本初成
  */
 public class HandoverService {
-
     /** 
     * @Title: getDataPages 
-    * @Description: 调度交接
+    * @Description: 调度交接待配流向数据
     * @param pageindex
     * @param pagelimit
-    * @param warehouse_in_no
-    * @param company_name
+    * @param plan_no
+    * @param goods_name
+    * @param entry_start
+    * @param entry_end
+    * @param dispatcher
     * @return Page<Record>
     * @author liyu
     */
@@ -83,9 +85,11 @@ public class HandoverService {
     /** 
     * @Title: save 
     * @Description: 保存调度交接表驳船信息
-    * @param dispatch_id
+    * @param dispatch_detail_id
+    * @param left_qty
     * @param recordList
-    * @return ResponseObject
+    * @param dispatcher
+    * @return ResponseObj
     * @author liyu
     */
     public static ResponseObj save(Integer dispatch_detail_id, String left_qty, 
@@ -108,7 +112,6 @@ public class HandoverService {
                     }
                 }
                 // 运价超过指导价，提醒
-                //System.out.println(list);
                 if (overList.size() > 0) {
                     Record notice = new Record(); // 提醒
                     notice.set("title", "调度运价超出指导价，请确认。");
@@ -156,6 +159,7 @@ public class HandoverService {
     * @return List<Record>
     * @author liyu
     */
+    @SuppressWarnings("unchecked")
     private static List<Record> jsonToRecordList(String json) {
         List<JSONObject> list = new ArrayList<>();
         list = JSONObject.parseObject(json, list.getClass());
@@ -169,7 +173,7 @@ public class HandoverService {
 
     /** 
     * @Title: export 
-    * @Description: 导出 excel
+    * @Description: 导出宜兴永乐运输有限公司调度员交接表
     * @return boolean
     * @author liyu
      * @param id 
@@ -190,7 +194,6 @@ public class HandoverService {
         wbook.setSheetName(0, "调度交接表", (short)1);
         sheet.addMergedRegion(new Region(0, (short)0, 0, (short)13));
         // 设置列宽
-        //int[] widths = {3000,3000,3000};
         for (int i = 0; i < 14; i++) {
             sheet.setColumnWidth((short)i, (short)3000);
         }

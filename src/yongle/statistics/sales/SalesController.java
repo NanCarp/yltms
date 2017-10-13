@@ -32,8 +32,8 @@ public class SalesController extends Controller {
     * @author liyu
     */
     public void getJson(){
-        String plan_no = getPara("plan_no");
-        String consignor = getPara("consignor");
+        String plan_no = getPara("plan_no"); // 计划号
+        String consignor = getPara("consignor"); // 托运人
         
         Integer pageindex = 0; // 页码
         Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit"); // 每页数据条数
@@ -60,14 +60,14 @@ public class SalesController extends Controller {
     * @author liyu
     */
     public void detail() {
-        Integer id = getParaToInt();
+        Integer id = getParaToInt(); // 计划号 id
         
         Record plan = Db.findById("t_dispatch", id);
         setAttr("plan", plan);
         List<Record> shipList = SalesService.getShipSettleList(id);
-        setAttr("shipList", shipList);
+        setAttr("shipList", shipList); // 计划号下船结算信息
         List<Record> customerList = SalesService.getCustomerSettleList(id);
-        setAttr("customerList", customerList);
+        setAttr("customerList", customerList); // 计划号下客户结算信息
         
         render("sales_detail.html");
     }

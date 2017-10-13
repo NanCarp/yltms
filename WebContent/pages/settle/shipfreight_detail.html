@@ -52,13 +52,13 @@
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="ship_name">船名：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="ship_name" type="text" placeholder="" name="ship_name" value="${(record.ship_name)!}" readonly/>
+                    <input class="form-control text-left" id="ship_name" type="text" placeholder=""  value="${(record.ship_name)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="delivery_quantity">发货数量：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="loading_tonnage" type="text" placeholder="" name="delivery_quantity" value="${(record.delivery_quantity)!}" readonly/>
+                    <input class="form-control text-left" id="loading_tonnage" type="text" placeholder=""  value="${(record.delivery_quantity)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -70,7 +70,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="loss">损耗：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="loss" type="text" placeholder="" name="loss" value="${(record.loss)!}" readonly/>
+                    <input class="form-control text-left" id="loss" type="text" placeholder=""  value="${(record.loss)!}" readonly/>
                 </div>
             </div>
         </div>
@@ -79,25 +79,25 @@
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="fixed_loss">定耗：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="fixed_loss" type="text" placeholder="" name="fixed_loss" value="${(record.fixed_loss)!}" readonly/>
+                    <input class="form-control text-left" id="fixed_loss" type="text" placeholder=""  value="${(record.fixed_loss)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="exceed_loss">超耗：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="exceed_loss" type="text" placeholder="" name="exceed_loss" value="${(record.exceed_loss)!}" readonly/>
+                    <input class="form-control text-left" id="exceed_loss" type="text" placeholder="" value="${(record.exceed_loss)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="deduct_money">扣款：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="deduct_money" type="text" placeholder="" name="deduct_money" value="${(record.deduct_money)!}" readonly/>
+                    <input class="form-control text-left" id="deduct_money" type="text" placeholder="" value="${(record.deduct_money)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="freight_price">单价：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="freight_price" type="text" placeholder="" name="freight_price" value="${(record.freight_price)!}" readonly/>
+                    <input class="form-control text-left" id="freight_price" type="text" placeholder=""  value="${(record.freight_price)!}" readonly/>
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@
             <div class="form-group form-group-sm">
                 <label class="col-xs-1 control-label text-right" for="ship_freight">运费：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="ship_freight" type="text" placeholder="" name="ship_freight" value="${(record.ship_freight)!}" readonly/>
+                    <input class="form-control text-left" id="ship_freight" type="text" placeholder=""  value="${(record.ship_freight)!}" readonly/>
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -302,8 +302,8 @@ $(".form_date").datetimepicker({
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-  //websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
-	websocket = new WebSocket("ws://localhost:8080/websocket");
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	//websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
   alert('当前浏览器 Not support websocket')

@@ -41,11 +41,11 @@ public class HandoverSiteController extends Controller {
     * @author liyu
     */
     public void getJson(){
-        String plan_no = getPara("plan_no");
-        String goods_name = getPara("goods_name");
-        String entry_start = getPara("entry_start");
-        String entry_end = getPara("entry_end");
-        String entry_man = getPara("entry_man");
+        String plan_no = getPara("plan_no"); // 计划号
+        String goods_name = getPara("goods_name"); // 货名
+        String entry_start = getPara("entry_start"); // 录入起始日期
+        String entry_end = getPara("entry_end"); // 录入截止日期
+        String entry_man = getPara("entry_man"); // 录入人
         
         Integer pageindex = 0; // 页码
         Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit"); // 每页数据条数
@@ -91,7 +91,7 @@ public class HandoverSiteController extends Controller {
          Record record = HandoverSiteService.getRecordById(id);
          setAttr("record", record);
          List<Record> recordList = Db.find("SELECT *,a.id FROM `t_dispatch_ship` AS a LEFT JOIN t_dispatch_detail AS b ON a.dispatch_detail_id = b.id WHERE dispatch_detail_id = ? ", id);
-         setAttr("recordList", recordList);
+         setAttr("recordList", recordList); // 流向下具体船信息
          
          render("handover_site_edit.html");
      }
@@ -131,7 +131,7 @@ public class HandoverSiteController extends Controller {
     * @author 
     */
     public void print() {
-        Integer id = getParaToInt();
+        Integer id = getParaToInt(); // 流向 id
         Integer plan_no_id = Db.findById("t_dispatch_detail", id).getInt("plan_no_id");
         List<Record> recordList = Db.find("SELECT * "
                 + " FROM t_dispatch_ship AS a "
@@ -139,7 +139,7 @@ public class HandoverSiteController extends Controller {
                 + " ON b.id = a.dispatch_detail_id "
                 + " LEFT JOIN t_dispatch AS c "
                 + " ON b.plan_no_id = c.id"
-                + " WHERE c.id = ? ", plan_no_id);
+                + " WHERE c.id = ? ", plan_no_id); // 计划号下所有船信息
         
         renderJson(recordList);
     }

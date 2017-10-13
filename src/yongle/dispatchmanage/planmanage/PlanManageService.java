@@ -33,7 +33,7 @@ public class PlanManageService{
 		if(consignor!=null&&consignor!=""){
 			sql +=" and consignor like '%"+consignor+"%'";
 		}
-		if(plan_begintime!=null&&plan_begintime!=""){
+		/*if(plan_begintime!=null&&plan_begintime!=""){
 			if(plan_endtime!=null&&plan_endtime!=""){
 				sql +=" and '"+plan_begintime+"'<= entry_time and entry_time <= '"+plan_endtime+"'";
 			}else{
@@ -46,7 +46,13 @@ public class PlanManageService{
 			}else{
 				sql +=" and entry_time = '"+plan_endtime+"'";
 			}
-		}
+		}*/
+		if(plan_begintime!=null&&plan_begintime!=""){
+            sql +=" and '"+plan_begintime+"' <= entry_time ";
+        }
+		if(plan_endtime!=null&&plan_endtime!=""){
+            sql +=" and entry_time <= '"+plan_endtime+"'";
+        }
 		sql +=" order by id desc";
 		return Db.paginate(pageNumber, pageSize, "select *",sql);
 	}
@@ -60,13 +66,15 @@ public class PlanManageService{
 	 */
 	public static boolean savePlanDetailSee(Integer id,String PlanDetail){
 		boolean flag = Db.tx(new IAtom() {			
-			@Override
+			@SuppressWarnings("unchecked")
+            @Override
 			public boolean run() throws SQLException {
 				//判断数据是否保存成功
 				boolean flagData = true;
 				//删除该计划号下所有明细，重新保存数据
 				String sql = "delete from t_dispatch_detail where plan_no_id = "+id;
-				Integer num = Db.update(sql);
+				//Integer num = Db.update(sql);
+				Db.update(sql);
 				List<JSONObject> planDetailList = (List<JSONObject>) JSONObject.parse(PlanDetail);
 				for(JSONObject plandetail:planDetailList){
 					Record planDetailRecord = new Record();

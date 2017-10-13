@@ -17,13 +17,11 @@ public class SalesService {
     
     /** 
     * @Title: getDataPages 
-    * @Description: 数据
+    * @Description: 销售统计数据
     * @param pageindex
     * @param pagelimit
-    * @param plan_no
-    * @param apply_begin
-    * @param apply_end
-    * @param dispatcher
+    * @param plan_no 计划号
+    * @param consignor 托运人
     * @return Page<Record>
     * @author liyu
     */
@@ -43,7 +41,8 @@ public class SalesService {
             sqlExceptSelect += " AND a.consignor like '%" + consignor + "'";
         }
         
-        sqlExceptSelect += " GROUP BY a.plan_no_id ";
+        sqlExceptSelect += " GROUP BY a.plan_no_id "
+                + " ORDER BY a.plan_no_id DESC "; // 计划号 id 降序排列
         
         return Db.paginate(pageindex, pagelimit, select, sqlExceptSelect);
     }

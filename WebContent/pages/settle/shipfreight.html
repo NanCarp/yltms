@@ -172,7 +172,12 @@ var TableInit = function () {
                 }
             },{
                 field: 'deduct_money',
-                title: '扣款'
+                title: '扣款',
+                formatter:function(value,row,index){
+                	if(value!=null){
+                		return value.toFixed(3);	
+                	}
+                }
             },{
                 field: 'freight_price',
                 title: '单价'
@@ -270,8 +275,8 @@ function _export() {
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-  //websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
-	websocket = new WebSocket("ws://localhost:8080/websocket");
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	//websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
   alert('当前浏览器 Not support websocket')

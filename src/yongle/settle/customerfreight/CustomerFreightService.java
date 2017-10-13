@@ -18,7 +18,7 @@ public class CustomerFreightService {
     * @Description: 数据
     * @param pageindex
     * @param pagelimit
-    * @param plan_no
+    * @param plan_no 计划号
     * @return Page<Record>
     * @author liyu
     */

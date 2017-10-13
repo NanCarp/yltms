@@ -29,8 +29,8 @@ import yongle.utils.ResponseObj;
 
 /**
  * @ClassName: HandoverFinishService.java
- * @Description:
- * @author: 
+ * @Description: 已配流向
+ * @author: liyu
  * @date: 2017年9月22日下午6:11:23
  * @version: 1.0 版本初成
  */
@@ -38,11 +38,14 @@ public class HandoverFinishService {
 
     /** 
     * @Title: getDataPages 
-    * @Description: 调度交接
+    * @Description: 调度交接流向数据
     * @param pageindex
     * @param pagelimit
-    * @param warehouse_in_no
-    * @param company_name
+    * @param plan_no
+    * @param goods_name
+    * @param entry_start
+    * @param entry_end
+    * @param entry_man
     * @return Page<Record>
     * @author liyu
     */
@@ -127,6 +130,7 @@ public class HandoverFinishService {
     * @return List<Record>
     * @author liyu
     */
+    @SuppressWarnings("unchecked")
     private static List<Record> jsonToRecordList(String json) {
         List<JSONObject> list = new ArrayList<>();
         list = JSONObject.parseObject(json, list.getClass());
@@ -148,7 +152,6 @@ public class HandoverFinishService {
     */
     public static boolean export(HttpServletResponse response, Integer id) {
         
-        //Record record = Db.findById("t_dispatch", id);
         List<Record> recordList = Db.find("SELECT * "
                 + " FROM t_dispatch_ship AS a "
                 + " LEFT JOIN t_dispatch_detail AS b "
@@ -162,7 +165,6 @@ public class HandoverFinishService {
         wbook.setSheetName(0, "调度交接表", (short)1);
         sheet.addMergedRegion(new Region(0, (short)0, 0, (short)13));
         // 设置列宽
-        //int[] widths = {3000,3000,3000};
         for (int i = 0; i < 14; i++) {
             sheet.setColumnWidth((short)i, (short)3000);
         }
@@ -186,11 +188,7 @@ public class HandoverFinishService {
         
         HSSFRow row;
         String[] a = {"计划号","货名","海船名","发货码头","目的港","船名","姓名","手机号","身份证号码","配载吨位","可载吨位","到港日期","运价","加油"};
-        /*String[] b = {"plan_no","goods_name","seagoing_vessel_name","delivery_dock","destination_port",
-                "ship_name","ship_owner_name","ship_owner_phone","id_card_no","loading_tonnage",
-                "available_tonnage","arrival_date","freight_price","pre_refuel"};*/
         
-        //int i = 1;
         row = sheet.createRow(0);
         HSSFCell cell = row.createCell((short)0);
         cell.setEncoding(HSSFCell.ENCODING_UTF_16);
@@ -204,20 +202,6 @@ public class HandoverFinishService {
             cell0.setCellStyle(cellBorder);
             cell0.setCellValue(a[j]);
         }
-        
-        /*for (int j = 0; j < recordList.size(); j++) {
-            Record r = recordList.get(j);
-            row = sheet.createRow(j + 2);
-            for (int k = 0; k < b.length; k++) {
-                HSSFCell cell0 = row.createCell((short) 0);
-                cell0.setEncoding(HSSFCell.ENCODING_UTF_16);
-                cell0.setCellStyle(cellBorder);
-                String key = b[k];
-                Object obj = r.get(key);
-                //String s = obj == null ? "" : obj.toString();
-                cell0.setCellValue("" + obj);
-            }
-        }*/
         
         for (int j = 0; j < recordList.size(); j++) {
             Record r = recordList.get(j);

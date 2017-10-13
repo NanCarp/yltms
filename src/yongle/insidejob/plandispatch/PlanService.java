@@ -15,11 +15,11 @@ import com.jfinal.plugin.activerecord.Record;
 public class PlanService {
 	  /** 
 	* @Title: getRecordList 
-	* @Description: 根据 计划 id 查询
+	* @Description: 根据计划号查询计划调度信息
 	* @param plan_no
 	* @param consignor
 	* @return List<Record>
-	* @author 
+	* @author liyu
 	*/
 	public static List<Record> getRecordList(String plan_no, String consignor) {
 	      String sql = " SELECT b.*,c.*,a.*  "

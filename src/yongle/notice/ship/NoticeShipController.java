@@ -13,8 +13,8 @@ import yongle.utils.ResponseObj;
 
 /**
  * @ClassName: NoticeShipController.java
- * @Description:
- * @author: 
+ * @Description: 消息提醒
+ * @author: liyu
  * @date: 2017年9月21日下午5:05:01
  * @version: 1.0 版本初成
  */
@@ -30,7 +30,7 @@ public class NoticeShipController extends Controller{
         Integer notice_id = getParaToInt(); // 提醒 id
         setAttr("notice_id", notice_id);
         Record ship = Db.findFirst("SELECT * FROM `t_notice_ship` WHERE notice_id = ? ", notice_id);
-        Integer dispatch_detail_id = ship.getInt("dispatch_detail_id");
+        Integer dispatch_detail_id = ship.getInt("dispatch_detail_id"); // 流向 id
         
         Record record = HandoverService.getRecordById(dispatch_detail_id);
         setAttr("record", record);

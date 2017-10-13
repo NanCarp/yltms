@@ -11,8 +11,6 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.template.stat.ast.Set;
-
 import yongle.utils.EncodeUtil;
 
 /**

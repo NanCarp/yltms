@@ -31,9 +31,9 @@ public class PlanController extends Controller {
     */
     public void search() {
     	
-    	String plan_no = getPara("plan_no");
+    	String plan_no = getPara("plan_no"); // 计划号
     	setAttr("plan_no", plan_no);
-    	String consignor = getPara("consignor");
+    	String consignor = getPara("consignor"); // 托运人
     	setAttr("consignor", consignor);
     	
     	if (plan_no != null && !"".equals(plan_no)) {

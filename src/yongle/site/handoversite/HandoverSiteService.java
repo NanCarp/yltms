@@ -23,11 +23,14 @@ public class HandoverSiteService {
 
     /** 
     * @Title: getDataPages 
-    * @Description: 调度交接
+    * @Description: 调度交接 
     * @param pageindex
     * @param pagelimit
-    * @param warehouse_in_no
-    * @param company_name
+    * @param plan_no 计划号
+    * @param goods_name 货名
+    * @param entry_start 录入起始日期
+    * @param entry_end 录入截止日期
+    * @param entry_man 录入人
     * @return Page<Record>
     * @author liyu
     */
@@ -68,9 +71,9 @@ public class HandoverSiteService {
     /** 
     * @Title: save 
     * @Description: 保存调度交接表驳船信息
-    * @param dispatch_id
+    * @param dispatch_detail_id
     * @param recordList
-    * @return ResponseObject
+    * @return ResponseObj
     * @author liyu
     */
     public static ResponseObj save(Integer dispatch_detail_id, String recordList) {
@@ -121,7 +124,7 @@ public class HandoverSiteService {
     * @Description: 查看流向相关信息
     * @param id
     * @return Record
-    * @author 
+    * @author liyu
     */
     public static Record getRecordById(Integer id) {
         String sql = " SELECT *,a.id "

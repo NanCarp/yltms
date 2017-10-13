@@ -87,9 +87,10 @@ function confirm(id) {
                         action: "refresh"
                 }
                 send(JSON.stringify(msg));
+            	sendTo("indexframe", "refresh");
             	
                 parent.layer.msg(result.msg, {time: 2000}, function(){
-                    parent.refresh_iframe();
+                    //parent.refresh_iframe();
                     layer_close();
                 });
 
@@ -106,8 +107,8 @@ function confirm(id) {
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-//websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
-	websocket = new WebSocket("ws://localhost:8080/websocket");
+    websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+	//websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
 alert('当前浏览器 Not support websocket')
@@ -124,12 +125,7 @@ websocket.onopen = function () {
 
 //接收到消息的回调方法
 websocket.onmessage = function (event) {
-    /* var msg = JSON.parse(event.data);
-    if(msg.receiver === "handover_finish") {
-        if (msg.action === "refresh") {
-            refresh();
-        }
-    } */
+
 }
 
 //连接关闭的回调方法
@@ -156,6 +152,14 @@ function send(msg) {
     websocket.send(msg);
 }
 
+//发送给特定目标，进行特定操作
+function sendTo(receiver, action) {
+    var msg = {
+            receiver: receiver,
+            action: action
+    };
+    websocket.send(JSON.stringify(msg));
+}
 </script>
 </body>
 </html>

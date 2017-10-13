@@ -38,11 +38,11 @@ public class HandoverFinishController extends Controller {
     * @author liyu
     */
     public void getJson(){
-        String plan_no = getPara("plan_no");
-        String goods_name = getPara("goods_name");
-        String entry_start = getPara("entry_start");
-        String entry_end = getPara("entry_end");
-        String entry_man = getPara("entry_man");
+        String plan_no = getPara("plan_no"); // 计划号
+        String goods_name = getPara("goods_name"); // 货物名称
+        String entry_start = getPara("entry_start"); // 录入起始时间
+        String entry_end = getPara("entry_end"); // 录入截止时间
+        String entry_man = getPara("entry_man"); // 录入人
         
         Integer pageindex = 0; // 页码
         Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit"); // 每页数据条数

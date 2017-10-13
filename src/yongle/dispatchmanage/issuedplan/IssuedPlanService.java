@@ -29,7 +29,7 @@ public class IssuedPlanService {
 		if(consignor!=null&&consignor!=""){
 			sql +=" and consignor like '%"+consignor+"%'";
 		}
-		if(plan_begintime!=null&&plan_begintime!=""){
+		/*if(plan_begintime!=null&&plan_begintime!=""){
 			if(plan_endtime!=null&&plan_endtime!=""){
 				sql +=" and '"+plan_begintime+"'<= entry_time and entry_time <= '"+plan_endtime+"'";
 			}else{
@@ -42,7 +42,13 @@ public class IssuedPlanService {
 			}else{
 				sql +=" and entry_time = '"+plan_endtime+"'";
 			}
-		}
+		}*/
+		if(plan_begintime!=null&&plan_begintime!=""){
+            sql +=" and '"+plan_begintime+"'<= entry_time ";
+        }
+        if(plan_endtime!=null&&plan_endtime!=""){
+            sql +=" and entry_time <= '"+plan_endtime+"'";
+        }
 		sql +=" order by id desc";
 		return Db.paginate(pageNumber, pageSize, "select *",sql);
 	}

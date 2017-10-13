@@ -41,7 +41,7 @@ public class GoodsController extends Controller {
     * @author liyu
     */
     public void getJson() {
-        String goods_name = getPara("goods_name"); // 港口名称
+        String goods_name = getPara("goods_name"); // 货物名称
         
         Integer pageindex = 0; // 页码
         Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit"); // 每页数据条数

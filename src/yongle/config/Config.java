@@ -1,7 +1,5 @@
 package yongle.config;
 
-import java.util.Timer;
-
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -9,8 +7,6 @@ import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.ext.handler.ContextPathHandler;
-import com.jfinal.ext.handler.UrlSkipHandler;
-import com.jfinal.ext.plugin.shiro.*;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
@@ -30,7 +26,6 @@ import yongle.utils.WebSocketHandler;
  * @version: 1.0 版本初成
  */
 public class Config extends JFinalConfig {
-	private Timer timer = new Timer();
 
 	@Override
 	public void configConstant(Constants me) {
@@ -58,7 +53,7 @@ public class Config extends JFinalConfig {
 	
 	@Override
 	public void configPlugin(Plugins me) {
-	    // 配置C3p0数据库连接池插件
+	    // 配置Druid数据库连接池插件
         DruidPlugin druidPlugin = createDruidPlugin();
         me.add(druidPlugin);
         

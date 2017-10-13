@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label class="col-xs-1 control-label text-right" for="left_qty">剩余数量：</label>
                 <div class="col-xs-2">
-                    <input class="form-control text-left" id="left_qty" type="text" placeholder="剩余吨数" name="left_qty" value="${(record.left_qty)!}" readonly/>
+                    <input class="form-control text-left" id="left_qty" type="text" placeholder="剩余数量" name="left_qty" value="${(record.left_qty)!}" readonly/>
                 </div>
             </div>
             <!-- <div class="form-group">
@@ -746,8 +746,8 @@ $('form').on('change', 'input[name=loading_tonnage], input[name=freight_price]',
 var websocket = null;
 //判断当前浏览器是否支持WebSocket
 if ('WebSocket' in window) {
-	//console.log(window.location.host);
-    websocket = new WebSocket("ws://localhost:8080/websocket");
+	websocket = new WebSocket("ws://"+ window.location.host +"/websocket");
+    //websocket = new WebSocket("ws://localhost:8080/websocket");
 }
 else {
     alert('当前浏览器 Not support websocket')

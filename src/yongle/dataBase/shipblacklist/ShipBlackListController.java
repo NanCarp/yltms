@@ -8,7 +8,6 @@ import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.Record;
 
 import yongle.dataBase.ship.ShipController;
-import yongle.dataBase.ship.ShipService;
 import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: ShipBlackListController.java

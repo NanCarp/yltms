@@ -29,13 +29,13 @@ public class WaterwayFreightController extends Controller {
     * @author liyu
     */
     public void index() {
-        Record admin = getSessionAttr("admin");
+        Record admin = getSessionAttr("admin"); // 用户
         Integer rid = admin.getInt("role_id");
         String buttons = Db.queryStr("select button_ids from t_role_button where role_id = ?", rid);
-        if(buttons.indexOf("103")!=-1){
+        if(buttons.indexOf("103")!=-1){ // 审核权限
             setAttr("_review", 1);
         }
-        if(buttons.indexOf("104")!=-1){
+        if(buttons.indexOf("104")!=-1){ // 修改权限
             setAttr("_edit", 1);
         }
 
@@ -48,7 +48,7 @@ public class WaterwayFreightController extends Controller {
     * @author liyu
     */
     public void getJson(){
-        String plan_no = getPara("plan_no");
+        String plan_no = getPara("plan_no"); // 计划号
         String ship_name = getPara("ship_name");
         String start_date = getPara("start_date");
         String end_date = getPara("end_date");

@@ -22,10 +22,10 @@ public class WaterwayFreightService {
     * @Description: 页面数据
     * @param pageindex
     * @param pagelimit
-    * @param plan_no
-    * @param ship_name
-    * @param start_date
-    * @param end_date
+    * @param plan_no 计划号
+    * @param ship_name 船名
+    * @param start_date 起始日期
+    * @param end_date 截止日期
     * @return Page<Record>
     * @author liyu
     */
@@ -66,8 +66,9 @@ public class WaterwayFreightService {
     /** 
     * @Title: getRecordById 
     * @Description: 查询船相关信息
+    * @param id 船id
     * @return Record
-    * @author liyu
+    * @author 
     */
     public static Record getRecordById(Integer id) {
         String sql = " SELECT d.*,c.*,a.*,b.* "
@@ -84,8 +85,8 @@ public class WaterwayFreightService {
 
     /** 
     * @Title: createNotice 
-    * @Description: 创建提醒
-    * @param id
+    * @Description: 创建运单预付款提醒
+    * @param id 船id
     * @return Boolean
     * @author 
     */

@@ -37,10 +37,10 @@ public class ReceiptController extends Controller {
     * @author liyu
     */
     public void getJson(){
-        String plan_no = getPara("plan_no");
-        String ship_name = getPara("ship_name");
-        String start_date = getPara("start_date");
-        String end_date = getPara("end_date");
+        String plan_no = getPara("plan_no"); // 计划号
+        String ship_name = getPara("ship_name"); // 船名
+        String start_date = getPara("start_date"); // 起始日期
+        String end_date = getPara("end_date"); // 截止日期
         
         Integer pageindex = 0; // 页码
         Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit"); // 每页数据条数

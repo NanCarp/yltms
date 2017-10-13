@@ -32,11 +32,11 @@ public class CustomerFreightController extends Controller {
     
     /** 
     * @Title: getJson 
-    * @Description: 数据
+    * @Description: 待结算客户数据
     * @author liyu
     */
     public void getJson(){
-        String plan_no = getPara("plan_no");
+        String plan_no = getPara("plan_no"); // 计划号
         
         Integer pageindex = 0; // 页码
         Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit"); // 每页数据条数
@@ -62,8 +62,8 @@ public class CustomerFreightController extends Controller {
     * @author liyu
     */
     public void getRecord() {
-        Integer id = getParaToInt();
-        Record r = CustomerFreightService.getRecordById(id);
+        Integer id = getParaToInt(); // 船 id
+        Record r = CustomerFreightService.getRecordById(id); // 客户结算信息
         setAttr("record", r);
         
         render("customer_freight_edit.html");

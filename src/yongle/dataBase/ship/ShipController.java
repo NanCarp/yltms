@@ -13,7 +13,6 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 
-import yongle.dataBase.shipblacklist.ShipBlackService;
 import yongle.interceptor.ManageInterceptor;
 /**
  * @ClassName: ShipController.java
